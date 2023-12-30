@@ -11,7 +11,8 @@ class JabatanController extends Controller
      */
     public function index()
     {
-        //
+        $title = "Data Jabatan";
+        return view('dashboard.jabatan.jabatan')->with(compact('title'));
     }
 
     /**

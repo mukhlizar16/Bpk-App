@@ -17,12 +17,11 @@
         </div>
     </div>
 
-
+    <a class="btn btn-outline-secondary fs-5 fw-normal mt-2" href="{{ route('pejabat.index') }}"><i
+            class="fa-solid fa-chevron-left fs-5 me-2"></i>Kembali</a>
     <button class="btn btn-primary fs-5 fw-normal mt-2" data-bs-toggle="modal" data-bs-target="#tambahUser"><i
             class="fa-solid fa-square-plus fs-5 me-2"></i>Tambah</button>
-    <a class="btn btn-info fs-5 fw-normal mt-2" href="{{ route('jabatan.index') }}">
-        <i class="fa-solid fa-layer-plus fs-5 "></i> Jabatan
-    </a>
+    </button>
     <div class="row mt-3">
         <div class="col">
             <div class="card mt-2">
@@ -34,9 +33,7 @@
                         <thead>
                             <tr>
                                 <th>NO</th>
-                                <th>NAMA</th>
                                 <th>JABATAN</th>
-                                <th>HP</th>
                                 <th>ACTION</th>
                             </tr>
                         </thead>
@@ -44,11 +41,7 @@
                             {{-- @foreach ($pejabats as $user) --}}
                             <tr>
                                 <td>1</td>
-                                <td>asep</td>
                                 <td>Ketua</td>
-                                <td>
-                                    081364645125
-                                </td>
                                 <td>
                                     <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
                                         data-bs-target="#editUser">

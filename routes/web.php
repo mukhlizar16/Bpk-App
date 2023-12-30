@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\PaguController;
 use App\Http\Controllers\PejabatController;
@@ -35,6 +36,7 @@ Route::prefix('/dashboard')->middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('/user', UserController::class);
     Route::resource('/pejabat', PejabatController::class);
+    Route::resource('/jabatan', JabatanController::class);
     Route::prefix('/kegiatan')->group(function () {
         Route::resource('/utama', KegiatanController::class);
         Route::resource('/sub-kegiatan', SubKegiatanController::class);
