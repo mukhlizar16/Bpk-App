@@ -97,7 +97,7 @@ class UserController extends Controller
         } catch (\Illuminate\Database\QueryException $e) {
             if ($e->getCode() == 23000) {
                 //SQLSTATE[23000]: Integrity constraint violation
-                return redirect()->route('user.index')->with('failed', "User $user->name tidak dapat dihapus, karena sedang digunakan pada tabel lain!");
+                return redirect()->route('user.index')->with('failed', "User $user->name tidak dapat dihapus, karena sedang digunakan!");
             }
         }
 

@@ -61,7 +61,7 @@
                                             data-bs-target="#hapusUser{{ $loop->iteration }}">
                                             <i class="fa-solid fa-trash"></i>
                                         </button>
-                                        <button class="btn btn-sm btn-secondary" data-bs-toggle="modal"
+                                        <button class="btn btn-sm btn-dark" data-bs-toggle="modal"
                                             data-bs-target="#modalResetPassword{{ $loop->iteration }}">
                                             <i class="fa-regular fa-unlock-keyhole"></i>
                                         </button>
