@@ -18,7 +18,7 @@
     </div>
 
 
-    <button class="btn btn-primary fs-5 fw-normal mt-2" data-bs-toggle="modal" data-bs-target="#tambahUser"><i
+    <button class="btn btn-primary fs-5 fw-normal mt-2" data-bs-toggle="modal" data-bs-target="#tambahPejabat"><i
             class="fa-solid fa-square-plus fs-5 me-2"></i>Tambah</button>
     <a class="btn btn-info fs-5 fw-normal mt-2" href="{{ route('jabatan.index') }}">
         <i class="fa-solid fa-layer-plus fs-5 "></i> Jabatan
@@ -28,7 +28,7 @@
             <div class="card mt-2">
                 <div class="card-body">
 
-                    {{-- Tabel Data User --}}
+                    {{-- Tabel Data Pejabat --}}
                     <table id="myTable" class="table responsive nowrap table-bordered table-striped align-middle"
                         style="width:100%">
                         <thead>
@@ -41,88 +41,90 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{-- @foreach ($pejabats as $user) --}}
-                            <tr>
-                                <td>1</td>
-                                <td>asep</td>
-                                <td>Ketua</td>
-                                <td>
-                                    081364645125
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                        data-bs-target="#editUser">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
-                                        data-bs-target="#hapusUser">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
+                            @foreach ($pejabats as $pejabat)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $pejabat->nama }}</td>
+                                    <td>{{ $pejabat->Jabatan->nama }}</td>
+                                    <td>{{ $pejabat->hp }}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                                            data-bs-target="#editPejabat{{ $loop->iteration }}">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                                            data-bs-target="#hapusPejabat{{ $loop->iteration }}">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
 
-                            {{-- Modal Edit User --}}
-                            {{-- <x-form_modal>
-                                    @slot('id', "editUser$loop->iteration")
-                                    @slot('title', 'Edit Data User')
-                                    @slot('route', route('user.update', $user->id))
+                                {{-- Modal Edit Pejabat --}}
+                                <x-form_modal>
+                                    @slot('id', "editPejabat$loop->iteration")
+                                    @slot('title', 'Edit Data Pejabat')
+                                    @slot('route', route('pejabat.update', $pejabat->id))
                                     @slot('method') @method('put') @endslot
                                     @slot('btnPrimaryTitle', 'Perbarui')
 
                                     <div class="mb-3">
-                                        <label for="name" class="form-label">Nama</label>
-                                        <input type="name" class="form-control @error('name') is-invalid @enderror"
-                                            id="name" name="name" value="{{ old('name', $user->name) }}" autofocus
-                                            required>
-                                        @error('name')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="username" class="form-label">Username</label>
-                                        <input type="text" class="form-control @error('username') is-invalid @enderror"
-                                            id="username" name="username" value="{{ old('username', $user->username) }}"
+                                        <label for="nama" class="form-label">Nama</label>
+                                        <input type="name" class="form-control @error('nama') is-invalid @enderror"
+                                            id="nama" name="nama" value="{{ old('nama', $pejabat->nama) }}"
                                             autofocus required>
-                                        @error('username')
+                                        @error('nama')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
                                             </div>
                                         @enderror
                                     </div>
                                     <div class="mb-3">
-                                        <label for="isAdmin" class="form-label">Role</label>
-                                        <select class="form-select" id="isAdmin" name="isAdmin">
-                                            @foreach ([1 => 'Admin', 2 => 'User'] as $bool => $isAdmin)
-                                                <option value="{{ $bool }}"
-                                                    {{ old('isAdmin', $user->isAdmin) == $bool ? 'selected' : '' }}>
-                                                    {{ $isAdmin }}
-                                                </option>
+                                        <label for="jabatan_id" class="form-label">Jabatan</label>
+                                        <select class="form-select @error('jabatan_id') is-invalid @enderror"
+                                            name="jabatan_id" id="jabatan_id"
+                                            value="{{ old('jabatan_id', $pejabat->jabatan_id) }}">
+                                            @foreach ($jabatans as $jabatan)
+                                                @if (old('jabatan_id', $pejabat->jabatan_id) == $jabatan->id)
+                                                    <option value="{{ $jabatan->id }}" selected>
+                                                        {{ $jabatan->nama }}</option>
+                                                @else
+                                                    <option value="{{ $jabatan->id }}">
+                                                        {{ $jabatan->nama }}</option>
+                                                @endif
                                             @endforeach
                                         </select>
                                     </div>
-                                </x-form_modal> --}}
-                            {{-- / Modal Edit User --}}
+                                    <div class="mb-3">
+                                        <label for="hp" class="form-label">HP</label>
+                                        <input type="text" class="form-control @error('hp') is-invalid @enderror"
+                                            id="hp" name="hp" value="{{ old('hp', $pejabat->hp) }}" autofocus
+                                            required>
+                                        @error('hp')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </x-form_modal>
+                                {{-- / Modal Edit Pejabat --}}
 
-                            {{-- Modal Hapus User --}}
-                            {{-- <x-form_modal>
-                                    @slot('id', "hapusUser$loop->iteration")
-                                    @slot('title', 'Hapus Data User')
-                                    @slot('route', route('user.destroy', $user->id))
+                                {{-- Modal Hapus Pejabat --}}
+                                <x-form_modal>
+                                    @slot('id', "hapusPejabat$loop->iteration")
+                                    @slot('title', 'Hapus Data Pejabat')
+                                    @slot('route', route('pejabat.destroy', $pejabat->id))
                                     @slot('method') @method('delete') @endslot
                                     @slot('btnPrimaryClass', 'btn-outline-danger')
                                     @slot('btnSecondaryClass', 'btn-secondary')
                                     @slot('btnPrimaryTitle', 'Hapus')
 
-                                    <p class="fs-5">Apakah anda yakin akan menghapus data user
-                                        <b>{{ $user->name }}</b>?
+                                    <p class="fs-5">Apakah anda yakin akan menghapus data pejabat
+                                        <b>{{ $pejabat->nama }}</b>?
                                     </p>
 
-                                </x-form_modal> --}}
-                            {{-- / Modal Hapus User  --}}
-
-                            {{-- @endforeach --}}
+                                </x-form_modal>
+                                {{-- / Modal Hapus Pejabat  --}}
+                            @endforeach
                         </tbody>
                     </table>
                     {{-- / Tabel Data ... --}}
@@ -132,53 +134,44 @@
     </div>
 
 
-    <!-- Modal Tambah User -->
-    {{-- <x-form_modal>
-        @slot('id', 'tambahUser')
-        @slot('title', 'Tambah Data User')
+    <!-- Modal Tambah Pejabat -->
+    <x-form_modal>
+        @slot('id', 'tambahPejabat')
+        @slot('title', 'Tambah Data Pejabat')
         @slot('overflow', 'overflow-auto')
-        @slot('route', route('user.store'))
+        @slot('route', route('pejabat.store'))
 
         @csrf
         <div class="row">
             <div class="mb-3">
-                <label for="name" class="form-label">Nama</label>
-                <input type="name" class="form-control @error('name') is-invalid @enderror" id="name" name="name"
+                <label for="nama" class="form-label">Nama</label>
+                <input type="name" class="form-control @error('nama') is-invalid @enderror" id="nama" name="nama"
                     autofocus required>
-                @error('name')
+                @error('nama')
                     <div class="invalid-feedback">
                         {{ $message }}
                     </div>
                 @enderror
             </div>
             <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control @error('username') is-invalid @enderror" id="username"
-                    name="username" autofocus required>
-                @error('username')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control @error('password') is-invalid @enderror" id="password"
-                    name="password" autofocus required>
-                @error('password')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
-            </div>
-            <div class="mb-3">
-                <label for="isAdmin" class="form-label">Role</label>
-                <select class="form-select" id="isAdmin" name="isAdmin">
-                    <option value="1" selected>Admin</option>
-                    <option value="2">User</option>
+                <label for="jabatan_id" class="form-label">Jabatan</label>
+                <select class="form-select" id="jabatan_id" name="jabatan_id">
+                    @foreach ($jabatans as $jabatan)
+                        <option value="{{ $jabatan->id }}">{{ $jabatan->nama }}</option>
+                    @endforeach
                 </select>
             </div>
+            <div class="mb-3">
+                <label for="hp" class="form-label">HP</label>
+                <input type="text" class="form-control @error('hp') is-invalid @enderror" id="hp" name="hp"
+                    autofocus required>
+                @error('hp')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
+            </div>
         </div>
-    </x-form_modal> --}}
-    <!-- Akhir Modal Tambah User -->
+    </x-form_modal>
+    <!-- Akhir Modal Tambah Pejabat -->
 @endsection
