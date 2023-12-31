@@ -17,7 +17,7 @@
         </div>
     </div>
 
-    <button class="btn btn-primary fs-5 fw-normal mt-2" data-bs-toggle="modal" data-bs-target="#tambahUser"><i
+    <button class="btn btn-primary fs-5 fw-normal mt-2" data-bs-toggle="modal" data-bs-target="#tambahProgram"><i
             class="fa-solid fa-square-plus fs-5 me-2"></i>Tambah</button>
     </button>
     <div class="row mt-3">
@@ -25,10 +25,10 @@
             <div class="card mt-2">
                 <ul class="nav nav-pills p-2">
                     <li class="nav-item">
-                      <a class="nav-link active" aria-current="page" href="{{ route('program.index') }}">Program</a>
+                        <a class="nav-link active" aria-current="page" href="{{ route('program.index') }}">Program</a>
                     </li>
                     <li class="nav-item">
-                      <a class="nav-link" href="{{ route('utama.index') }}">Kegiatan</a>
+                        <a class="nav-link" href="{{ route('utama.index') }}">Kegiatan</a>
                     </li>
                 </ul>
                 <div class="card-body">
@@ -45,85 +45,73 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{-- @foreach ($pejabats as $user) --}}
-                            <tr>
-                                <td>1</td>
-                                <td>1</td>
-                                <td>Masak</td>
-                                <td>
-                                    <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                        data-bs-target="#editUser">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
-                                        data-bs-target="#hapusUser">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
+                            @foreach ($programs as $program)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $program->kode }}</td>
+                                    <td>{{ $program->keterangan }}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                                            data-bs-target="#editProgram{{ $loop->iteration }}">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                                            data-bs-target="#hapusProgram{{ $loop->iteration }}">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
 
-                            {{-- Modal Edit User --}}
-                            {{-- <x-form_modal>
-                                    @slot('id', "editUser$loop->iteration")
-                                    @slot('title', 'Edit Data User')
-                                    @slot('route', route('user.update', $user->id))
+                                {{-- Modal Edit Program --}}
+                                <x-form_modal>
+                                    @slot('id', "editProgram$loop->iteration")
+                                    @slot('title', 'Edit Data Program')
+                                    @slot('route', route('program.update', $program->id))
                                     @slot('method') @method('put') @endslot
                                     @slot('btnPrimaryTitle', 'Perbarui')
 
                                     <div class="mb-3">
-                                        <label for="name" class="form-label">Nama</label>
-                                        <input type="name" class="form-control @error('name') is-invalid @enderror"
-                                            id="name" name="name" value="{{ old('name', $user->name) }}" autofocus
-                                            required>
-                                        @error('name')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="username" class="form-label">Username</label>
-                                        <input type="text" class="form-control @error('username') is-invalid @enderror"
-                                            id="username" name="username" value="{{ old('username', $user->username) }}"
+                                        <label for="kode" class="form-label">Kode</label>
+                                        <input type="text" class="form-control @error('kode') is-invalid @enderror"
+                                            id="kode" name="kode" value="{{ old('kode', $program->kode) }}"
                                             autofocus required>
-                                        @error('username')
+                                        @error('kode')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
                                             </div>
                                         @enderror
                                     </div>
                                     <div class="mb-3">
-                                        <label for="isAdmin" class="form-label">Role</label>
-                                        <select class="form-select" id="isAdmin" name="isAdmin">
-                                            @foreach ([1 => 'Admin', 2 => 'User'] as $bool => $isAdmin)
-                                                <option value="{{ $bool }}"
-                                                    {{ old('isAdmin', $user->isAdmin) == $bool ? 'selected' : '' }}>
-                                                    {{ $isAdmin }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                                        <label for="keterangan" class="form-label">keterangan</label>
+                                        <input type="text" class="form-control @error('keterangan') is-invalid @enderror"
+                                            id="keterangan" name="keterangan"
+                                            value="{{ old('keterangan', $program->keterangan) }}" autofocus required>
+                                        @error('keterangan')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
                                     </div>
-                                </x-form_modal> --}}
-                            {{-- / Modal Edit User --}}
+                                </x-form_modal>
+                                {{-- / Modal Edit Program --}}
 
-                            {{-- Modal Hapus User --}}
-                            {{-- <x-form_modal>
-                                    @slot('id', "hapusUser$loop->iteration")
-                                    @slot('title', 'Hapus Data User')
-                                    @slot('route', route('user.destroy', $user->id))
+                                {{-- Modal Hapus Program --}}
+                                <x-form_modal>
+                                    @slot('id', "hapusProgram$loop->iteration")
+                                    @slot('title', 'Hapus Data Program')
+                                    @slot('route', route('program.destroy', $program->id))
                                     @slot('method') @method('delete') @endslot
                                     @slot('btnPrimaryClass', 'btn-outline-danger')
                                     @slot('btnSecondaryClass', 'btn-secondary')
                                     @slot('btnPrimaryTitle', 'Hapus')
 
-                                    <p class="fs-5">Apakah anda yakin akan menghapus data user
-                                        <b>{{ $user->name }}</b>?
+                                    <p class="fs-5">Apakah anda yakin akan menghapus data Program
+                                        <b>{{ $program->keterangan }}</b>?
                                     </p>
 
-                                </x-form_modal> --}}
-                            {{-- / Modal Hapus User  --}}
-
-                            {{-- @endforeach --}}
+                                </x-form_modal>
+                                {{-- / Modal Hapus Program  --}}
+                            @endforeach
                         </tbody>
                     </table>
                     {{-- / Tabel Data ... --}}
@@ -133,53 +121,36 @@
     </div>
 
 
-    <!-- Modal Tambah User -->
-    {{-- <x-form_modal>
-        @slot('id', 'tambahUser')
-        @slot('title', 'Tambah Data User')
+    <!-- Modal Tambah program -->
+    <x-form_modal>
+        @slot('id', 'tambahProgram')
+        @slot('title', 'Tambah Data Program')
         @slot('overflow', 'overflow-auto')
-        @slot('route', route('user.store'))
+        @slot('route', route('program.store'))
 
         @csrf
         <div class="row">
             <div class="mb-3">
-                <label for="name" class="form-label">Nama</label>
-                <input type="name" class="form-control @error('name') is-invalid @enderror" id="name" name="name"
+                <label for="kode" class="form-label">Kode</label>
+                <input type="text" class="form-control @error('kode') is-invalid @enderror" id="kode" name="kode"
                     autofocus required>
-                @error('name')
+                @error('kode')
                     <div class="invalid-feedback">
                         {{ $message }}
                     </div>
                 @enderror
             </div>
             <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control @error('username') is-invalid @enderror" id="username"
-                    name="username" autofocus required>
-                @error('username')
+                <label for="keterangan" class="form-label">keterangan</label>
+                <input type="text" class="form-control @error('keterangan') is-invalid @enderror" id="keterangan"
+                    name="keterangan" autofocus required>
+                @error('keterangan')
                     <div class="invalid-feedback">
                         {{ $message }}
                     </div>
                 @enderror
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control @error('password') is-invalid @enderror" id="password"
-                    name="password" autofocus required>
-                @error('password')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
-            </div>
-            <div class="mb-3">
-                <label for="isAdmin" class="form-label">Role</label>
-                <select class="form-select" id="isAdmin" name="isAdmin">
-                    <option value="1" selected>Admin</option>
-                    <option value="2">User</option>
-                </select>
             </div>
         </div>
-    </x-form_modal> --}}
-    <!-- Akhir Modal Tambah User -->
+    </x-form_modal>
+    <!-- Akhir Modal Tambah Program -->
 @endsection
