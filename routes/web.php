@@ -2,11 +2,14 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\FisikController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\KegiatanController;
+use App\Http\Controllers\KeuanganController;
 use App\Http\Controllers\PaguController;
 use App\Http\Controllers\PejabatController;
 use App\Http\Controllers\ProgramController;
+use App\Http\Controllers\SpmkController;
 use App\Http\Controllers\SubKegiatanController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -43,5 +46,16 @@ Route::prefix('/dashboard')->middleware('auth')->group(function () {
         Route::resource('/program', ProgramController::class);
     });
     Route::resource('/pagu', PaguController::class);
+    Route::prefix('/pagu')->group(function () {
+        Route::resource('/spmk', SpmkController::class)->parameters([
+            'pagu' => 'id',
+        ]);
+        Route::resource('/fisik', FisikController::class)->parameters([
+            'pagu' => 'id',
+        ]);
+        Route::resource('/keuangan', KeuanganController::class)->parameters([
+            'pagu' => 'id',
+        ]);
+    });
     Route::put('/resetpassword/{user}', [UserController::class, 'resetPasswordAdmin'])->name('resetpassword.resetPasswordAdmin');
 });

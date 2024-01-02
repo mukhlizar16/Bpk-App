@@ -17,8 +17,9 @@
         </div>
     </div>
 
-    <a class="btn btn-outline-secondary fs-5 fw-normal mt-2" href="{{ route('utama.index') }}"><i class="fa-solid fa-chevron-left fs-5 me-2"></i>Kembali</a>
-    <button class="btn btn-primary fs-5 fw-normal mt-2" data-bs-toggle="modal" data-bs-target="#tambahUser"><i
+    <a class="btn btn-outline-secondary fs-5 fw-normal mt-2" href="{{ route('utama.index') }}"><i
+            class="fa-solid fa-chevron-left fs-5 me-2"></i>Kembali</a>
+    <button class="btn btn-primary fs-5 fw-normal mt-2" data-bs-toggle="modal" data-bs-target="#tambahSub"><i
             class="fa-solid fa-square-plus fs-5 me-2"></i>Tambah</button>
     </button>
     <div class="row mt-3">
@@ -26,7 +27,7 @@
             <div class="card mt-2">
                 <div class="card-body">
 
-                    {{-- Tabel Data User --}}
+                    {{-- Tabel Data Sub Kegiatan --}}
                     <table id="myTable" class="table responsive nowrap table-bordered table-striped align-middle"
                         style="width:100%">
                         <thead>
@@ -39,88 +40,75 @@
                             </tr>
                         </thead>
                         <tbody>
-                            {{-- @foreach ($pejabats as $user) --}}
-                            <tr>
-                                <td>1</td>
-                                <td>Masak</td>
-                                <td>1</td>
-                                <td>
-                                    Masak Telur
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                        data-bs-target="#editUser">
-                                        <i class="fa-solid fa-pen-to-square"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
-                                        data-bs-target="#hapusUser">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                </td>
-                            </tr>
+                            @foreach ($subkegiatans as $sub)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $sub->kegiatan->keterangan }}</td>
+                                    <td>{{ $sub->kode }}</td>
+                                    <td>{{ $sub->keterangan }}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                                            data-bs-target="#editSub{{ $loop->iteration }}">
+                                            <i class="fa-solid fa-pen-to-square"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                                            data-bs-target="#hapusSub{{ $loop->iteration }}">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
 
-                            {{-- Modal Edit User --}}
-                            {{-- <x-form_modal>
-                                    @slot('id', "editUser$loop->iteration")
-                                    @slot('title', 'Edit Data User')
-                                    @slot('route', route('user.update', $user->id))
+                                {{-- Modal Edit Sub Kegiatan --}}
+                                <x-form_modal>
+                                    @slot('id', "editSub$loop->iteration")
+                                    @slot('title', 'Edit Data Sub Kegiatan')
+                                    @slot('route', route('sub-kegiatan.update', $sub->id))
                                     @slot('method') @method('put') @endslot
                                     @slot('btnPrimaryTitle', 'Perbarui')
 
+                                    <input type="hidden" name="kegiatan_id" id="" value="{{ $utama->id }}">
                                     <div class="mb-3">
-                                        <label for="name" class="form-label">Nama</label>
-                                        <input type="name" class="form-control @error('name') is-invalid @enderror"
-                                            id="name" name="name" value="{{ old('name', $user->name) }}" autofocus
+                                        <label for="kode" class="form-label">Kode</label>
+                                        <input type="text" class="form-control @error('kode') is-invalid @enderror"
+                                            id="kode" name="kode" value="{{ old('kode', $sub->kode) }}" autofocus
                                             required>
-                                        @error('name')
+                                        @error('kode')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
                                             </div>
                                         @enderror
                                     </div>
                                     <div class="mb-3">
-                                        <label for="username" class="form-label">Username</label>
-                                        <input type="text" class="form-control @error('username') is-invalid @enderror"
-                                            id="username" name="username" value="{{ old('username', $user->username) }}"
-                                            autofocus required>
-                                        @error('username')
+                                        <label for="keterangan" class="form-label">keterangan</label>
+                                        <input type="text" class="form-control @error('keterangan') is-invalid @enderror"
+                                            id="keterangan" name="keterangan"
+                                            value="{{ old('keterangan', $sub->keterangan) }}" autofocus required>
+                                        @error('keterangan')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
                                             </div>
                                         @enderror
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="isAdmin" class="form-label">Role</label>
-                                        <select class="form-select" id="isAdmin" name="isAdmin">
-                                            @foreach ([1 => 'Admin', 2 => 'User'] as $bool => $isAdmin)
-                                                <option value="{{ $bool }}"
-                                                    {{ old('isAdmin', $user->isAdmin) == $bool ? 'selected' : '' }}>
-                                                    {{ $isAdmin }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </x-form_modal> --}}
-                            {{-- / Modal Edit User --}}
+                                </x-form_modal>
+                                {{-- / Modal Edit Sub Kegiatan --}}
 
-                            {{-- Modal Hapus User --}}
-                            {{-- <x-form_modal>
-                                    @slot('id', "hapusUser$loop->iteration")
-                                    @slot('title', 'Hapus Data User')
-                                    @slot('route', route('user.destroy', $user->id))
+                                {{-- Modal Hapus Sub Kegiatan --}}
+                                <x-form_modal>
+                                    @slot('id', "hapusSub$loop->iteration")
+                                    @slot('title', 'Hapus Data Sub Kegiatan')
+                                    @slot('route', route('sub-kegiatan.destroy', $sub->id))
                                     @slot('method') @method('delete') @endslot
                                     @slot('btnPrimaryClass', 'btn-outline-danger')
                                     @slot('btnSecondaryClass', 'btn-secondary')
                                     @slot('btnPrimaryTitle', 'Hapus')
 
-                                    <p class="fs-5">Apakah anda yakin akan menghapus data user
-                                        <b>{{ $user->name }}</b>?
+                                    <p class="fs-5">Apakah anda yakin akan menghapus data sub kegiatan
+                                        <b>{{ $sub->keterangan }}</b>?
                                     </p>
 
-                                </x-form_modal> --}}
-                            {{-- / Modal Hapus User  --}}
-
-                            {{-- @endforeach --}}
+                                </x-form_modal>
+                                {{-- / Modal Hapus Sub Kegiatan  --}}
+                            @endforeach
                         </tbody>
                     </table>
                     {{-- / Tabel Data ... --}}
@@ -130,53 +118,37 @@
     </div>
 
 
-    <!-- Modal Tambah User -->
-    {{-- <x-form_modal>
-        @slot('id', 'tambahUser')
-        @slot('title', 'Tambah Data User')
+    <!-- Modal Tambah Sub Kegiatan -->
+    <x-form_modal>
+        @slot('id', 'tambahSub')
+        @slot('title', 'Tambah Data Sub Kegiatan')
         @slot('overflow', 'overflow-auto')
-        @slot('route', route('user.store'))
+        @slot('route', route('sub-kegiatan.store'))
 
         @csrf
         <div class="row">
+            <input type="hidden" name="kegiatan_id" id="" value="{{ $utama->id }}">
             <div class="mb-3">
-                <label for="name" class="form-label">Nama</label>
-                <input type="name" class="form-control @error('name') is-invalid @enderror" id="name" name="name"
+                <label for="kode" class="form-label">Kode</label>
+                <input type="text" class="form-control @error('kode') is-invalid @enderror" id="kode" name="kode"
                     autofocus required>
-                @error('name')
+                @error('kode')
                     <div class="invalid-feedback">
                         {{ $message }}
                     </div>
                 @enderror
             </div>
             <div class="mb-3">
-                <label for="username" class="form-label">Username</label>
-                <input type="text" class="form-control @error('username') is-invalid @enderror" id="username"
-                    name="username" autofocus required>
-                @error('username')
+                <label for="keterangan" class="form-label">Keterangan</label>
+                <input type="keterangan" class="form-control @error('keterangan') is-invalid @enderror" id="keterangan"
+                    name="keterangan" autofocus required>
+                @error('keterangan')
                     <div class="invalid-feedback">
                         {{ $message }}
                     </div>
                 @enderror
-            </div>
-            <div class="mb-3">
-                <label for="password" class="form-label">Password</label>
-                <input type="password" class="form-control @error('password') is-invalid @enderror" id="password"
-                    name="password" autofocus required>
-                @error('password')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
-                @enderror
-            </div>
-            <div class="mb-3">
-                <label for="isAdmin" class="form-label">Role</label>
-                <select class="form-select" id="isAdmin" name="isAdmin">
-                    <option value="1" selected>Admin</option>
-                    <option value="2">User</option>
-                </select>
             </div>
         </div>
-    </x-form_modal> --}}
-    <!-- Akhir Modal Tambah User -->
+    </x-form_modal>
+    <!-- Akhir Modal Tambah Sub Kegiatan -->
 @endsection

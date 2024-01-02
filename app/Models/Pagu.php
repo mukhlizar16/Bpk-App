@@ -16,6 +16,16 @@ class Pagu extends Model
         return $this->belongsTo(Subkegiatan::class, 'subkegiatan_id');
     }
 
+    public function SumberDana()
+    {
+        return $this->belongsTo(SumberDana::class, 'sumber_dana_id');
+    }
+
+    public function JenisPengadaan()
+    {
+        return $this->belongsTo(JenisPengadaan::class, 'pengadaan_id');
+    }
+
     public function RealisasiKeuangan()
     {
         return $this->hasMany(RealisasiKeuangan::class);

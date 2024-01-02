@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Subkegiatan;
+use App\Models\Pagu;
+use App\Models\RealisasiFisik;
 use Illuminate\Http\Request;
 
-class SubKegiatanController extends Controller
+class FisikController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $title = "Data Sub Kegiatan";
-        return view('dashboard.kegiatan.sub-kegiatan.index')->with(compact('title'));
+        //
     }
 
     /**
@@ -31,25 +31,27 @@ class SubKegiatanController extends Controller
     {
         try {
             $validatedData = $request->validate([
-                'kegiatan_id' => 'required',
-                'kode' => 'required',
-                'keterangan' => 'required',
+                'pagu_id' => 'required',
+                'nilai' => 'required',
+                'bobot' => 'required',
             ]);
         } catch (\Illuminate\Validation\ValidationException $exception) {
             return redirect()->back()->with('failed', $exception->getMessage());
         }
 
-        Subkegiatan::create($validatedData);
+        RealisasiFisik::create($validatedData);
 
-        return redirect()->back()->with('success', 'Sub Kegiatan baru berhasil ditambahkan!');
+        return redirect()->back()->with('success', 'Fisik baru berhasil ditambahkan!');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Pagu $fisik)
     {
-        //
+        $title = "Data Realisasi Fisik - " . $fisik->paket;
+        $fisiks = RealisasiFisik::where('pagu_id', $fisik->id)->get();
+        return view('dashboard.pagu.fisik.index')->with(compact('title', 'fisiks', 'fisik'));
     }
 
     /**
@@ -63,20 +65,19 @@ class SubKegiatanController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Subkegiatan $sub_kegiatan)
+    public function update(Request $request, RealisasiFisik $fisik)
     {
         try {
             $rules = [
-                'kegiatan_id' => 'required',
-                'kode' => 'required',
-                'keterangan' => 'required',
+                'nilai' => 'required',
+                'bobot' => 'required',
             ];
 
             $validatedData = $this->validate($request, $rules);
 
-            Subkegiatan::where('id', $sub_kegiatan->id)->update($validatedData);
+            RealisasiFisik::where('id', $fisik->id)->update($validatedData);
 
-            return redirect()->back()->with('success', "Data Sub Kegiatan $sub_kegiatan->keterangan berhasil diperbarui!");
+            return redirect()->back()->with('success', "Data Fisik $fisik->nilai berhasil diperbarui!");
         } catch (\Illuminate\Validation\ValidationException $exception) {
             return redirect()->back()->with('failed', 'Data gagal diperbarui! ' . $exception->getMessage());
         }
@@ -85,17 +86,17 @@ class SubKegiatanController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Subkegiatan $sub_kegiatan)
+    public function destroy(RealisasiFisik $fisik)
     {
         try {
-            SubKegiatan::destroy($sub_kegiatan->id);
+            RealisasiFisik::destroy($fisik->id);
         } catch (\Illuminate\Database\QueryException $e) {
             if ($e->getCode() == 23000) {
                 //SQLSTATE[23000]: Integrity constraint violation
-                return redirect()->back()->with('failed', "Sub Kegiatan $sub_kegiatan->keterangan tidak dapat dihapus, karena sedang digunakan!");
+                return redirect()->back()->with('failed', "Fisik $fisik->nilai tidak dapat dihapus, karena sedang digunakan!");
             }
         }
 
-        return redirect()->back()->with('success', "Sub Kegiatan $sub_kegiatan->keterangan berhasil dihapus!");
+        return redirect()->back()->with('success', "Fisik $fisik->nilai berhasil dihapus!");
     }
 }

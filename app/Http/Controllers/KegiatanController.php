@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Kegiatan;
 use App\Models\Program;
+use App\Models\Subkegiatan;
 use Illuminate\Http\Request;
 
 class KegiatanController extends Controller
@@ -50,9 +51,11 @@ class KegiatanController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Kegiatan $utama)
     {
-        //
+        $title = "Data Sub Kegiatan - $utama->keterangan";
+        $subkegiatans = Subkegiatan::where('kegiatan_id', $utama->id)->get();
+        return view('dashboard.kegiatan.sub-kegiatan.index')->with(compact('title', 'utama', 'subkegiatans'));
     }
 
     /**

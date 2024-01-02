@@ -30,63 +30,55 @@
                         <thead>
                             <tr>
                                 <th>NO</th>
-                                <th>SUB KEGIATAN</th>
-                                <th>PAKET</th>
-                                <th>SUMBER DANA</th>
+                                <th>PAGU</th>
+                                <th>PENYEDIA</th>
+                                <th>NOMOR</th>
+                                <th>TANGGAL</th>
                                 <th>JUMLAH</th>
-                                <th>PENGADAAN</th>
+                                <th>JANGKA WAKTU</th>
+                                <th>BUKTI</th>
+                                <th>HPS</th>
+                                <th>DOKUMEN</th>
                                 <th>ACTION</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($pagus as $pagu)
+                            @foreach ($kontraks as $kontrak)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $pagu->Subkegiatan->keterangan }}</td>
-                                    <td>{{ $pagu->paket }}</td>
-                                    <td>{{ $pagu->SumberDana->keterangan }}</td>
-                                    <td>{{ $pagu->jumlah }}</td>
-                                    <td>{{ $pagu->JenisPengadaan->keterangan }}</td>
+                                    <td>{{ $kontrak->Pagu->paket }}</td>
+                                    <td>{{ $kontrak->penyedia }}</td>
+                                    <td>{{ $kontrak->nomor }}</td>
+                                    <td>{{ $kontrak->tanggal }}</td>
+                                    <td>{{ $kontrak->jumlah }}</td>
+                                    <td>{{ $kontrak->jangka_waktu }}</td>
+                                    <td>{{ $kontrak->bukti }}</td>
+                                    <td>{{ $kontrak->hps }}</td>
+                                    <td>{{ $kontrak->dokumen }}</td>
                                     <td>
                                         <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal"
-                                            data-bs-target="#showPagu{{ $loop->iteration }}">
+                                            data-bs-target="#showKontrak{{ $loop->iteration }}">
                                             <i class="fa-solid fa-list"></i>
                                         </button>
                                         <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                            data-bs-target="#editPagu{{ $loop->iteration }}">
+                                            data-bs-target="#editKontrak{{ $loop->iteration }}">
                                             <i class="fa-solid fa-pen-to-square"></i>
                                         </button>
                                         <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
-                                            data-bs-target="#hapusPagu{{ $loop->iteration }}">
+                                            data-bs-target="#hapusKontrak{{ $loop->iteration }}">
                                             <i class="fa-solid fa-trash"></i>
                                         </button>
                                     </td>
                                 </tr>
 
-                                {{-- Modal Edit Pagu --}}
+                                {{-- Modal Edit Kontrak --}}
                                 <x-form_modal>
-                                    @slot('id', "editPagu$loop->iteration")
-                                    @slot('title', 'Edit Data Pagu')
-                                    @slot('route', route('pagu.update', $pagu->id))
+                                    @slot('id', "editKontrak$loop->iteration")
+                                    @slot('title', 'Edit Data Kontrak')
+                                    @slot('route', route('kontrak.update', $kontrak->id))
                                     @slot('method') @method('put') @endslot
                                     @slot('btnPrimaryTitle', 'Perbarui')
 
-                                    <div class="mb-3">
-                                        <label for="subkegiatan_id" class="form-label">Sub Kegiatan</label>
-                                        <select class="form-select @error('subkegiatan_id') is-invalid @enderror"
-                                            name="subkegiatan_id" id="subkegiatan_id"
-                                            value="{{ old('subkegiatan_id', $pagu->subkegiatan_id) }}">
-                                            @foreach ($subs as $sub)
-                                                @if (old('subkegiatan_id', $pagu->sub_id) == $sub->id)
-                                                    <option value="{{ $sub->id }}" selected>
-                                                        {{ $sub->keterangan }}</option>
-                                                @else
-                                                    <option value="{{ $sub->id }}">
-                                                        {{ $sub->keterangan }}</option>
-                                                @endif
-                                            @endforeach
-                                        </select>
-                                    </div>
                                     <div class="mb-3">
                                         <label for="paket" class="form-label">Paket</label>
                                         <input type="text" class="form-control @error('paket') is-invalid @enderror"

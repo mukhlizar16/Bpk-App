@@ -54,7 +54,7 @@
                                     <td>{{ $kegiatan->keterangan }}</td>
                                     <td>
                                         <a type="button" class="btn btn-sm btn-info"
-                                            href="{{ route('sub-kegiatan.index') }}">
+                                            href="{{ route('utama.show', $kegiatan->id) }}">
                                             <i class="fa-solid fa-chart-line"></i>
                                         </a>
                                         <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
@@ -76,28 +76,44 @@
                                     @slot('method') @method('put') @endslot
                                     @slot('btnPrimaryTitle', 'Perbarui')
 
+                                    <div class="mb-3">
+                                        <label for="program_id" class="form-label">Program</label>
+                                        <select class="form-select @error('program_id') is-invalid @enderror"
+                                            name="program_id" id="program_id"
+                                            value="{{ old('program_id', $kegiatan->program_id) }}">
+                                            @foreach ($programs as $program)
+                                                @if (old('program_id', $kegiatan->program_id) == $program->id)
+                                                    <option value="{{ $program->id }}" selected>
+                                                        {{ $program->keterangan }}</option>
+                                                @else
+                                                    <option value="{{ $program->id }}">
+                                                        {{ $program->keterangan }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    </div>
 
                                     <div class="mb-3">
-                                        <label for="username" class="form-label">Username</label>
-                                        <input type="text" class="form-control @error('username') is-invalid @enderror"
-                                            id="username" name="username" value="{{ old('username', $user->username) }}"
+                                        <label for="kode" class="form-label">Kode</label>
+                                        <input type="text" class="form-control @error('kode') is-invalid @enderror"
+                                            id="kode" name="kode" value="{{ old('kode', $kegiatan->kode) }}"
                                             autofocus required>
-                                        @error('username')
+                                        @error('kode')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
                                             </div>
                                         @enderror
                                     </div>
                                     <div class="mb-3">
-                                        <label for="isAdmin" class="form-label">Role</label>
-                                        <select class="form-select" id="isAdmin" name="isAdmin">
-                                            @foreach ([1 => 'Admin', 2 => 'User'] as $bool => $isAdmin)
-                                                <option value="{{ $bool }}"
-                                                    {{ old('isAdmin', $user->isAdmin) == $bool ? 'selected' : '' }}>
-                                                    {{ $isAdmin }}
-                                                </option>
-                                            @endforeach
-                                        </select>
+                                        <label for="keterangan" class="form-label">keterangan</label>
+                                        <input type="text" class="form-control @error('keterangan') is-invalid @enderror"
+                                            id="keterangan" name="keterangan"
+                                            value="{{ old('keterangan', $kegiatan->keterangan) }}" autofocus required>
+                                        @error('keterangan')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
                                     </div>
                                 </x-form_modal>
                                 {{-- / Modal Edit Kegiatan --}}
@@ -147,8 +163,8 @@
             </div>
             <div class="mb-3">
                 <label for="kode" class="form-label">Kode</label>
-                <input type="text" class="form-control @error('kode') is-invalid @enderror" id="kode"
-                    name="kode" autofocus required>
+                <input type="text" class="form-control @error('kode') is-invalid @enderror" id="kode" name="kode"
+                    autofocus required>
                 @error('kode')
                     <div class="invalid-feedback">
                         {{ $message }}

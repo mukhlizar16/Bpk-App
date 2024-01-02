@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('realisasi_fisiks', function (Blueprint $table) {
+        Schema::create('jenis_pengadaans', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('pagu_id')->constrained('pagus')->onUpdate('cascade')->onDelete('restrict');
-            $table->index('pagu_id');
-            $table->integer('nilai');
-            $table->decimal('bobot', $precision = 5, $scale = 2);
+            $table->string('keterangan');
             $table->timestamps();
         });
     }
@@ -26,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('realisasi_fisiks');
+        Schema::dropIfExists('jenis_pengadaans');
     }
 };

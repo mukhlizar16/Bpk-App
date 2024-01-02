@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('pagu_id')->constrained('pagus')->onUpdate('cascade')->onDelete('restrict');
             $table->index('pagu_id');
+            $table->integer('nilai');
             $table->decimal('bobot', $precision = 5, $scale = 2);
             $table->timestamps();
         });
