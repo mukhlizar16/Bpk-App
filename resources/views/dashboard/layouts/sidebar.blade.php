@@ -16,7 +16,7 @@
             </a>
         </li>
 
-        <li class="menu-item {{ Request::is('dashboard/pagu*') ? 'active open' : '' }}">
+        <li class="menu-item {{ Request::is('dashboard/*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="fa-duotone fa-note-sticky fa-sm me-3"></i>
                 <div data-i18n="Layouts">Pagu</div>
@@ -28,8 +28,8 @@
                         <div data-i18n="Analytics">Data Pagu</div>
                     </a>
                 </li>
-                <li class="menu-item {{ Request::is('dashboard/berita/kategori-berita*') ? 'active' : '' }}">
-                    <a href="/dashboard/berita/kategori-berita" class="menu-link">
+                <li class="menu-item {{ Request::is('dashboard/kontrak*') ? 'active' : '' }}">
+                    <a href="/dashboard/kontrak" class="menu-link">
                         <div data-i18n="data surat">Data Kontrak</div>
                     </a>
                 </li>

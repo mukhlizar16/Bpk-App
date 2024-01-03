@@ -1,14 +1,17 @@
 <?php
 
+use App\Http\Controllers\AdendumController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FisikController;
 use App\Http\Controllers\JabatanController;
 use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\KeuanganController;
+use App\Http\Controllers\KontrakController;
 use App\Http\Controllers\PaguController;
 use App\Http\Controllers\PejabatController;
 use App\Http\Controllers\ProgramController;
+use App\Http\Controllers\Sp2dController;
 use App\Http\Controllers\SpmkController;
 use App\Http\Controllers\SubKegiatanController;
 use App\Http\Controllers\UserController;
@@ -55,6 +58,15 @@ Route::prefix('/dashboard')->middleware('auth')->group(function () {
         ]);
         Route::resource('/keuangan', KeuanganController::class)->parameters([
             'pagu' => 'id',
+        ]);
+    });
+    Route::resource('/kontrak', KontrakController::class);
+    Route::prefix('/kontrak')->group(function () {
+        Route::resource('/adendum', AdendumController::class)->parameters([
+            'kontrak' => 'id',
+        ]);
+        Route::resource('/sp2d', Sp2dController::class)->parameters([
+            'kontrak' => 'id',
         ]);
     });
     Route::put('/resetpassword/{user}', [UserController::class, 'resetPasswordAdmin'])->name('resetpassword.resetPasswordAdmin');

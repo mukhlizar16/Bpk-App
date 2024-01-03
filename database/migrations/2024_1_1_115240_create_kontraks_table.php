@@ -20,7 +20,7 @@ return new class extends Migration
             $table->date('tanggal');
             $table->integer('jumlah');
             $table->integer('jangka_waktu');
-            $table->enum('bukti', [1, 0]);
+            $table->enum('bukti', [1, 0])->default(0);
             $table->integer('hps');
             $table->string('dokumen');
             $table->timestamps();
