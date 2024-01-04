@@ -5,7 +5,7 @@
                 <h5 class="modal-title">{{ $title }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ $route ?? '' }}" method="post">
+            <form action="{{ $route ?? '' }}" method="post" enctype="multipart/form-data">
                 {{ $method ?? '' }}
                 @csrf
                 <div class="modal-body">

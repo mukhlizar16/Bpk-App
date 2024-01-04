@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Pagu;
 use App\Models\Spmk;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class SpmkController extends Controller
 {
@@ -41,6 +42,10 @@ class SpmkController extends Controller
             return redirect()->back()->with('failed', $exception->getMessage());
         }
 
+        if ($request->file('dokumen')) {
+            $validatedData['dokumen'] = $request->file('dokumen')->store('dokumen-spmk');
+        }
+
         Spmk::create($validatedData);
 
         return redirect()->back()->with('success', 'Spmk baru berhasil ditambahkan!');
@@ -51,9 +56,10 @@ class SpmkController extends Controller
      */
     public function show(Pagu $spmk)
     {
+
         $title = "Data SPMK - " . $spmk->paket;
-        $spmks = Spmk::where('pagu_id', $spmk->id)->get();
-        return view('dashboard.pagu.spmk.index')->with(compact('title', 'spmks', 'spmk'));
+        $spmkses = Spmk::where('pagu_id', $spmk->id)->get();
+        return view('dashboard.pagu.spmk.index')->with(compact('title', 'spmkses', 'spmk'));
     }
 
     /**
@@ -69,14 +75,23 @@ class SpmkController extends Controller
      */
     public function update(Request $request, Spmk $spmk)
     {
+        // dd($request);
         try {
             $rules = [
+                'pagu_id' => 'required',
                 'nomor' => 'required',
                 'tanggal' => 'required',
                 'dokumen' => 'required',
             ];
 
             $validatedData = $this->validate($request, $rules);
+
+            if ($request->file('dokumen')) {
+                if ($request->oldDokumen) {
+                    Storage::delete($request->oldDokumen);
+                }
+                $validatedData['dokumen'] = $request->file('dokumen')->storeAs('dokumen-spmk', $validatedData['dokumen']->getClientOriginalName());
+            }
 
             Spmk::where('id', $spmk->id)->update($validatedData);
 
@@ -92,6 +107,9 @@ class SpmkController extends Controller
     public function destroy(Spmk $spmk)
     {
         try {
+            if ($spmk->dokumen) {
+                Storage::delete($spmk->dokumen);
+            }
             Spmk::destroy($spmk->id);
         } catch (\Illuminate\Database\QueryException $e) {
             if ($e->getCode() == 23000) {

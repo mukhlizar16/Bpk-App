@@ -45,14 +45,21 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($adendums as $adendum)
+                            @foreach ($adendumses as $adendums)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $adendum->Kontrak->penyedia }}</td>
-                                    <td>{{ $adendum->nomor }}</td>
-                                    <td>{{ $adendum->tanggal }}</td>
-                                    <td>{{ $adendum->keterangan }}</td>
-                                    <td>{{ $adendum->dokumen }}</td>
+                                    <td>{{ $adendums->Kontrak->penyedia }}</td>
+                                    <td>{{ $adendums->nomor }}</td>
+                                    <td>{{ $adendums->tanggal }}</td>
+                                    <td>{{ $adendums->keterangan }}</td>
+                                    <td>
+                                        @if ($adendums->dokumen)
+                                            <a class="btn btn-primary" href="{{ asset('storage/' . $adendums->dokumen) }}"
+                                                download><i class="fa-solid fa-download me-2"></i> Dokumen</a>
+                                        @else
+                                            No document available
+                                        @endif
+                                    </td>
                                     <td>
                                         <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
                                             data-bs-target="#editAdendum{{ $loop->iteration }}">
@@ -69,14 +76,16 @@
                                 <x-form_modal>
                                     @slot('id', "editAdendum$loop->iteration")
                                     @slot('title', 'Edit Data Adendum')
-                                    @slot('route', route('adendum.update', $adendum->id))
+                                    @slot('route', route('adendum.update', $adendums->id))
                                     @slot('method') @method('put') @endslot
                                     @slot('btnPrimaryTitle', 'Perbarui')
+
+                                    <input type="hidden" name="oldDokumen" value="{{ $adendums->dokumen }}">
 
                                     <div class="mb-3">
                                         <label for="nomor" class="form-label">Nomor</label>
                                         <input type="text" class="form-control @error('nomor') is-invalid @enderror"
-                                            id="nomor" name="nomor" value="{{ old('nomor', $adendum->nomor) }}"
+                                            id="nomor" name="nomor" value="{{ old('nomor', $adendums->nomor) }}"
                                             autofocus required>
                                         @error('nomor')
                                             <div class="invalid-feedback">
@@ -87,7 +96,7 @@
                                     <div class="mb-3">
                                         <label for="tanggal" class="form-label">Tanggal</label>
                                         <input type="date" class="form-control @error('tanggal') is-invalid @enderror"
-                                            id="tanggal" name="tanggal" value="{{ old('tanggal', $adendum->tanggal) }}"
+                                            id="tanggal" name="tanggal" value="{{ old('tanggal', $adendums->tanggal) }}"
                                             autofocus required>
                                         @error('tanggal')
                                             <div class="invalid-feedback">
@@ -98,8 +107,8 @@
                                     <div class="mb-3">
                                         <label for="keterangan" class="form-label">Keterangan</label>
                                         <input type="text" class="form-control @error('keterangan') is-invalid @enderror"
-                                            id="keterangan" name="keterangan" value="{{ old('keterangan', $adendum->keterangan) }}"
-                                            autofocus required>
+                                            id="keterangan" name="keterangan"
+                                            value="{{ old('keterangan', $adendums->keterangan) }}" autofocus required>
                                         @error('keterangan')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -108,8 +117,8 @@
                                     </div>
                                     <div class="mb-3">
                                         <label for="dokumen" class="form-label">Dokumen</label>
-                                        <input type="text" class="form-control @error('dokumen') is-invalid @enderror"
-                                            id="dokumen" name="dokumen" value="{{ old('dokumen', $adendum->dokumen) }}"
+                                        <input type="file" class="form-control @error('dokumen') is-invalid @enderror"
+                                            id="dokumen" name="dokumen" value="{{ old('dokumen', $adendums->dokumen) }}"
                                             autofocus required>
                                         @error('dokumen')
                                             <div class="invalid-feedback">
@@ -125,14 +134,14 @@
                                 <x-form_modal>
                                     @slot('id', "hapusAdendum$loop->iteration")
                                     @slot('title', 'Hapus Data Surat Adendum')
-                                    @slot('route', route('adendum.destroy', $adendum->id))
+                                    @slot('route', route('adendum.destroy', $adendums->id))
                                     @slot('method') @method('delete') @endslot
                                     @slot('btnPrimaryClass', 'btn-outline-danger')
                                     @slot('btnSecondaryClass', 'btn-secondary')
                                     @slot('btnPrimaryTitle', 'Hapus')
 
                                     <p class="fs-5">Apakah anda yakin akan menghapus data Adendum
-                                        <b>{{ $adendum->nomor }}</b>?
+                                        <b>{{ $adendums->nomor }}</b>?
                                     </p>
 
                                 </x-form_modal>
@@ -154,8 +163,7 @@
                             <div class="mb-3">
                                 <label for="nomor" class="form-label">Nomor</label>
                                 <input type="text" class="form-control @error('nomor') is-invalid @enderror"
-                                    id="nomor" name="nomor" value="{{ old('nomor') }}"
-                                    autofocus required>
+                                    id="nomor" name="nomor" value="{{ old('nomor') }}" autofocus required>
                                 @error('nomor')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -165,8 +173,7 @@
                             <div class="mb-3">
                                 <label for="tanggal" class="form-label">Tanggal</label>
                                 <input type="date" class="form-control @error('tanggal') is-invalid @enderror"
-                                    id="tanggal" name="tanggal" value="{{ old('tanggal') }}"
-                                    autofocus required>
+                                    id="tanggal" name="tanggal" value="{{ old('tanggal') }}" autofocus required>
                                 @error('tanggal')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -176,8 +183,8 @@
                             <div class="mb-3">
                                 <label for="keterangan" class="form-label">Keterangan</label>
                                 <input type="text" class="form-control @error('keterangan') is-invalid @enderror"
-                                    id="keterangan" name="keterangan" value="{{ old('keterangan') }}"
-                                    autofocus required>
+                                    id="keterangan" name="keterangan" value="{{ old('keterangan') }}" autofocus
+                                    required>
                                 @error('keterangan')
                                     <div class="invalid-feedback">
                                         {{ $message }}
@@ -186,9 +193,8 @@
                             </div>
                             <div class="mb-3">
                                 <label for="dokumen" class="form-label">Dokumen</label>
-                                <input type="text" class="form-control @error('dokumen') is-invalid @enderror"
-                                    id="dokumen" name="dokumen" value="{{ old('dokumen') }}"
-                                    autofocus required>
+                                <input type="file" class="form-control @error('dokumen') is-invalid @enderror"
+                                    id="dokumen" name="dokumen" value="{{ old('dokumen') }}" autofocus required>
                                 @error('dokumen')
                                     <div class="invalid-feedback">
                                         {{ $message }}

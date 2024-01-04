@@ -44,13 +44,20 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($spmks as $spmk)
+                            @foreach ($spmkses as $spmks)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $spmk->Pagu->paket }}</td>
-                                    <td>{{ $spmk->nomor }}</td>
-                                    <td>{{ $spmk->tanggal }}</td>
-                                    <td>{{ $spmk->dokumen }}</td>
+                                    <td>{{ $spmks->Pagu->paket }}</td>
+                                    <td>{{ $spmks->nomor }}</td>
+                                    <td>{{ $spmks->tanggal }}</td>
+                                    <td>
+                                        @if ($spmks->dokumen)
+                                            <a class="btn btn-primary" href="{{ asset('storage/' . $spmks->dokumen) }}"
+                                                download><i class="fa-solid fa-download me-2"></i> Dokumen</a>
+                                        @else
+                                            No document available
+                                        @endif
+                                    </td>
                                     <td>
                                         <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
                                             data-bs-target="#editSpmk{{ $loop->iteration }}">
@@ -67,14 +74,16 @@
                                 <x-form_modal>
                                     @slot('id', "editSpmk$loop->iteration")
                                     @slot('title', 'Edit Data Spmk')
-                                    @slot('route', route('spmk.update', $spmk->id))
+                                    @slot('route', route('spmk.update', $spmks->id))
                                     @slot('method') @method('put') @endslot
                                     @slot('btnPrimaryTitle', 'Perbarui')
 
+                                    <input type="hidden" name="pagu_id" value="{{ $spmk->id }}">
+                                    <input type="hidden" name="oldDokumen" value="{{ $spmks->dokumen }}">
                                     <div class="mb-3">
                                         <label for="nomor" class="form-label">Nomor</label>
                                         <input type="text" class="form-control @error('nomor') is-invalid @enderror"
-                                            id="nomor" name="nomor" value="{{ old('nomor', $spmk->nomor) }}"
+                                            id="nomor" name="nomor" value="{{ old('nomor', $spmks->nomor) }}"
                                             autofocus required>
                                         @error('nomor')
                                             <div class="invalid-feedback">
@@ -85,7 +94,7 @@
                                     <div class="mb-3">
                                         <label for="tanggal" class="form-label">Tanggal</label>
                                         <input type="date" class="form-control @error('tanggal') is-invalid @enderror"
-                                            id="tanggal" name="tanggal" value="{{ old('nomor', $spmk->tanggal) }}"
+                                            id="tanggal" name="tanggal" value="{{ old('nomor', $spmks->tanggal) }}"
                                             autofocus required>
                                         @error('tanggal')
                                             <div class="invalid-feedback">
@@ -95,9 +104,8 @@
                                     </div>
                                     <div class="mb-3">
                                         <label for="dokumen" class="form-label">Dokumen</label>
-                                        <input type="text" class="form-control @error('dokumen') is-invalid @enderror"
-                                            id="dokumen" name="dokumen" value="{{ old('nomor', $spmk->dokumen) }}"
-                                            autofocus required>
+                                        <input type="file" class="form-control @error('dokumen') is-invalid @enderror"
+                                            id="dokumen" name="dokumen" autofocus required>
                                         @error('dokumen')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -112,14 +120,14 @@
                                 <x-form_modal>
                                     @slot('id', "hapusSpmk$loop->iteration")
                                     @slot('title', 'Hapus Data Surat Spmk')
-                                    @slot('route', route('spmk.destroy', $spmk->id))
+                                    @slot('route', route('spmk.destroy', $spmks->id))
                                     @slot('method') @method('delete') @endslot
                                     @slot('btnPrimaryClass', 'btn-outline-danger')
                                     @slot('btnSecondaryClass', 'btn-secondary')
                                     @slot('btnPrimaryTitle', 'Hapus')
 
                                     <p class="fs-5">Apakah anda yakin akan menghapus data Spmk
-                                        <b>{{ $spmk->nomor }}</b>?
+                                        <b>{{ $spmks->nomor }}</b>?
                                     </p>
 
                                 </x-form_modal>
@@ -160,7 +168,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="dokumen" class="form-label">Dokumen</label>
-                                <input type="text" class="form-control @error('dokumen') is-invalid @enderror"
+                                <input type="file" class="form-control @error('dokumen') is-invalid @enderror"
                                     id="dokumen" name="dokumen" autofocus required>
                                 @error('dokumen')
                                     <div class="invalid-feedback">

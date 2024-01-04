@@ -45,14 +45,21 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($sp2ds as $sp2d)
+                            @foreach ($sp2dses as $sp2ds)
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $sp2d->Kontrak->penyedia }}</td>
-                                    <td>{{ $sp2d->nomor }}</td>
-                                    <td>{{ $sp2d->tanggal }}</td>
-                                    <td>{{ $sp2d->jumlah }}</td>
-                                    <td>{{ $sp2d->dokumen }}</td>
+                                    <td>{{ $sp2ds->Kontrak->penyedia }}</td>
+                                    <td>{{ $sp2ds->nomor }}</td>
+                                    <td>{{ $sp2ds->tanggal }}</td>
+                                    <td>{{ $sp2ds->jumlah }}</td>
+                                    <td>
+                                        @if ($sp2ds->dokumen)
+                                            <a class="btn btn-primary" href="{{ asset('storage/' . $sp2ds->dokumen) }}"
+                                                download><i class="fa-solid fa-download me-2"></i> Dokumen</a>
+                                        @else
+                                            No document available
+                                        @endif
+                                    </td>
                                     <td>
                                         <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
                                             data-bs-target="#editSp2d{{ $loop->iteration }}">
@@ -69,14 +76,15 @@
                                 <x-form_modal>
                                     @slot('id', "editSp2d$loop->iteration")
                                     @slot('title', 'Edit Data Sp2d')
-                                    @slot('route', route('sp2d.update', $sp2d->id))
+                                    @slot('route', route('sp2d.update', $sp2ds->id))
                                     @slot('method') @method('put') @endslot
                                     @slot('btnPrimaryTitle', 'Perbarui')
 
+                                    <input type="hidden" name="oldDokumen" value="{{ $sp2ds->dokumen }}">
                                     <div class="mb-3">
                                         <label for="nomor" class="form-label">Nomor</label>
                                         <input type="text" class="form-control @error('nomor') is-invalid @enderror"
-                                            id="nomor" name="nomor" value="{{ old('nomor', $sp2d->nomor) }}"
+                                            id="nomor" name="nomor" value="{{ old('nomor', $sp2ds->nomor) }}"
                                             autofocus required>
                                         @error('nomor')
                                             <div class="invalid-feedback">
@@ -87,7 +95,7 @@
                                     <div class="mb-3">
                                         <label for="tanggal" class="form-label">Tanggal</label>
                                         <input type="date" class="form-control @error('tanggal') is-invalid @enderror"
-                                            id="tanggal" name="tanggal" value="{{ old('tanggal', $sp2d->tanggal) }}"
+                                            id="tanggal" name="tanggal" value="{{ old('tanggal', $sp2ds->tanggal) }}"
                                             autofocus required>
                                         @error('tanggal')
                                             <div class="invalid-feedback">
@@ -98,7 +106,7 @@
                                     <div class="mb-3">
                                         <label for="jumlah" class="form-label">jumlah</label>
                                         <input type="number" class="form-control @error('jumlah') is-invalid @enderror"
-                                            id="jumlah" name="jumlah" value="{{ old('jumlah', $sp2d->jumlah) }}"
+                                            id="jumlah" name="jumlah" value="{{ old('jumlah', $sp2ds->jumlah) }}"
                                             autofocus required>
                                         @error('jumlah')
                                             <div class="invalid-feedback">
@@ -108,8 +116,8 @@
                                     </div>
                                     <div class="mb-3">
                                         <label for="dokumen" class="form-label">Dokumen</label>
-                                        <input type="text" class="form-control @error('dokumen') is-invalid @enderror"
-                                            id="dokumen" name="dokumen" value="{{ old('dokumen', $sp2d->dokumen) }}"
+                                        <input type="file" class="form-control @error('dokumen') is-invalid @enderror"
+                                            id="dokumen" name="dokumen" value="{{ old('dokumen', $sp2ds->dokumen) }}"
                                             autofocus required>
                                         @error('dokumen')
                                             <div class="invalid-feedback">
@@ -125,14 +133,14 @@
                                 <x-form_modal>
                                     @slot('id', "hapusSp2d$loop->iteration")
                                     @slot('title', 'Hapus Data Surat Sp2d')
-                                    @slot('route', route('sp2d.destroy', $sp2d->id))
+                                    @slot('route', route('sp2d.destroy', $sp2ds->id))
                                     @slot('method') @method('delete') @endslot
                                     @slot('btnPrimaryClass', 'btn-outline-danger')
                                     @slot('btnSecondaryClass', 'btn-secondary')
                                     @slot('btnPrimaryTitle', 'Hapus')
 
                                     <p class="fs-5">Apakah anda yakin akan menghapus data Sp2d
-                                        <b>{{ $sp2d->nomor }}</b>?
+                                        <b>{{ $sp2ds->nomor }}</b>?
                                     </p>
 
                                 </x-form_modal>
@@ -186,7 +194,7 @@
                             </div>
                             <div class="mb-3">
                                 <label for="dokumen" class="form-label">Dokumen</label>
-                                <input type="text" class="form-control @error('dokumen') is-invalid @enderror"
+                                <input type="file" class="form-control @error('dokumen') is-invalid @enderror"
                                     id="dokumen" name="dokumen" value="{{ old('dokumen') }}"
                                     autofocus required>
                                 @error('dokumen')

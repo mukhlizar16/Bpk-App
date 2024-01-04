@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Adendum;
 use App\Models\Kontrak;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class AdendumController extends Controller
 {
@@ -41,6 +42,10 @@ class AdendumController extends Controller
             return redirect()->back()->with('failed', $exception->getMessage());
         }
 
+        if ($request->file('dokumen')) {
+            $validatedData['dokumen'] = $request->file('dokumen')->store('dokumen-adendum');
+        }
+
         Adendum::create($validatedData);
 
         return redirect()->back()->with('success', 'Adendum baru berhasil ditambahkan!');
@@ -52,8 +57,8 @@ class AdendumController extends Controller
     public function show(Kontrak $adendum)
     {
         $title = "Data Adendum - " . $adendum->nomor;
-        $adendums = Adendum::where('kontrak_id', $adendum->id)->get();
-        return view('dashboard.pagu.adendum.index')->with(compact('title', 'adendums', 'adendum'));
+        $adendumses = Adendum::where('kontrak_id', $adendum->id)->get();
+        return view('dashboard.pagu.adendum.index')->with(compact('title', 'adendumses', 'adendum'));
     }
 
     /**
@@ -79,6 +84,13 @@ class AdendumController extends Controller
 
             $validatedData = $this->validate($request, $rules);
 
+            if ($request->file('dokumen')) {
+                if ($request->oldDokumen) {
+                    Storage::delete($request->oldDokumen);
+                }
+                $validatedData['dokumen'] = $request->file('dokumen')->storeAs('dokumen-adendum', $validatedData['dokumen']->getClientOriginalName());
+            }
+
             Adendum::where('id', $adendum->id)->update($validatedData);
 
             return redirect()->back()->with('success', "Data Adendum $adendum->nomor berhasil diperbarui!");
@@ -93,6 +105,11 @@ class AdendumController extends Controller
     public function destroy(Adendum $adendum)
     {
         try {
+
+            if ($adendum->dokumen) {
+                Storage::delete($adendum->dokumen);
+            }
+
             Adendum::destroy($adendum->id);
         } catch (\Illuminate\Database\QueryException $e) {
             if ($e->getCode() == 23000) {
