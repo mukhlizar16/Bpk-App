@@ -13,7 +13,10 @@ class FisikController extends Controller
      */
     public function index()
     {
-        //
+        $title = "Data Realisasi Fisik " ;
+        $fisiks = RealisasiFisik::All();
+        $pagus = Pagu::all();
+        return view('dashboard.pagu.fisik.index')->with(compact('title', 'fisiks', 'pagus'));
     }
 
     /**
@@ -49,9 +52,7 @@ class FisikController extends Controller
      */
     public function show(Pagu $fisik)
     {
-        $title = "Data Realisasi Fisik - " . $fisik->paket;
-        $fisiks = RealisasiFisik::where('pagu_id', $fisik->id)->get();
-        return view('dashboard.pagu.fisik.index')->with(compact('title', 'fisiks', 'fisik'));
+
     }
 
     /**

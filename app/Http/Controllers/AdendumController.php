@@ -14,7 +14,10 @@ class AdendumController extends Controller
      */
     public function index()
     {
-        //
+        $title = "Data Adendum";
+        $adendumses = Adendum::all();
+        $kontraks = Kontrak::all();
+        return view('dashboard.pagu.adendum.index')->with(compact('title', 'adendumses', 'kontraks'));
     }
 
     /**
@@ -56,9 +59,7 @@ class AdendumController extends Controller
      */
     public function show(Kontrak $adendum)
     {
-        $title = "Data Adendum - " . $adendum->nomor;
-        $adendumses = Adendum::where('kontrak_id', $adendum->id)->get();
-        return view('dashboard.pagu.adendum.index')->with(compact('title', 'adendumses', 'adendum'));
+
     }
 
     /**
@@ -79,7 +80,6 @@ class AdendumController extends Controller
                 'nomor' => 'required',
                 'tanggal' => 'required',
                 'keterangan' => 'required',
-                'dokumen' => 'required',
             ];
 
             $validatedData = $this->validate($request, $rules);
@@ -88,7 +88,7 @@ class AdendumController extends Controller
                 if ($request->oldDokumen) {
                     Storage::delete($request->oldDokumen);
                 }
-                $validatedData['dokumen'] = $request->file('dokumen')->storeAs('dokumen-adendum', $validatedData['dokumen']->getClientOriginalName());
+                $validatedData['dokumen'] = $request->file('dokumen')->store('dokumen-adendum');
             }
 
             Adendum::where('id', $adendum->id)->update($validatedData);

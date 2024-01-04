@@ -48,10 +48,9 @@
                                     <td>{{ $pagu->jumlah }}</td>
                                     <td>{{ $pagu->JenisPengadaan->keterangan }}</td>
                                     <td>
-                                        <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal"
-                                            data-bs-target="#showPagu{{ $loop->iteration }}">
+                                        <a href="{{ route('spmk.show', $pagu->id) }}" class="btn btn-sm btn-info">
                                             <i class="fa-solid fa-list"></i>
-                                        </button>
+                                        </a>
                                         <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
                                             data-bs-target="#editPagu{{ $loop->iteration }}">
                                             <i class="fa-solid fa-pen-to-square"></i>
@@ -162,7 +161,7 @@
                                 {{-- / Modal Hapus pagu  --}}
 
                                 {{-- Modal Detail Pagu --}}
-                                <x-form_modal2>
+                                {{-- <x-form_modal2>
                                     @slot('id', "showPagu$loop->iteration")
                                     @slot('title', 'Show Data Pagu')
 
@@ -196,7 +195,7 @@
                                         </div>
                                     </div>
 
-                                </x-form_modal2>
+                                </x-form_modal2> --}}
                                 {{-- / Modal Detail Pagu --}}
                             @endforeach
                         </tbody>

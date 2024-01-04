@@ -17,8 +17,6 @@
         </div>
     </div>
 
-    <a class="btn btn-outline-secondary fs-5 fw-normal mt-2" href="{{ route('pejabat.index') }}"><i
-            class="fa-solid fa-chevron-left fs-5 me-2"></i>Kembali</a>
     <button class="btn btn-primary fs-5 fw-normal mt-2" data-bs-toggle="modal" data-bs-target="#tambahJabatan"><i
             class="fa-solid fa-square-plus fs-5 me-2"></i>Tambah</button>
     </button>

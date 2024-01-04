@@ -17,8 +17,6 @@
         </div>
     </div>
 
-    <a class="btn btn-outline-secondary fs-5 fw-normal mt-2" href="{{ route('utama.index') }}"><i
-            class="fa-solid fa-chevron-left fs-5 me-2"></i>Kembali</a>
     <button class="btn btn-primary fs-5 fw-normal mt-2" data-bs-toggle="modal" data-bs-target="#tambahSub"><i
             class="fa-solid fa-square-plus fs-5 me-2"></i>Tambah</button>
     </button>
@@ -66,7 +64,22 @@
                                     @slot('method') @method('put') @endslot
                                     @slot('btnPrimaryTitle', 'Perbarui')
 
-                                    <input type="hidden" name="kegiatan_id" id="" value="{{ $utama->id }}">
+                                    <div class="mb-3">
+                                        <label for="kegiatan_id" class="form-label">Kegiatan</label>
+                                        <select class="form-select @error('kegiatan_id') is-invalid @enderror"
+                                            name="kegiatan_id" id="kegiatan_id"
+                                            value="{{ old('kegiatan_id', $sub->kegiatan_id) }}">
+                                            @foreach ($kegiatans as $kegiatan)
+                                                @if (old('kegiatan_id', $kegiatan->kegiatan_id) == $kegiatan->id)
+                                                    <option value="{{ $kegiatan->id }}" selected>
+                                                        {{ $kegiatan->keterangan }}</option>
+                                                @else
+                                                    <option value="{{ $kegiatan->id }}">
+                                                        {{ $kegiatan->keterangan }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    </div>
                                     <div class="mb-3">
                                         <label for="kode" class="form-label">Kode</label>
                                         <input type="text" class="form-control @error('kode') is-invalid @enderror"
@@ -127,7 +140,15 @@
 
         @csrf
         <div class="row">
-            <input type="hidden" name="kegiatan_id" id="" value="{{ $utama->id }}">
+            <div class="mb-3">
+                <label for="kegiatan_id" class="form-label">Kegiatan</label>
+                <select class="form-select @error('kegiatan_id') is-invalid @enderror" name="kegiatan_id" id="kegiatan_id">
+                    @foreach ($kegiatans as $kegiatan)
+                        <option value="{{ $kegiatan->id }}" selected>
+                            {{ $kegiatan->keterangan }}</option>
+                    @endforeach
+                </select>
+            </div>
             <div class="mb-3">
                 <label for="kode" class="form-label">Kode</label>
                 <input type="text" class="form-control @error('kode') is-invalid @enderror" id="kode" name="kode"

@@ -23,14 +23,6 @@
     <div class="row mt-3">
         <div class="col">
             <div class="card mt-2">
-                <ul class="nav nav-pills p-2">
-                    <li class="nav-item">
-                        <a class="nav-link " aria-current="page" href="{{ route('program.index') }}">Program</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="{{ route('utama.index') }}">Kegiatan</a>
-                    </li>
-                </ul>
                 <div class="card-body">
 
                     {{-- Tabel Data Kegiatan --}}
@@ -53,10 +45,6 @@
                                     <td>{{ $kegiatan->kode }}</td>
                                     <td>{{ $kegiatan->keterangan }}</td>
                                     <td>
-                                        <a type="button" class="btn btn-sm btn-info"
-                                            href="{{ route('utama.show', $kegiatan->id) }}">
-                                            <i class="fa-solid fa-chart-line"></i>
-                                        </a>
                                         <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
                                             data-bs-target="#editKegiatan{{ $loop->iteration }}">
                                             <i class="fa-solid fa-pen-to-square"></i>
@@ -72,7 +60,7 @@
                                 <x-form_modal>
                                     @slot('id', "editKegiatan$loop->iteration")
                                     @slot('title', 'Edit Data Kegiatan')
-                                    @slot('route', route('utama.update', $kegiatan->id))
+                                    @slot('route', route('kegiatan.update', $kegiatan->id))
                                     @slot('method') @method('put') @endslot
                                     @slot('btnPrimaryTitle', 'Perbarui')
 
@@ -122,7 +110,7 @@
                                 <x-form_modal>
                                     @slot('id', "hapusKegiatan$loop->iteration")
                                     @slot('title', 'Hapus Data Kegiatan')
-                                    @slot('route', route('utama.destroy', $kegiatan->id))
+                                    @slot('route', route('kegiatan.destroy', $kegiatan->id))
                                     @slot('method') @method('delete') @endslot
                                     @slot('btnPrimaryClass', 'btn-outline-danger')
                                     @slot('btnSecondaryClass', 'btn-secondary')
@@ -149,7 +137,7 @@
         @slot('id', 'tambahKegiatan')
         @slot('title', 'Tambah Data Kegiatan')
         @slot('overflow', 'overflow-auto')
-        @slot('route', route('utama.store'))
+        @slot('route', route('kegiatan.store'))
 
         @csrf
         <div class="row">

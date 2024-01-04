@@ -40,22 +40,22 @@ class KegiatanController extends Controller
                 'keterangan' => 'required',
             ]);
         } catch (\Illuminate\Validation\ValidationException $exception) {
-            return redirect()->route('utama.index')->with('failed', $exception->getMessage());
+            return redirect()->route('kegiatan.index')->with('failed', $exception->getMessage());
         }
 
         Kegiatan::create($validatedData);
 
-        return redirect()->route('utama.index')->with('success', 'Kegiatan baru berhasil ditambahkan!');
+        return redirect()->route('kegiatan.index')->with('success', 'Kegiatan baru berhasil ditambahkan!');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Kegiatan $utama)
+    public function show(Kegiatan $kegiatan)
     {
-        $title = "Data Sub Kegiatan - $utama->keterangan";
-        $subkegiatans = Subkegiatan::where('kegiatan_id', $utama->id)->get();
-        return view('dashboard.kegiatan.sub-kegiatan.index')->with(compact('title', 'utama', 'subkegiatans'));
+        $title = "Data Sub Kegiatan - $kegiatan->keterangan";
+        $subkegiatans = Subkegiatan::where('kegiatan_id', $kegiatan->id)->get();
+        return view('dashboard.kegiatan.sub-kegiatan.index')->with(compact('title', 'kegiatan', 'subkegiatans'));
     }
 
     /**
@@ -69,7 +69,7 @@ class KegiatanController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Kegiatan $utama)
+    public function update(Request $request, Kegiatan $kegiatan)
     {
         try {
             $rules = [
@@ -80,28 +80,28 @@ class KegiatanController extends Controller
 
             $validatedData = $this->validate($request, $rules);
 
-            Kegiatan::where('id', $utama->id)->update($validatedData);
+            Kegiatan::where('id', $kegiatan->id)->update($validatedData);
 
-            return redirect()->route('utama.index')->with('success', "Data Kegiatan $utama->keterangan berhasil diperbarui!");
+            return redirect()->route('kegiatan.index')->with('success', "Data Kegiatan $kegiatan->keterangan berhasil diperbarui!");
         } catch (\Illuminate\Validation\ValidationException $exception) {
-            return redirect()->route('utama.index')->with('failed', 'Data gagal diperbarui! ' . $exception->getMessage());
+            return redirect()->route('kegiatan.index')->with('failed', 'Data gagal diperbarui! ' . $exception->getMessage());
         }
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Kegiatan $utama)
+    public function destroy(Kegiatan $kegiatan)
     {
         try {
-            Kegiatan::destroy($utama->id);
+            Kegiatan::destroy($kegiatan->id);
         } catch (\Illuminate\Database\QueryException $e) {
             if ($e->getCode() == 23000) {
                 //SQLSTATE[23000]: Integrity constraint violation
-                return redirect()->route('utama.index')->with('failed', "Kegiatan $utama->keterangan tidak dapat dihapus, karena sedang digunakan!");
+                return redirect()->route('kegiatan.index')->with('failed', "Kegiatan $kegiatan->keterangan tidak dapat dihapus, karena sedang digunakan!");
             }
         }
 
-        return redirect()->route('utama.index')->with('success', "Kegiatan $utama->keterangan berhasil dihapus!");
+        return redirect()->route('kegiatan.index')->with('success', "Kegiatan $kegiatan->keterangan berhasil dihapus!");
     }
 }

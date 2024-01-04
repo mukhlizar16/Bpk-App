@@ -21,10 +21,6 @@
 
     <div class="row">
         <div class="col">
-            <a class="btn btn-outline-secondary fs-5 fw-normal mt-2" href="{{ route('pagu.index') }}">
-                <i class="fa-regular fa-chevron-left me-2"></i>
-                Kembali
-            </a>
             <button class="btn btn-primary fs-5 fw-normal mt-2" data-bs-toggle="modal" data-bs-target="#tambahFisik"><i
                     class="fa-solid fa-square-plus fs-5 me-2"></i>Tambah</button>
 
@@ -68,6 +64,23 @@
                                     @slot('route', route('fisik.update', $fisik->id))
                                     @slot('method') @method('put') @endslot
                                     @slot('btnPrimaryTitle', 'Perbarui')
+
+                                    <div class="mb-3">
+                                        <label for="pagu_id" class="form-label">Pagu</label>
+                                        <select class="form-select @error('pagu_id') is-invalid @enderror"
+                                            name="pagu_id" id="pagu_id"
+                                            value="{{ old('pagu_id', $fisik->pagu_id) }}">
+                                            @foreach ($pagus as $pagu)
+                                                @if (old('pagu_id', $fisik->pagu_id) == $pagu->id)
+                                                    <option value="{{ $pagu->id }}" selected>
+                                                        {{ $pagu->paket }}</option>
+                                                @else
+                                                    <option value="{{ $pagu->id }}">
+                                                        {{ $pagu->paket }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    </div>
 
                                     <div class="mb-3">
                                         <label for="nilai" class="form-label">Nilai</label>
@@ -124,7 +137,16 @@
 
                         @csrf
                         <div class="row">
-                            <input type="hidden" name="pagu_id" value="{{ $fisik->id }}">
+                            <div class="mb-3">
+                                <label for="pagu_id" class="form-label">pagu</label>
+                                <select class="form-select @error('pagu_id') is-invalid @enderror" name="pagu_id"
+                                    id="pagu_id">
+                                    @foreach ($pagus as $pagu)
+                                        <option value="{{ $pagu->id }}" selected>
+                                            {{ $pagu->paket }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                             <div class="mb-3">
                                 <label for="nilai" class="form-label">Nilai</label>
                                 <input type="number" class="form-control @error('nilai') is-invalid @enderror"

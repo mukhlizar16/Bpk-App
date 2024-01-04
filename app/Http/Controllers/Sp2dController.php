@@ -14,7 +14,10 @@ class Sp2dController extends Controller
      */
     public function index()
     {
-        //
+        $title = "Data Sp2d ";
+        $sp2dses = Sp2d::all();
+        $kontraks = Kontrak::all();
+        return view('dashboard.pagu.sp2d.index')->with(compact('title', 'sp2dses', 'kontraks'));
     }
 
     /**
@@ -56,9 +59,7 @@ class Sp2dController extends Controller
      */
     public function show(Kontrak $sp2d)
     {
-        $title = "Data Sp2d - " . $sp2d->nomor;
-        $sp2dses = Sp2d::where('kontrak_id', $sp2d->id)->get();
-        return view('dashboard.pagu.sp2d.index')->with(compact('title', 'sp2dses', 'sp2d'));
+
     }
 
     /**

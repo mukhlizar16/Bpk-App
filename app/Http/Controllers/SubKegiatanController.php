@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Kegiatan;
 use App\Models\Subkegiatan;
 use Illuminate\Http\Request;
 
@@ -13,7 +14,9 @@ class SubKegiatanController extends Controller
     public function index()
     {
         $title = "Data Sub Kegiatan";
-        return view('dashboard.kegiatan.sub-kegiatan.index')->with(compact('title'));
+        $subkegiatans = Subkegiatan::all();
+        $kegiatans = Kegiatan::all();
+        return view('dashboard.kegiatan.sub-kegiatan.index')->with(compact('title', 'subkegiatans', 'kegiatans'));
     }
 
     /**

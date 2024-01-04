@@ -23,14 +23,6 @@
     <div class="row mt-3">
         <div class="col">
             <div class="card mt-2">
-                <ul class="nav nav-pills p-2">
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="{{ route('program.index') }}">Program</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('utama.index') }}">Kegiatan</a>
-                    </li>
-                </ul>
                 <div class="card-body">
 
                     {{-- Tabel Data User --}}

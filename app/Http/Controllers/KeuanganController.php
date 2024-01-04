@@ -13,7 +13,10 @@ class KeuanganController extends Controller
      */
     public function index()
     {
-        //
+        $title = "Data Realisasi Keuangan " ;
+        $keuangans = RealisasiKeuangan::all();
+        $pagus = Pagu::all();
+        return view('dashboard.pagu.keuangan.index')->with(compact('title', 'keuangans', 'pagus'));
     }
 
     /**
@@ -49,9 +52,7 @@ class KeuanganController extends Controller
      */
     public function show(Pagu $keuangan)
     {
-        $title = "Data Realisasi Keuangan - " . $keuangan->paket;
-        $keuangans = RealisasiKeuangan::where('pagu_id', $keuangan->id)->get();
-        return view('dashboard.pagu.keuangan.index')->with(compact('title', 'keuangans', 'keuangan'));
+
     }
 
     /**
