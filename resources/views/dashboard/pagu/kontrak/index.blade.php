@@ -34,7 +34,7 @@
                                 <th>PENYEDIA</th>
                                 <th>NOMOR</th>
                                 <th>TANGGAL</th>
-                                <th>JUMLAH</th>
+                                <th>NILAI KONTRAK</th>
                                 <th>JANGKA WAKTU</th>
                                 <th>BUKTI</th>
                                 <th>HPS</th>
@@ -50,7 +50,7 @@
                                     <td>{{ $kontrak->penyedia }}</td>
                                     <td>{{ $kontrak->nomor }}</td>
                                     <td>{{ $kontrak->tanggal }}</td>
-                                    <td>{{ $kontrak->jumlah }}</td>
+                                    <td>{{ $kontrak->nilai_kontrak }}</td>
                                     <td>{{ $kontrak->jangka_waktu }}</td>
                                     @php
                                         if ($kontrak->bukti == 1) {
@@ -61,7 +61,14 @@
                                     @endphp
                                     <td>{{ $bukti }}</td>
                                     <td>{{ $kontrak->hps }}</td>
-                                    <td>{{ $kontrak->dokumen }}</td>
+                                    <td>
+                                        @if ($kontrak->dokumen)
+                                            <a class="btn btn-primary" href="{{ asset('storage/' . $kontrak->dokumen) }}"
+                                                download><i class="fa-solid fa-download me-2"></i> Dokumen</a>
+                                        @else
+                                            No document available
+                                        @endif
+                                    </td>
                                     <td>
                                         <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal"
                                             data-bs-target="#showKontrak{{ $loop->iteration }}">
@@ -86,7 +93,7 @@
                                     @slot('method') @method('put') @endslot
                                     @slot('btnPrimaryTitle', 'Perbarui')
 
-
+                                    <input type="hidden" name="oldDokumen" value="{{ $kontrak->dokumen }}">
                                     <div class="mb-3">
                                         <label for="pagu_id" class="form-label">Pagu</label>
                                         <select class="form-select @error('pagu_id') is-invalid @enderror" name="pagu_id"
@@ -140,11 +147,11 @@
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="jumlah" class="form-label">Jumlah</label>
-                                        <input type="number" class="form-control @error('jumlah') is-invalid @enderror"
-                                            id="jumlah" name="jumlah" value="{{ old('jumlah', $kontrak->jumlah) }}"
+                                        <label for="nilai_kontrak" class="form-label">Nilai Kontrak</label>
+                                        <input type="number" class="form-control @error('nilai_kontrak') is-invalid @enderror"
+                                            id="nilai_kontrak" name="nilai_kontrak" value="{{ old('nilai_kontrak', $kontrak->nilai_kontrak) }}"
                                             autofocus required>
-                                        @error('jumlah')
+                                        @error('nilai_kontrak')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
                                             </div>
@@ -190,9 +197,9 @@
 
                                     <div class="mb-3">
                                         <label for="dokumen" class="form-label">Dokumen</label>
-                                        <input type="text" class="form-control @error('dokumen') is-invalid @enderror"
-                                            id="dokumen" name="dokumen"
-                                            value="{{ old('dokumen', $kontrak->dokumen) }}" autofocus required>
+                                        <input type="file" class="form-control @error('dokumen') is-invalid @enderror"
+                                            id="dokumen" name="dokumen" value="{{ old('dokumen', $kontrak->dokumen) }}"
+                                            autofocus>
                                         @error('dokumen')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -314,10 +321,10 @@
             </div>
 
             <div class="mb-3">
-                <label for="jumlah" class="form-label">Jumlah</label>
-                <input type="number" class="form-control @error('jumlah') is-invalid @enderror" id="jumlah"
-                    name="jumlah" value="{{ old('jumlah') }}" autofocus required>
-                @error('jumlah')
+                <label for="nilai_kontrak" class="form-label">Nilai Kontrak</label>
+                <input type="number" class="form-control @error('nilai_kontrak') is-invalid @enderror" id="nilai_kontrak"
+                    name="nilai_kontrak" value="{{ old('nilai_kontrak') }}" autofocus required>
+                @error('nilai_kontrak')
                     <div class="invalid-feedback">
                         {{ $message }}
                     </div>
@@ -358,8 +365,8 @@
 
             <div class="mb-3">
                 <label for="dokumen" class="form-label">Dokumen</label>
-                <input type="text" class="form-control @error('dokumen') is-invalid @enderror" id="dokumen"
-                    name="dokumen" value="{{ old('dokumen') }}" autofocus required>
+                <input type="file" class="form-control @error('dokumen') is-invalid @enderror"
+                    id="dokumen" name="dokumen" value="{{ old('dokumen') }}" autofocus required>
                 @error('dokumen')
                     <div class="invalid-feedback">
                         {{ $message }}

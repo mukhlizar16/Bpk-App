@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\AdendumController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BapController;
+use App\Http\Controllers\BastController;
+use App\Http\Controllers\BastPhoController;
 use App\Http\Controllers\DanaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FisikController;
@@ -59,6 +62,11 @@ Route::prefix('/dashboard')->middleware('auth')->group(function () {
     });
     Route::prefix('/pagu')->group(function () {
         Route::resource('/spmk', SpmkController::class);
+    });
+    Route::prefix('/berita-acara')->group(function () {
+        Route::resource('/pemeriksaan', BapController::class);
+        Route::resource('/bast', BastController::class);
+        Route::resource('/bast-pho', BastPhoController::class);
     });
     Route::resource('/kontrak', KontrakController::class);
     Route::put('/resetpassword/{user}', [UserController::class, 'resetPasswordAdmin'])->name('resetpassword.resetPasswordAdmin');

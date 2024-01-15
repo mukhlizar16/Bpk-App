@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('penyedia');
             $table->string('nomor');
             $table->date('tanggal');
-            $table->integer('jumlah');
+            $table->integer('nilai_kontrak');
             $table->integer('jangka_waktu');
             $table->enum('bukti', [1, 0])->default(0);
             $table->integer('hps');

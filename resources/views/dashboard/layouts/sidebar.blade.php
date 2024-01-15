@@ -44,6 +44,31 @@
             </a>
         </li>
 
+        <li class="menu-item {{ Request::is('dashboard/berita-acara*') ? 'active open' : '' }}">
+            <a href="javascript:void(0);" class="menu-link menu-toggle">
+                <i class="fa-duotone fa-files fa-sm me-3"></i>
+                <div data-i18n="Layouts">Berita Acara</div>
+            </a>
+
+            <ul class="menu-sub">
+                <li class="menu-item {{ Request::is('dashboard/berita-acara/pemeriksaan*') ? 'active' : '' }}">
+                    <a href="/dashboard/berita-acara/pemeriksaan" class="menu-link">
+                        <div data-i18n="Analytics">Pemeriksaan</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ Request::is('dashboard/berita-acara/bast') ? 'active' : '' }}">
+                    <a href="/dashboard/berita-acara/bast" class="menu-link">
+                        <div data-i18n="Analytics">BAST</div>
+                    </a>
+                </li>
+                <li class="menu-item {{ Request::is('dashboard/berita-acara/bast-pho*') ? 'active' : '' }}">
+                    <a href="/dashboard/berita-acara/bast-pho" class="menu-link">
+                        <div data-i18n="Analytics">BAST PHO</div>
+                    </a>
+                </li>
+            </ul>
+        </li>
+
         <li class="menu-item {{ Request::is('dashboard/realisasi*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="fa-duotone fa-chart-network fa-sm me-3"></i>

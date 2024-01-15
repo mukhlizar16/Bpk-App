@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Kontrak;
 use App\Models\Pagu;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class KontrakController extends Controller
 {
@@ -38,7 +39,7 @@ class KontrakController extends Controller
                 'penyedia' => 'required',
                 'nomor' => 'required',
                 'tanggal' => 'required',
-                'jumlah' => 'required',
+                'nilai_kontrak' => 'required',
                 'jangka_waktu' => 'required',
                 'bukti' => 'required',
                 'hps' => 'required',
@@ -46,6 +47,10 @@ class KontrakController extends Controller
             ]);
         } catch (\Illuminate\Validation\ValidationException $exception) {
             return redirect()->route('kontrak.index')->with('failed', $exception->getMessage());
+        }
+
+        if ($request->file('dokumen')) {
+            $validatedData['dokumen'] = $request->file('dokumen')->store('dokumen-kontrak');
         }
 
         Kontrak::create($validatedData);
@@ -80,14 +85,20 @@ class KontrakController extends Controller
                 'penyedia' => 'required',
                 'nomor' => 'required',
                 'tanggal' => 'required',
-                'jumlah' => 'required',
+                'nilai_kontrak' => 'required',
                 'jangka_waktu' => 'required',
                 'bukti' => 'required',
                 'hps' => 'required',
-                'dokumen' => 'required',
             ];
 
             $validatedData = $this->validate($request, $rules);
+
+            if ($request->file('dokumen')) {
+                if ($request->oldDokumen) {
+                    Storage::delete($request->oldDokumen);
+                }
+                $validatedData['dokumen'] = $request->file('dokumen')->store('dokumen-kontrak');
+            }
 
             Kontrak::where('id', $kontrak->id)->update($validatedData);
 
@@ -103,6 +114,9 @@ class KontrakController extends Controller
     public function destroy(Kontrak $kontrak)
     {
         try {
+            if ($kontrak->dokumen) {
+                Storage::delete($kontrak->dokumen);
+            }
             Kontrak::destroy($kontrak->id);
         } catch (\Illuminate\Database\QueryException $e) {
             if ($e->getCode() == 23000) {
