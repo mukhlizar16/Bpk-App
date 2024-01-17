@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\PaguDataExport;
 use App\Models\JenisPengadaan;
 use App\Models\Pagu;
 use App\Models\Subkegiatan;
 use App\Models\SumberDana;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PaguController extends Controller
 {
@@ -108,5 +110,10 @@ class PaguController extends Controller
         }
 
         return redirect()->route('pagu.index')->with('success', "Pagu $pagu->keterangan berhasil dihapus!");
+    }
+
+    public function exportAll()
+    {
+        return Excel::download(new PaguDataExport, 'Data Pagu.xlsx');
     }
 }

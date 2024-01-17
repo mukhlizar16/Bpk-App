@@ -19,6 +19,8 @@
 
     <button class="btn btn-primary fs-5 fw-normal mt-2" data-bs-toggle="modal" data-bs-target="#tambahPagu"><i
             class="fa-solid fa-square-plus fs-5 me-2"></i>Tambah</button>
+    <a class="btn btn-success fs-5 fw-normal mt-2" href="{{ route('pagu.export-all') }}"><i
+            class="fa-solid fa-file fs-5 me-2"></i>Download Excel</a>
     <div class="row mt-3">
         <div class="col">
             <div class="card mt-2">

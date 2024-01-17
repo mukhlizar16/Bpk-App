@@ -43,6 +43,10 @@ Route::get('/', function () {
     return redirect('/dashboard');
 });
 
+Route::get('/export', function () {
+    return view('export.pagu');
+});
+
 Route::prefix('/dashboard')->middleware('auth')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
     Route::resource('/user', UserController::class);
@@ -68,6 +72,7 @@ Route::prefix('/dashboard')->middleware('auth')->group(function () {
         Route::resource('/bast', BastController::class);
         Route::resource('/bast-pho', BastPhoController::class);
     });
+    Route::get('/export-pagu', [PaguController::class, 'exportAll'])->name('pagu.export-all');
     Route::resource('/kontrak', KontrakController::class);
     Route::put('/resetpassword/{user}', [UserController::class, 'resetPasswordAdmin'])->name('resetpassword.resetPasswordAdmin');
 });
