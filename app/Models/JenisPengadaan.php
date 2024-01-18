@@ -9,8 +9,8 @@ class JenisPengadaan extends Model
 {
     use HasFactory;
 
-    public function Pagu()
+    public function Kontrak()
     {
-        return $this->hasMany(Pagu::class);
+        return $this->hasMany(Kontrak::class);
     }
 }

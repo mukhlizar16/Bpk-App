@@ -25,4 +25,9 @@ class Kontrak extends Model
     {
         return $this->hasMany(Sp2d::class);
     }
+
+    public function JenisPengadaan()
+    {
+        return $this->belongsTo(JenisPengadaan::class, 'pengadaan_id');
+    }
 }

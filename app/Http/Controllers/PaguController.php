@@ -21,8 +21,7 @@ class PaguController extends Controller
         $pagus = Pagu::all();
         $subs = Subkegiatan::all();
         $danas = SumberDana::all();
-        $jenises = JenisPengadaan::all();
-        return view('dashboard.pagu.index')->with(compact('title', 'pagus', 'subs', 'danas', 'jenises'));
+        return view('dashboard.pagu.index')->with(compact('title', 'pagus', 'subs', 'danas'));
     }
 
     /**
@@ -44,7 +43,7 @@ class PaguController extends Controller
                 'paket' => 'required',
                 'sumber_dana_id' => 'required',
                 'jumlah' => 'required',
-                'pengadaan_id' => 'required',
+
             ]);
         } catch (\Illuminate\Validation\ValidationException $exception) {
             return redirect()->route('pagu.index')->with('failed', $exception->getMessage());
@@ -82,7 +81,7 @@ class PaguController extends Controller
                 'paket' => 'required',
                 'sumber_dana_id' => 'required',
                 'jumlah' => 'required',
-                'pengadaan_id' => 'required',
+
             ];
 
             $validatedData = $this->validate($request, $rules);

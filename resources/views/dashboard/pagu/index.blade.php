@@ -36,7 +36,6 @@
                                 <th>PAKET</th>
                                 <th>SUMBER DANA</th>
                                 <th>JUMLAH</th>
-                                <th>PENGADAAN</th>
                                 <th>ACTION</th>
                             </tr>
                         </thead>
@@ -48,7 +47,6 @@
                                     <td>{{ $pagu->paket }}</td>
                                     <td>{{ $pagu->SumberDana->keterangan }}</td>
                                     <td>{{ $pagu->jumlah }}</td>
-                                    <td>{{ $pagu->JenisPengadaan->keterangan }}</td>
                                     <td>
                                         <a href="{{ route('spmk.show', $pagu->id) }}" class="btn btn-sm btn-info">
                                             <i class="fa-solid fa-list"></i>
@@ -125,22 +123,6 @@
                                                 {{ $message }}
                                             </div>
                                         @enderror
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="pengadaan_id" class="form-label">Jenis Pengadaan</label>
-                                        <select class="form-select @error('pengadaan_id') is-invalid @enderror"
-                                            name="pengadaan_id" id="pengadaan_id"
-                                            value="{{ old('pengadaan_id', $pagu->pengadaan_id) }}">
-                                            @foreach ($jenises as $jenis)
-                                                @if (old('pengadaan_id', $pagu->jenis_id) == $jenis->id)
-                                                    <option value="{{ $jenis->id }}" selected>
-                                                        {{ $jenis->keterangan }}</option>
-                                                @else
-                                                    <option value="{{ $jenis->id }}">
-                                                        {{ $jenis->keterangan }}</option>
-                                                @endif
-                                            @endforeach
-                                        </select>
                                     </div>
                                 </x-form_modal>
                                 {{-- / Modal Edit Pagu --}}
@@ -254,14 +236,7 @@
                     </div>
                 @enderror
             </div>
-            <div class="mb-3">
-                <label for="pengadaan_id" class="form-label">Jenis Pengadaan</label>
-                <select class="form-select" id="pengadaan_id" name="pengadaan_id">
-                    @foreach ($jenises as $jenis)
-                        <option value="{{ $jenis->id }}">{{ $jenis->keterangan }}</option>
-                    @endforeach
-                </select>
-            </div>
+
         </div>
     </x-form_modal>
     <!-- Akhir Modal Tambah Pagu -->

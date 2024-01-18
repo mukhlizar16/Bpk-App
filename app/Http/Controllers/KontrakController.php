@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\JenisPengadaan;
 use App\Models\Kontrak;
 use App\Models\Pagu;
 use Illuminate\Http\Request;
@@ -17,7 +18,8 @@ class KontrakController extends Controller
         $title = "Data Kontrak";
         $kontraks = Kontrak::all();
         $pagus = Pagu::all();
-        return view('dashboard.pagu.kontrak.index')->with(compact('title', 'kontraks', 'pagus'));
+        $jenises = JenisPengadaan::all();
+        return view('dashboard.pagu.kontrak.index')->with(compact('title', 'kontraks', 'pagus', 'jenises'));
     }
 
     /**
@@ -36,6 +38,7 @@ class KontrakController extends Controller
         try {
             $validatedData = $request->validate([
                 'pagu_id' => 'required',
+                'pengadaan_id' => 'required',
                 'penyedia' => 'required',
                 'nomor' => 'required',
                 'tanggal' => 'required',
@@ -43,6 +46,7 @@ class KontrakController extends Controller
                 'jangka_waktu' => 'required',
                 'bukti' => 'required',
                 'hps' => 'required',
+                'cara_pengadaan' => 'required',
                 'dokumen' => 'required',
             ]);
         } catch (\Illuminate\Validation\ValidationException $exception) {
@@ -82,12 +86,14 @@ class KontrakController extends Controller
         try {
             $rules = [
                 'pagu_id' => 'required',
+                'pengadaan_id' => 'required',
                 'penyedia' => 'required',
                 'nomor' => 'required',
                 'tanggal' => 'required',
                 'nilai_kontrak' => 'required',
                 'jangka_waktu' => 'required',
                 'bukti' => 'required',
+                'cara_pengadaan' => 'required',
                 'hps' => 'required',
             ];
 

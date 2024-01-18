@@ -21,11 +21,6 @@ class Pagu extends Model
         return $this->belongsTo(SumberDana::class, 'sumber_dana_id');
     }
 
-    public function JenisPengadaan()
-    {
-        return $this->belongsTo(JenisPengadaan::class, 'pengadaan_id');
-    }
-
     public function RealisasiKeuangan()
     {
         return $this->hasMany(RealisasiKeuangan::class);

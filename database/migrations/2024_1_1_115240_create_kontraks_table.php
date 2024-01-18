@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('kontraks', function (Blueprint $table) {
             $table->id();
             $table->foreignId('pagu_id')->constrained('pagus')->onUpdate('cascade')->onDelete('restrict');
+            $table->foreignId('pengadaan_id')->constrained('jenis_pengadaans')->onUpdate('cascade')->onDelete('restrict');
             $table->index('pagu_id');
             $table->string('penyedia');
             $table->string('nomor');
@@ -22,6 +23,7 @@ return new class extends Migration
             $table->integer('jangka_waktu');
             $table->enum('bukti', [1, 0])->default(0);
             $table->integer('hps');
+            $table->string('cara_pengadaan');
             $table->string('dokumen');
             $table->timestamps();
         });

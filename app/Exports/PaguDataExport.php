@@ -15,7 +15,7 @@ class PaguDataExport implements FromView, ShouldAutoSize
 
     public function view(): View
     {
-        $data = Pagu::with('Subkegiatan', 'SumberDana', 'JenisPengadaan', 'RealisasiKeuangan', 'RealisasiFisik', 'Spmk', 'Kontrak')->get();
+        $data = Pagu::with('Subkegiatan', 'SumberDana', 'RealisasiKeuangan', 'RealisasiFisik', 'Spmk', 'Kontrak')->get();
         $program = Program::with('Kegiatan')->get();
 
         return view('export.pagu', [

@@ -31,6 +31,7 @@
                             <tr>
                                 <th>NO</th>
                                 <th>PAGU</th>
+                                <th>PENGADAAN</th>
                                 <th>PENYEDIA</th>
                                 <th>NOMOR</th>
                                 <th>TANGGAL</th>
@@ -38,6 +39,7 @@
                                 <th>JANGKA WAKTU</th>
                                 <th>BUKTI</th>
                                 <th>HPS</th>
+                                <th>CARA PENGADAAN</th>
                                 <th>DOKUMEN</th>
                                 <th>ACTION</th>
                             </tr>
@@ -47,6 +49,7 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $kontrak->Pagu->paket }}</td>
+                                    <td>{{ $kontrak->JenisPengadaan->keterangan }}</td>
                                     <td>{{ $kontrak->penyedia }}</td>
                                     <td>{{ $kontrak->nomor }}</td>
                                     <td>{{ $kontrak->tanggal }}</td>
@@ -61,6 +64,7 @@
                                     @endphp
                                     <td>{{ $bukti }}</td>
                                     <td>{{ $kontrak->hps }}</td>
+                                    <td>{{ $kontrak->cara_pengadaan }}</td>
                                     <td>
                                         @if ($kontrak->dokumen)
                                             <a class="btn btn-primary" href="{{ asset('storage/' . $kontrak->dokumen) }}"
@@ -105,6 +109,23 @@
                                                 @else
                                                     <option value="{{ $pagu->id }}">
                                                         {{ $pagu->paket }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="pengadaan_id" class="form-label">Jenis Pengadaan</label>
+                                        <select class="form-select @error('pengadaan_id') is-invalid @enderror"
+                                            name="pengadaan_id" id="pengadaan_id"
+                                            value="{{ old('pengadaan_id', $kontrak->pengadaan_id) }}">
+                                            @foreach ($jenises as $jenis)
+                                                @if (old('pengadaan_id', $kontrak->jenis_id) == $jenis->id)
+                                                    <option value="{{ $jenis->id }}" selected>
+                                                        {{ $jenis->keterangan }}</option>
+                                                @else
+                                                    <option value="{{ $jenis->id }}">
+                                                        {{ $jenis->keterangan }}</option>
                                                 @endif
                                             @endforeach
                                         </select>
@@ -189,6 +210,17 @@
                                             id="hps" name="hps" value="{{ old('hps', $kontrak->hps) }}"
                                             autofocus required>
                                         @error('hps')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="cara_pengadaan" class="form-label">Cara Pengadaan</label>
+                                        <input type="text" class="form-control @error('cara_pengadaan') is-invalid @enderror" id="cara_pengadaan"
+                                            name="cara_pengadaan" value="{{ old('cara_pengadaan', $kontrak->cara_pengadaan) }}" autofocus required>
+                                        @error('cara_pengadaan')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
                                             </div>
@@ -288,6 +320,15 @@
             </div>
 
             <div class="mb-3">
+                <label for="pengadaan_id" class="form-label">Jenis Pengadaan</label>
+                <select class="form-select" id="pengadaan_id" name="pengadaan_id">
+                    @foreach ($jenises as $jenis)
+                        <option value="{{ $jenis->id }}">{{ $jenis->keterangan }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="mb-3">
                 <label for="penyedia" class="form-label">penyedia</label>
                 <input type="text" class="form-control @error('penyedia') is-invalid @enderror" id="penyedia"
                     name="penyedia" value="{{ old('penyedia') }}" autofocus required>
@@ -357,6 +398,17 @@
                 <input type="number" class="form-control @error('hps') is-invalid @enderror" id="hps"
                     name="hps" value="{{ old('hps') }}" autofocus required>
                 @error('hps')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                @enderror
+            </div>
+
+            <div class="mb-3">
+                <label for="cara_pengadaan" class="form-label">Cara Pengadaan</label>
+                <input type="text" class="form-control @error('cara_pengadaan') is-invalid @enderror" id="cara_pengadaan"
+                    name="cara_pengadaan" value="{{ old('cara_pengadaan') }}" autofocus required>
+                @error('cara_pengadaan')
                     <div class="invalid-feedback">
                         {{ $message }}
                     </div>

@@ -125,8 +125,8 @@
                                 <td>{{ $pagu->paket }}</td>
                                 <td>{{ $pagu->SumberDana->keterangan }}</td>
                                 <td>{{ $pagu->jumlah }}</td>
-                                <td>{{ $pagu->JenisPengadaan->keterangan }}</td>
                                 @if ($pagu->Kontrak)
+                                    <td>{{ $pagu->Kontrak->cara_pengadaan }}</td>
                                     <td>{{ $pagu->Kontrak->penyedia }}</td>
                                     <td>{{ $pagu->Kontrak->nomor }}</td>
                                     <td>{{ $pagu->Kontrak->tanggal }}</td>

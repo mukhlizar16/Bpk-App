@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('paket');
             $table->foreignId('sumber_dana_id')->constrained('sumber_danas')->onUpdate('cascade')->onDelete('restrict');
             $table->integer('jumlah');
-            $table->foreignId('pengadaan_id')->constrained('jenis_pengadaans')->onUpdate('cascade')->onDelete('restrict');
             $table->timestamps();
         });
     }
