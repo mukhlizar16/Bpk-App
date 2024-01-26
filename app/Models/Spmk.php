@@ -9,6 +9,7 @@ class Spmk extends Model
 {
     use HasFactory;
 
+    protected $table = 'spmk';
     protected $guarded = ['id'];
 
     public function Pagu()

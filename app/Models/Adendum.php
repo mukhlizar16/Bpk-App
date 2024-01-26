@@ -9,7 +9,8 @@ class Adendum extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
+    protected $table = 'adendum';
+    protected $fillable = ['kontrak_id', 'tanggal', 'keterangan', 'dokumen', 'nomor'];
 
     public function Kontrak()
     {

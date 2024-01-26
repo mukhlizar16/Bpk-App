@@ -22,141 +22,146 @@
     <div class="row">
         <div class="col">
             <button class="btn btn-primary fs-5 fw-normal mt-2" data-bs-toggle="modal" data-bs-target="#tambahSp2d"><i
-                    class="fa-solid fa-square-plus fs-5 me-2"></i>Tambah</button>
+                    class="fa-solid fa-square-plus fs-5 me-2"></i>Tambah
+            </button>
             <div class="mt-3 card">
                 <div class="card-body">
                     {{-- Table --}}
                     <table id="myTable" class="table align-middle responsive nowrap table-bordered table-striped"
-                        style="width:100%">
+                           style="width:100%">
                         <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>Kontrak</th>
-                                <th>Nomor</th>
-                                <th>Tanggal</th>
-                                <th>Jumlah</th>
-                                <th>Dokumen</th>
-                                <th>Action</th>
-                            </tr>
+                        <tr>
+                            <th>#</th>
+                            <th>Kontrak</th>
+                            <th>Nomor</th>
+                            <th>Tanggal</th>
+                            <th>Jumlah</th>
+                            <th>Dokumen</th>
+                            <th>Action</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            @foreach ($sp2dses as $sp2ds)
-                                <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $sp2ds->Kontrak->penyedia }}</td>
-                                    <td>{{ $sp2ds->nomor }}</td>
-                                    <td>{{ $sp2ds->tanggal }}</td>
-                                    <td>{{ $sp2ds->jumlah }}</td>
-                                    <td>
-                                        @if ($sp2ds->dokumen)
-                                            <a class="btn btn-primary" href="{{ asset('storage/' . $sp2ds->dokumen) }}"
-                                                download><i class="fa-solid fa-download me-2"></i> Dokumen</a>
-                                        @else
-                                            No document available
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
+                        @foreach ($sp2dses as $sp2ds)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $sp2ds->Kontrak->Pagu->paket }}</td>
+                                <td>{{ $sp2ds->nomor }}</td>
+                                <td>{{ $sp2ds->tanggal }}</td>
+                                <td>{{ $sp2ds->jumlah }}</td>
+                                <td>
+                                    @if ($sp2ds->dokumen)
+                                        <a class="btn btn-primary" href="{{ asset('storage/' . $sp2ds->dokumen) }}"
+                                           download><i class="fa-solid fa-download me-2"></i> Dokumen</a>
+                                    @else
+                                        No document available
+                                    @endif
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
                                             data-bs-target="#editSp2d{{ $loop->iteration }}">
-                                            <i class="fa-regular fa-pen-to-square"></i>
-                                        </button>
-                                        <button class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                                        <i class="fa-regular fa-pen-to-square"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger" data-bs-toggle="modal"
                                             data-bs-target="#hapusSp2d{{ $loop->iteration }}">
-                                            <i class="fa-regular fa-trash-can fa-lg"></i>
-                                        </button>
-                                    </td>
-                                </tr>
+                                        <i class="fa-regular fa-trash-can fa-lg"></i>
+                                    </button>
+                                </td>
+                            </tr>
 
-                                {{-- Modal Edit Sp2d --}}
-                                <x-form_modal>
-                                    @slot('id', "editSp2d$loop->iteration")
-                                    @slot('title', 'Edit Data Sp2d')
-                                    @slot('route', route('sp2d.update', $sp2ds->id))
-                                    @slot('method') @method('put') @endslot
-                                    @slot('btnPrimaryTitle', 'Perbarui')
+                            {{-- Modal Edit Sp2d --}}
+                            <x-form_modal>
+                                @slot('id', "editSp2d$loop->iteration")
+                                @slot('title', 'Edit Data Sp2d')
+                                @slot('route', route('sp2d.update', $sp2ds->id))
+                                @slot('method')
+                                    @method('put')
+                                @endslot
+                                @slot('btnPrimaryTitle', 'Perbarui')
 
-                                    <input type="hidden" name="oldDokumen" value="{{ $sp2ds->dokumen }}">
-                                    <div class="mb-3">
-                                        <label for="kontrak_id" class="form-label">Kontrak</label>
-                                        <select class="form-select @error('kontrak_id') is-invalid @enderror"
+                                <input type="hidden" name="oldDokumen" value="{{ $sp2ds->dokumen }}">
+                                <div class="mb-3">
+                                    <label for="kontrak_id" class="form-label">Kontrak</label>
+                                    <select class="form-select @error('kontrak_id') is-invalid @enderror"
                                             name="kontrak_id" id="kontrak_id"
                                             value="{{ old('kontrak_id', $sp2ds->kontrak_id) }}">
-                                            @foreach ($kontraks as $kontrak)
-                                                @if (old('kontrak_id', $sp2ds->kontrak_id) == $kontrak->id)
-                                                    <option value="{{ $kontrak->id }}" selected>
-                                                        {{ $kontrak->nomor }}</option>
-                                                @else
-                                                    <option value="{{ $kontrak->id }}">
-                                                        {{ $kontrak->nomor }}</option>
-                                                @endif
-                                            @endforeach
-                                        </select>
+                                        @foreach ($kontraks as $kontrak)
+                                            @if (old('kontrak_id', $sp2ds->kontrak_id) == $kontrak->id)
+                                                <option value="{{ $kontrak->id }}" selected>
+                                                    {{ $kontrak->nomor }}</option>
+                                            @else
+                                                <option value="{{ $kontrak->id }}">
+                                                    {{ $kontrak->nomor }}</option>
+                                            @endif
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="nomor" class="form-label">Nomor</label>
+                                    <input type="text" class="form-control @error('nomor') is-invalid @enderror"
+                                           id="nomor" name="nomor" value="{{ old('nomor', $sp2ds->nomor) }}"
+                                           autofocus required>
+                                    @error('nomor')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="nomor" class="form-label">Nomor</label>
-                                        <input type="text" class="form-control @error('nomor') is-invalid @enderror"
-                                            id="nomor" name="nomor" value="{{ old('nomor', $sp2ds->nomor) }}"
-                                            autofocus required>
-                                        @error('nomor')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
+                                    @enderror
+                                </div>
+                                <div class="mb-3">
+                                    <label for="tanggal" class="form-label">Tanggal</label>
+                                    <input type="date" class="form-control @error('tanggal') is-invalid @enderror"
+                                           id="tanggal" name="tanggal" value="{{ old('tanggal', $sp2ds->tanggal) }}"
+                                           autofocus required>
+                                    @error('tanggal')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="tanggal" class="form-label">Tanggal</label>
-                                        <input type="date" class="form-control @error('tanggal') is-invalid @enderror"
-                                            id="tanggal" name="tanggal" value="{{ old('tanggal', $sp2ds->tanggal) }}"
-                                            autofocus required>
-                                        @error('tanggal')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
+                                    @enderror
+                                </div>
+                                <div class="mb-3">
+                                    <label for="jumlah" class="form-label">jumlah</label>
+                                    <input type="number" class="form-control @error('jumlah') is-invalid @enderror"
+                                           id="jumlah" name="jumlah" value="{{ old('jumlah', $sp2ds->jumlah) }}"
+                                           autofocus required>
+                                    @error('jumlah')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="jumlah" class="form-label">jumlah</label>
-                                        <input type="number" class="form-control @error('jumlah') is-invalid @enderror"
-                                            id="jumlah" name="jumlah" value="{{ old('jumlah', $sp2ds->jumlah) }}"
-                                            autofocus required>
-                                        @error('jumlah')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
+                                    @enderror
+                                </div>
+                                <div class="mb-3">
+                                    <label for="dokumen" class="form-label">Dokumen</label>
+                                    <input type="file" class="form-control @error('dokumen') is-invalid @enderror"
+                                           id="dokumen" name="dokumen" value="{{ old('dokumen', $sp2ds->dokumen) }}"
+                                           autofocus required>
+                                    @error('dokumen')
+                                    <div class="invalid-feedback">
+                                        {{ $message }}
                                     </div>
-                                    <div class="mb-3">
-                                        <label for="dokumen" class="form-label">Dokumen</label>
-                                        <input type="file" class="form-control @error('dokumen') is-invalid @enderror"
-                                            id="dokumen" name="dokumen" value="{{ old('dokumen', $sp2ds->dokumen) }}"
-                                            autofocus required>
-                                        @error('dokumen')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
-                                    </div>
+                                    @enderror
+                                </div>
 
-                                </x-form_modal>
-                                {{-- / Modal Edit sp2d --}}
+                            </x-form_modal>
+                            {{-- / Modal Edit sp2d --}}
 
-                                {{-- Modal Hapus Sp2d --}}
-                                <x-form_modal>
-                                    @slot('id', "hapusSp2d$loop->iteration")
-                                    @slot('title', 'Hapus Data Surat Sp2d')
-                                    @slot('route', route('sp2d.destroy', $sp2ds->id))
-                                    @slot('method') @method('delete') @endslot
-                                    @slot('btnPrimaryClass', 'btn-outline-danger')
-                                    @slot('btnSecondaryClass', 'btn-secondary')
-                                    @slot('btnPrimaryTitle', 'Hapus')
+                            {{-- Modal Hapus Sp2d --}}
+                            <x-form_modal>
+                                @slot('id', "hapusSp2d$loop->iteration")
+                                @slot('title', 'Hapus Data Surat Sp2d')
+                                @slot('route', route('sp2d.destroy', $sp2ds->id))
+                                @slot('method')
+                                    @method('delete')
+                                @endslot
+                                @slot('btnPrimaryClass', 'btn-outline-danger')
+                                @slot('btnSecondaryClass', 'btn-secondary')
+                                @slot('btnPrimaryTitle', 'Hapus')
 
-                                    <p class="fs-5">Apakah anda yakin akan menghapus data Sp2d
-                                        <b>{{ $sp2ds->nomor }}</b>?
-                                    </p>
+                                <p class="fs-5">Apakah anda yakin akan menghapus data Sp2d
+                                    <b>{{ $sp2ds->nomor }}</b>?
+                                </p>
 
-                                </x-form_modal>
-                                {{-- / Modal Hapus Sp2d  --}}
-                            @endforeach
+                            </x-form_modal>
+                            {{-- / Modal Hapus Sp2d  --}}
+                        @endforeach
                         </tbody>
                     </table>
                     {{-- End Table --}}
@@ -172,7 +177,7 @@
                             <div class="mb-3">
                                 <label for="kontrak_id" class="form-label">Kontrak</label>
                                 <select class="form-select @error('kontrak_id') is-invalid @enderror" name="kontrak_id"
-                                    id="kontrak_id">
+                                        id="kontrak_id">
                                     @foreach ($kontraks as $kontrak)
                                         <option value="{{ $kontrak->id }}" selected>
                                             {{ $kontrak->nomor }}</option>
@@ -182,41 +187,41 @@
                             <div class="mb-3">
                                 <label for="nomor" class="form-label">Nomor</label>
                                 <input type="text" class="form-control @error('nomor') is-invalid @enderror"
-                                    id="nomor" name="nomor" value="{{ old('nomor') }}" autofocus required>
+                                       id="nomor" name="nomor" value="{{ old('nomor') }}" autofocus required>
                                 @error('nomor')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
                                 @enderror
                             </div>
                             <div class="mb-3">
                                 <label for="tanggal" class="form-label">Tanggal</label>
                                 <input type="date" class="form-control @error('tanggal') is-invalid @enderror"
-                                    id="tanggal" name="tanggal" value="{{ old('tanggal') }}" autofocus required>
+                                       id="tanggal" name="tanggal" value="{{ old('tanggal') }}" autofocus required>
                                 @error('tanggal')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
                                 @enderror
                             </div>
                             <div class="mb-3">
                                 <label for="jumlah" class="form-label">jumlah</label>
                                 <input type="text" class="form-control @error('jumlah') is-invalid @enderror"
-                                    id="jumlah" name="jumlah" value="{{ old('jumlah') }}" autofocus required>
+                                       id="jumlah" name="jumlah" value="{{ old('jumlah') }}" autofocus required>
                                 @error('jumlah')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
                                 @enderror
                             </div>
                             <div class="mb-3">
                                 <label for="dokumen" class="form-label">Dokumen</label>
                                 <input type="file" class="form-control @error('dokumen') is-invalid @enderror"
-                                    id="dokumen" name="dokumen" value="{{ old('dokumen') }}" autofocus required>
+                                       id="dokumen" name="dokumen" value="{{ old('dokumen') }}" autofocus required>
                                 @error('dokumen')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
+                                <div class="invalid-feedback">
+                                    {{ $message }}
+                                </div>
                                 @enderror
                             </div>
                         </div>

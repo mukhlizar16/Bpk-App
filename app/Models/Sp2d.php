@@ -9,6 +9,7 @@ class Sp2d extends Model
 {
     use HasFactory;
 
+    protected $table = 'sp2d';
     protected $guarded = ['id'];
 
     public function Kontrak()

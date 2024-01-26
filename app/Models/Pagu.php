@@ -9,7 +9,8 @@ class Pagu extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
+    protected $table = 'pagu';
+    protected $fillable = ['subkegiatan_id', 'jumlah', 'paket', 'sumber_dana_id', 'pengadaan_id'];
 
     public function Subkegiatan()
     {

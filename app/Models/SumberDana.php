@@ -9,6 +9,8 @@ class SumberDana extends Model
 {
     use HasFactory;
 
+    protected $table = 'sumber_dana';
+
     public function Pagu()
     {
         return $this->hasMany(Pagu::class);

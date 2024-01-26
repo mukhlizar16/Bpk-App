@@ -9,8 +9,11 @@ class JenisPengadaan extends Model
 {
     use HasFactory;
 
-    public function Kontrak()
+    protected $table = 'jenis_pengadaan';
+    protected $fillable = ['keterangan'];
+
+    public function Pagu()
     {
-        return $this->hasMany(Kontrak::class);
+        return $this->hasMany(Pagu::class);
     }
 }

@@ -9,5 +9,6 @@ class Bap extends Model
 {
     use HasFactory;
 
-    protected $guarded = ['id'];
+    protected $table = 'bap';
+    protected $fillable = ['nomor', 'tanggal'];
 }

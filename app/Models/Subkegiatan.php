@@ -9,6 +9,7 @@ class Subkegiatan extends Model
 {
     use HasFactory;
 
+    protected $table = 'subkegiatan';
     protected $guarded = ['id'];
 
     public function Kegiatan()

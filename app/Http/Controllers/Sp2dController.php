@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Kontrak;
 use App\Models\Sp2d;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class Sp2dController extends Controller
 {
@@ -15,17 +17,9 @@ class Sp2dController extends Controller
     public function index()
     {
         $title = "Data Sp2d ";
-        $sp2dses = Sp2d::all();
+        $sp2dses = Sp2d::with('Kontrak.Pagu')->get();
         $kontraks = Kontrak::all();
         return view('dashboard.pagu.sp2d.index')->with(compact('title', 'sp2dses', 'kontraks'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -41,7 +35,7 @@ class Sp2dController extends Controller
                 'jumlah' => 'required',
                 'dokumen' => 'required',
             ]);
-        } catch (\Illuminate\Validation\ValidationException $exception) {
+        } catch (ValidationException $exception) {
             return redirect()->back()->with('failed', $exception->getMessage());
         }
 
@@ -52,6 +46,14 @@ class Sp2dController extends Controller
         Sp2d::create($validatedData);
 
         return redirect()->back()->with('success', 'Sp2d baru berhasil ditambahkan!');
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
     }
 
     /**
@@ -96,7 +98,7 @@ class Sp2dController extends Controller
             Sp2d::where('id', $sp2d->id)->update($validatedData);
 
             return redirect()->back()->with('success', "Data Sp2d $sp2d->nomor berhasil diperbarui!");
-        } catch (\Illuminate\Validation\ValidationException $exception) {
+        } catch (ValidationException $exception) {
             return redirect()->back()->with('failed', 'Data gagal diperbarui! ' . $exception->getMessage());
         }
     }
@@ -113,7 +115,7 @@ class Sp2dController extends Controller
             }
 
             Sp2d::destroy($sp2d->id);
-        } catch (\Illuminate\Database\QueryException $e) {
+        } catch (QueryException $e) {
             if ($e->getCode() == 23000) {
                 //SQLSTATE[23000]: Integrity constraint violation
                 return redirect()->back()->with('failed', "Sp2d $sp2d->nomor tidak dapat dihapus, karena sedang digunakan!");

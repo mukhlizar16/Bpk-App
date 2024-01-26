@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Adendum;
 use App\Models\Kontrak;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
 
 class AdendumController extends Controller
 {
@@ -15,43 +17,9 @@ class AdendumController extends Controller
     public function index()
     {
         $title = "Data Adendum";
-        $adendumses = Adendum::all();
+        $adendumses = Adendum::with('Kontrak.Pagu')->get();
         $kontraks = Kontrak::all();
         return view('dashboard.pagu.adendum.index')->with(compact('title', 'adendumses', 'kontraks'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        try {
-            $validatedData = $request->validate([
-                'kontrak_id' => 'required',
-                'nomor' => 'required',
-                'tanggal' => 'required',
-                'keterangan' => 'required',
-                'dokumen' => 'required',
-            ]);
-        } catch (\Illuminate\Validation\ValidationException $exception) {
-            return redirect()->back()->with('failed', $exception->getMessage());
-        }
-
-        if ($request->file('dokumen')) {
-            $validatedData['dokumen'] = $request->file('dokumen')->store('dokumen-adendum');
-        }
-
-        Adendum::create($validatedData);
-
-        return redirect()->back()->with('success', 'Adendum baru berhasil ditambahkan!');
     }
 
     /**
@@ -94,9 +62,43 @@ class AdendumController extends Controller
             Adendum::where('id', $adendum->id)->update($validatedData);
 
             return redirect()->back()->with('success', "Data Adendum $adendum->nomor berhasil diperbarui!");
-        } catch (\Illuminate\Validation\ValidationException $exception) {
+        } catch (ValidationException $exception) {
             return redirect()->back()->with('failed', 'Data gagal diperbarui! ' . $exception->getMessage());
         }
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        try {
+            $validatedData = $request->validate([
+                'kontrak_id' => 'required',
+                'nomor' => 'required',
+                'tanggal' => 'required',
+                'keterangan' => 'required',
+                'dokumen' => 'required',
+            ]);
+        } catch (ValidationException $exception) {
+            return redirect()->back()->with('failed', $exception->getMessage());
+        }
+
+        if ($request->file('dokumen')) {
+            $validatedData['dokumen'] = $request->file('dokumen')->store('dokumen-adendum');
+        }
+
+        Adendum::create($validatedData);
+
+        return redirect()->back()->with('success', 'Adendum baru berhasil ditambahkan!');
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
     }
 
     /**
@@ -111,7 +113,7 @@ class AdendumController extends Controller
             }
 
             Adendum::destroy($adendum->id);
-        } catch (\Illuminate\Database\QueryException $e) {
+        } catch (QueryException $e) {
             if ($e->getCode() == 23000) {
                 //SQLSTATE[23000]: Integrity constraint violation
                 return redirect()->back()->with('failed', "Adendum $adendum->nomor tidak dapat dihapus, karena sedang digunakan!");

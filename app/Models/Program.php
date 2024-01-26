@@ -10,6 +10,7 @@ class Program extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+    protected $table = 'program';
 
     public function Kegiatan()
     {

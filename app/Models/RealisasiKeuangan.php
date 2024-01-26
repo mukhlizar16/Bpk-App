@@ -9,6 +9,7 @@ class RealisasiKeuangan extends Model
 {
     use HasFactory;
 
+    protected $table = 'realisasi_keuangan';
     protected $guarded = ['id'];
 
     public function Pagu()

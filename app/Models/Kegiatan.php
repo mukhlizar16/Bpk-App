@@ -9,6 +9,7 @@ class Kegiatan extends Model
 {
     use HasFactory;
 
+    protected $table = 'kegiatan';
     protected $guarded = ['id'];
 
     public function Program()

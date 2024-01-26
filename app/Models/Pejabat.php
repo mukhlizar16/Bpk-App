@@ -10,6 +10,7 @@ class Pejabat extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+    protected $table = 'pejabat';
 
     public function Jabatan()
     {
