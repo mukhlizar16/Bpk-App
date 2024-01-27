@@ -49,7 +49,7 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $spmks->Pagu->paket }}</td>
                                     <td>{{ $spmks->nomor }}</td>
-                                    <td>{{ $spmks->tanggal }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($spmks->tanggal)->format('d-m-Y') }}</td>
                                     <td>
                                         @if ($spmks->dokumen)
                                             <a class="btn btn-primary" href="{{ asset('storage/' . $spmks->dokumen) }}"
@@ -78,8 +78,22 @@
                                     @slot('method') @method('put') @endslot
                                     @slot('btnPrimaryTitle', 'Perbarui')
 
-                                    <input type="hidden" name="pagu_id" value="{{ $spmk->id }}">
                                     <input type="hidden" name="oldDokumen" value="{{ $spmks->dokumen }}">
+                                    <div class="mb-3">
+                                        <label for="pagu_id" class="form-label">Pagu</label>
+                                        <select class="form-select @error('pagu_id') is-invalid @enderror" name="pagu_id"
+                                            id="pagu_id" value="{{ old('pagu_id', $spmks->pagu_id) }}">
+                                            @foreach ($pagus as $pagu)
+                                                @if (old('pagu_id', $pagu->pagu_id) == $pagu->id)
+                                                    <option value="{{ $pagu->id }}" selected>
+                                                        {{ $pagu->paket }}</option>
+                                                @else
+                                                    <option value="{{ $pagu->id }}">
+                                                        {{ $pagu->paket }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    </div>
                                     <div class="mb-3">
                                         <label for="nomor" class="form-label">Nomor</label>
                                         <input type="text" class="form-control @error('nomor') is-invalid @enderror"
@@ -105,7 +119,7 @@
                                     <div class="mb-3">
                                         <label for="dokumen" class="form-label">Dokumen</label>
                                         <input type="file" class="form-control @error('dokumen') is-invalid @enderror"
-                                            id="dokumen" name="dokumen" autofocus required>
+                                            id="dokumen" name="dokumen" autofocus>
                                         @error('dokumen')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -145,7 +159,16 @@
 
                         @csrf
                         <div class="row">
-                            <input type="hidden" name="pagu_id" value="{{ $spmk->id }}">
+                            <div class="mb-3">
+                                <label for="pagu_id" class="form-label">Pagu</label>
+                                <select class="form-select @error('pagu_id') is-invalid @enderror" name="pagu_id" id="pagu_id"
+                                    value="{{ old('pagu_id') }}">
+                                    @foreach ($pagus as $pagu)
+                                        <option value="{{ $pagu->id }}" selected>
+                                            {{ $pagu->paket }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
                             <div class="mb-3">
                                 <label for="nomor" class="form-label">Nomor</label>
                                 <input type="text" class="form-control @error('nomor') is-invalid @enderror"

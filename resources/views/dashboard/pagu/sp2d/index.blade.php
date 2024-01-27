@@ -46,7 +46,7 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $sp2ds->Kontrak->Pagu->paket }}</td>
                                 <td>{{ $sp2ds->nomor }}</td>
-                                <td>{{ $sp2ds->tanggal }}</td>
+                                <td>{{ \Carbon\Carbon::parse($sp2ds->tanggal)->format('d-m-Y') }}</td>
                                 <td>{{ $sp2ds->jumlah }}</td>
                                 <td>
                                     @if ($sp2ds->dokumen)

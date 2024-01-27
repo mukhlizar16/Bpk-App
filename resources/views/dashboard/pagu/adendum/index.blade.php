@@ -48,7 +48,7 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $adendums->Kontrak->Pagu->paket }}</td>
                                 <td>{{ $adendums->nomor }}</td>
-                                <td>{{ $adendums->tanggal }}</td>
+                                <td>{{ \Carbon\Carbon::parse($adendums->tanggal)->format('d-m-Y') }}</td>
                                 <td>{{ $adendums->keterangan }}</td>
                                 <td>
                                     @if ($adendums->dokumen)
@@ -59,8 +59,7 @@
                                     @endif
                                 </td>
                                 <td>
-                                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                            data-bs-target="#editAdendum{{ $loop->iteration }}">
+                                    <button class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#editAdendum{{ $loop->iteration }}">
                                         <i class="fa-regular fa-pen-to-square"></i>
                                     </button>
                                     <button class="btn btn-sm btn-danger" data-bs-toggle="modal"
