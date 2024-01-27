@@ -46,7 +46,7 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $adendums->Kontrak->penyedia }}</td>
                                     <td>{{ $adendums->nomor }}</td>
-                                    <td>{{ $adendums->tanggal }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($adendums->tanggal)->format('d-m-Y') }}</td>
                                     <td>{{ $adendums->keterangan }}</td>
                                     <td>
                                         @if ($adendums->dokumen)

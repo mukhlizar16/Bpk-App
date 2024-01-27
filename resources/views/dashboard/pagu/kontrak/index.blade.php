@@ -52,7 +52,7 @@
                                     <td>{{ $kontrak->JenisPengadaan->keterangan }}</td>
                                     <td>{{ $kontrak->penyedia }}</td>
                                     <td>{{ $kontrak->nomor }}</td>
-                                    <td>{{ $kontrak->tanggal }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($kontrak->tanggal)->format('d-m-Y') }}</td>
                                     <td>{{ $kontrak->nilai_kontrak }}</td>
                                     <td>{{ $kontrak->jangka_waktu }}</td>
                                     @php

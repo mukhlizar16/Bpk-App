@@ -49,7 +49,7 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $spmks->Pagu->paket }}</td>
                                     <td>{{ $spmks->nomor }}</td>
-                                    <td>{{ $spmks->tanggal }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($spmks->tanggal)->format('d-m-Y') }}</td>
                                     <td>
                                         @if ($spmks->dokumen)
                                             <a class="btn btn-primary" href="{{ asset('storage/' . $spmks->dokumen) }}"

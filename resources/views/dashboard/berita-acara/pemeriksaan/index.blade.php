@@ -40,7 +40,7 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $bap->nomor }}</td>
-                                    <td>{{ $bap->tanggal }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($bap->tanggal)->format('d-m-Y') }}</td>
                                     <td>
                                         <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
                                             data-bs-target="#editBap{{ $loop->iteration }}">
