@@ -43,7 +43,7 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $fisik->Pagu->paket }}</td>
-                                    <td>{{ $fisik->nilai }}</td>
+                                    <td>Rp. {{ number_format($fisik->nilai, 0, ',', '.')}}</td>
                                     <td>{{ $fisik->bobot }}</td>
                                     <td>
                                         <button class="btn btn-sm btn-warning" data-bs-toggle="modal"

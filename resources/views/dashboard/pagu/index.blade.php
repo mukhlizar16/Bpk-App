@@ -48,9 +48,6 @@
                                     <td>{{ $pagu->SumberDana->keterangan }}</td>
                                     <td>{{ $pagu->jumlah }}</td>
                                     <td>
-                                        <a href="{{ route('spmk.show', $pagu->id) }}" class="btn btn-sm btn-info">
-                                            <i class="fa-solid fa-list"></i>
-                                        </a>
                                         <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
                                             data-bs-target="#editPagu{{ $loop->iteration }}">
                                             <i class="fa-solid fa-pen-to-square"></i>

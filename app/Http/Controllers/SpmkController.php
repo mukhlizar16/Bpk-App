@@ -14,8 +14,10 @@ class SpmkController extends Controller
      */
     public function index()
     {
-        $title = "Data Pagu";
-        return view('dashboard.pagu.spmk.index')->with(compact('title'));
+        $title = "Data SPMK";
+        $pagus = Pagu::all();
+        $spmkses = Spmk::with("Pagu")->get();
+        return view('dashboard.pagu.spmk.index')->with(compact('title', 'spmkses', 'pagus'));
     }
 
     /**
@@ -56,9 +58,8 @@ class SpmkController extends Controller
      */
     public function show(Pagu $spmk)
     {
-
         $title = "Data SPMK - " . $spmk->paket;
-        $spmkses = Spmk::where('pagu_id', $spmk->id)->get();
+        $spmkses = Spmk::with("Pagu")->get();
         return view('dashboard.pagu.spmk.index')->with(compact('title', 'spmkses', 'spmk'));
     }
 
@@ -81,7 +82,6 @@ class SpmkController extends Controller
                 'pagu_id' => 'required',
                 'nomor' => 'required',
                 'tanggal' => 'required',
-                'dokumen' => 'required',
             ];
 
             $validatedData = $this->validate($request, $rules);

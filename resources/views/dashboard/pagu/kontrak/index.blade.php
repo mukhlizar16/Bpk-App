@@ -53,7 +53,7 @@
                                     <td>{{ $kontrak->penyedia }}</td>
                                     <td>{{ $kontrak->nomor }}</td>
                                     <td>{{ \Carbon\Carbon::parse($kontrak->tanggal)->format('d-m-Y') }}</td>
-                                    <td>{{ $kontrak->nilai_kontrak }}</td>
+                                    <td>Rp. {{ number_format($kontrak->nilai_kontrak, 0, ',', '.') }}</td>
                                     <td>{{ $kontrak->jangka_waktu }}</td>
                                     @php
                                         if ($kontrak->bukti == 1) {
@@ -74,10 +74,6 @@
                                         @endif
                                     </td>
                                     <td>
-                                        <button type="button" class="btn btn-sm btn-info" data-bs-toggle="modal"
-                                            data-bs-target="#showKontrak{{ $loop->iteration }}">
-                                            <i class="fa-solid fa-list"></i>
-                                        </button>
                                         <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
                                             data-bs-target="#editKontrak{{ $loop->iteration }}">
                                             <i class="fa-solid fa-pen-to-square"></i>
@@ -261,34 +257,6 @@
                                 </x-form_modal>
                                 {{-- / Modal Hapus Kontrak  --}}
 
-                                {{-- Modal Detail Kontrak --}}
-                                <x-form_modal2>
-                                    @slot('id', "showKontrak$loop->iteration")
-                                    @slot('title', 'Show Data Detail Kontrak')
-
-                                    <div class="row">
-                                        <div class="mb-2 col-lg-6">
-                                            <a href="{{ route('adendum.show', $kontrak->id) }}">
-                                                <div class="card shadow">
-                                                    <div class="card-body text-center">
-                                                        Adendum
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                        <div class="mb-2 col-lg-6">
-                                            <a href="{{ route('sp2d.show', $kontrak->id) }}">
-                                                <div class="card shadow">
-                                                    <div class="card-body text-center">
-                                                        SP2D
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    </div>
-
-                                </x-form_modal2>
-                                {{-- / Modal Detail Kontrak --}}
                             @endforeach
                         </tbody>
                     </table>

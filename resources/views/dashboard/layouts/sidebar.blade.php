@@ -44,6 +44,13 @@
             </a>
         </li>
 
+        <li class="menu-item {{ Request::is('dashboard/spmk*') ? 'active' : '' }}">
+            <a href="/dashboard/spmk" class="menu-link">
+                <i class="fa-light fa-file-contract me-3"></i>
+                <div data-i18n="Analytics">Spmk</div>
+            </a>
+        </li>
+
         <li class="menu-item {{ Request::is('dashboard/berita-acara*') ? 'active open' : '' }}">
             <a href="javascript:void(0);" class="menu-link menu-toggle">
                 <i class="fa-duotone fa-files fa-sm me-3"></i>

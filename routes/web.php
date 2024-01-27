@@ -60,12 +60,10 @@ Route::prefix('/dashboard')->middleware('auth')->group(function () {
     Route::resource('/pagu', PaguController::class);
     Route::resource('/adendum', AdendumController::class);
     Route::resource('/sp2d', Sp2dController::class);
+    Route::resource('/spmk', SpmkController::class);
     Route::prefix('/realisasi')->group(function () {
         Route::resource('/fisik', FisikController::class);
         Route::resource('/keuangan', KeuanganController::class);
-    });
-    Route::prefix('/pagu')->group(function () {
-        Route::resource('/spmk', SpmkController::class);
     });
     Route::prefix('/berita-acara')->group(function () {
         Route::resource('/pemeriksaan', BapController::class);
