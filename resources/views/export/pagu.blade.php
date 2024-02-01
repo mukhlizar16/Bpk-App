@@ -95,8 +95,18 @@
             @endphp
             @foreach ($programs as $program)
                 <tr>
-                    <td style="font-weight: 800">{{ chr($programCounter++) }}</td>
-                    <td colspan="22" style="font-weight: 800">Program: {{ $program->keterangan }}</td>
+                    <td style="font-weight: 800;">{{ chr($programCounter++) }}</td>
+                    <td colspan="3" style="font-weight: 800; border: 1px solid">Program: {{ $program->keterangan }}
+                    </td>
+                    <td colspan="1" style="font-weight: 800; border: 1px solid">
+                        {{ $program->kegiatan->sum(function ($kegiatan) {
+                            return $kegiatan->Subkegiatan->sum(function ($subkegiatan) {
+                                return $subkegiatan->Pagu->sum('jumlah');
+                            });
+                        }) }}
+                    </td>
+                    <td colspan="18" style="font-weight: 800; border: 1px solid">
+                    </td>
                 </tr>
                 @php
                     $kegiatanCounter = 1;
@@ -104,7 +114,14 @@
                 @foreach ($program->kegiatan as $kegiatan)
                     <tr>
                         <td style="font-weight: 800">{{ romanNumerals($kegiatanCounter++) }}</td>
-                        <td colspan="22" style="font-weight: 800">Kegiatan: {{ $kegiatan->keterangan }}</td>
+                        <td colspan="3" style="font-weight: 800">Kegiatan: {{ $kegiatan->keterangan }}</td>
+                        <td colspan="1" style="font-weight: 800; border: 1px solid">
+                            {{ $kegiatan->Subkegiatan->flatMap(function ($subkegiatan) {
+                                return $subkegiatan->Pagu->pluck('jumlah');
+                            })->sum() }}
+                        </td>
+                        <td colspan="18" style="font-weight: 800; border: 1px solid">
+                        </td>
                     </tr>
 
                     @php
@@ -113,7 +130,11 @@
                     @foreach ($kegiatan->Subkegiatan as $subkegiatan)
                         <tr>
                             <td style="font-weight: 800">{{ $subkegiatanCounter++ }}</td>
-                            <td colspan="22" style="font-weight: 800">Subkegiatan: {{ $subkegiatan->keterangan }}</td>
+                            <td colspan="3" style="font-weight: 800">Subkegiatan: {{ $subkegiatan->keterangan }}</td>
+                            <td colspan="1" style="font-weight: 800; border: 1px solid">{{ $subkegiatan->Pagu->sum('jumlah') }}
+                            </td>
+                            <td colspan="18" style="font-weight: 800; border: 1px solid">
+                            </td>
                         </tr>
                         @php
                             $i = 1;
@@ -139,8 +160,8 @@
                                         {{ $bukti }}
                                     </td>
                                 @else
-                                <td colspan="5">-</td>
-                                <td>-</td>
+                                    <td colspan="5">-</td>
+                                    <td>-</td>
                                 @endif
                                 <td>
                                     @if ($pagu->Spmk)
