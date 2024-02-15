@@ -47,9 +47,11 @@
                 <th rowspan="2">No</th>
                 <th colspan="2">Jenis dan Uraian Kegiatan Pembangunan dan Pengadaan</th>
                 <th colspan="2">Pagu Anggaran</th>
+                <th colspan="2">Realisasi</th>
                 <th>Cara Pengadaan</th>
                 <th colspan="5">Kontrak/SPK/SP</th>
                 <th rowspan="2">Bukti Kewajaran harga dari Penyedia (Ada/Tidak)</th>
+                <th rowspan="2">Nomor Sp2d</th>
                 <th colspan="2">Surat Perintah Mulai Kerja (SPMK)</th>
                 <th colspan="3">Adendum Kontrak I</th>
                 <th colspan="3">Adendum Kontrak II</th>
@@ -61,6 +63,8 @@
                 <th>Fisik Konstruksi/Nama Barang</th>
                 <th>Sumber Dana</th>
                 <th>DPA-OPD (Rp)</th>
+                <th>Anggaran</th>
+                <th>Fisik</th>
                 <th>Swakelola/ Pengadaan Langsung/ Lelang/ Penunjukan Langsung</th>
                 <th>Nama Penyedia</th>
                 <th>Nomor</th>
@@ -83,7 +87,7 @@
         </thead>
         <thead>
             <tr>
-                @for ($i = 0; $i < 23; $i++)
+                @for ($i = 0; $i < 26; $i++)
                     <th>{{ $i }}</th>
                 @endfor
             </tr>
@@ -117,8 +121,8 @@
                         <td colspan="3" style="font-weight: 800">Kegiatan: {{ $kegiatan->keterangan }}</td>
                         <td colspan="1" style="font-weight: 800; border: 1px solid">
                             {{ $kegiatan->Subkegiatan->flatMap(function ($subkegiatan) {
-                                return $subkegiatan->Pagu->pluck('jumlah');
-                            })->sum() }}
+                                    return $subkegiatan->Pagu->pluck('jumlah');
+                                })->sum() }}
                         </td>
                         <td colspan="18" style="font-weight: 800; border: 1px solid">
                         </td>
@@ -131,7 +135,8 @@
                         <tr>
                             <td style="font-weight: 800">{{ $subkegiatanCounter++ }}</td>
                             <td colspan="3" style="font-weight: 800">Subkegiatan: {{ $subkegiatan->keterangan }}</td>
-                            <td colspan="1" style="font-weight: 800; border: 1px solid">{{ $subkegiatan->Pagu->sum('jumlah') }}
+                            <td colspan="1" style="font-weight: 800; border: 1px solid">
+                                {{ $subkegiatan->Pagu->sum('jumlah') }}
                             </td>
                             <td colspan="18" style="font-weight: 800; border: 1px solid">
                             </td>
@@ -146,6 +151,8 @@
                                 <td>{{ $pagu->paket }}</td>
                                 <td>{{ $pagu->SumberDana->keterangan }}</td>
                                 <td>{{ $pagu->jumlah }}</td>
+                                <td>{{ $pagu->RealisasiKeuangan->sum('nilai') }}</td>
+                                <td>{{ $pagu->RealisasiFisik->sum('nilai') }}</td>
                                 @if ($pagu->Kontrak)
                                     <td>{{ $pagu->Kontrak->cara_pengadaan }}</td>
                                     <td>{{ $pagu->Kontrak->penyedia }}</td>
@@ -159,6 +166,16 @@
                                         @endphp
                                         {{ $bukti }}
                                     </td>
+                                    @php
+                                        $kontraks2 = $pagu->Kontrak;
+                                    @endphp
+                                    @if ($kontraks2->Sp2d)
+                                        @foreach ($kontraks2->Sp2d as $sp2d)
+                                            <td>{{ $sp2d->nomor }}</td>
+                                        @endforeach
+                                    @else
+                                        <td>-</td>
+                                    @endif
                                 @else
                                     <td colspan="5">-</td>
                                     <td>-</td>
