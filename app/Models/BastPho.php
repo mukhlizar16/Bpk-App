@@ -10,4 +10,9 @@ class BastPho extends Model
     use HasFactory;
 
     protected $guarded = ['id'];
+
+    public function Pagu()
+    {
+        return $this->belongsTo(Pagu::class, 'pagu_id');
+    }
 }
