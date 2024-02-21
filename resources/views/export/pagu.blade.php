@@ -27,6 +27,7 @@
                 <th colspan="3">Adendum Kontrak I</th>
                 <th colspan="3">Adendum Kontrak II</th>
                 <th colspan="3">Adendum Kontrak III</th>
+                <th rowspan="2">Penjab</th>
             </tr>
             <tr >
                 <th>Nama Program/ Kegiatan</th>
@@ -65,7 +66,7 @@
         </thead>
         <thead>
             <tr >
-                @for ($i = 0; $i < 35; $i++)
+                @for ($i = 0; $i < 36; $i++)
                     <th>{{ $i }}</th>
                 @endfor
             </tr>
@@ -197,6 +198,7 @@
                                 @else
                                     -
                                 @endif
+                                <td></td>
                             </tr>
                         @endforeach
                     @endforeach
