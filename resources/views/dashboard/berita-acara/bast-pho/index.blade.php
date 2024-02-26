@@ -31,7 +31,9 @@
                             <tr>
                                 <th>NO</th>
                                 <th>NOMOR</th>
+                                <th>PAGU</th>
                                 <th>TANGGAL</th>
+                                <th>KETERANGAN</th>
                                 <th>ACTION</th>
                             </tr>
                         </thead>
@@ -40,7 +42,9 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $bast->nomor }}</td>
+                                    <td>{{ $bast->Pagu->paket }}</td>
                                     <td>{{ \Carbon\Carbon::parse($bast->tanggal)->format('d-m-Y') }}</td>
+                                    <td>{{ $bast->ket }}</td>
                                     <td>
                                         <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
                                             data-bs-target="#editBastPho{{ $loop->iteration }}">
@@ -74,11 +78,40 @@
                                     </div>
 
                                     <div class="mb-3">
+                                        <label for="pagu_id" class="form-label">Pagu</label>
+                                        <select class="form-select @error('pagu_id') is-invalid @enderror"
+                                            name="pagu_id" id="pagu_id"
+                                            value="{{ old('pagu_id', $bast->pagu_id) }}">
+                                            @foreach ($pagus as $pagu)
+                                                @if (old('pagu_id', $bast->pagu_id) == $pagu->id)
+                                                    <option value="{{ $pagu->id }}" selected>
+                                                        {{ $pagu->paket }}</option>
+                                                @else
+                                                    <option value="{{ $pagu->id }}">
+                                                        {{ $pagu->paket }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
                                         <label for="tanggal" class="form-label">Tanggal</label>
                                         <input type="date" class="form-control @error('tanggal') is-invalid @enderror"
                                             id="tanggal" name="tanggal" value="{{ old('tanggal', $bast->tanggal) }}" autofocus
                                             required>
                                         @error('tanggal')
+                                            <div class="invalid-feedback">
+                                                {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="ket" class="form-label">Keterangan</label>
+                                        <input type="text" class="form-control @error('ket') is-invalid @enderror"
+                                            id="ket" name="ket" value="{{ old('ket', $bast->ket) }}" autofocus
+                                            required>
+                                        @error('ket')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
                                             </div>
@@ -135,11 +168,34 @@
         </div>
 
         <div class="mb-3">
+            <label for="pagu_id" class="form-label">pagu</label>
+            <select class="form-select @error('pagu_id') is-invalid @enderror" name="pagu_id"
+                id="pagu_id">
+                @foreach ($pagus as $pagu)
+                    <option value="{{ $pagu->id }}" selected>
+                        {{ $pagu->paket }}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="mb-3">
             <label for="tanggal" class="form-label">Tanggal</label>
             <input type="date" class="form-control @error('tanggal') is-invalid @enderror"
                 id="tanggal" name="tanggal" autofocus
                 required>
             @error('tanggal')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+            @enderror
+        </div>
+
+        <div class="mb-3">
+            <label for="ket" class="form-label">Keterangan</label>
+            <input type="text" class="form-control @error('ket') is-invalid @enderror"
+                id="ket" name="ket" autofocus
+                required>
+            @error('ket')
                 <div class="invalid-feedback">
                     {{ $message }}
                 </div>

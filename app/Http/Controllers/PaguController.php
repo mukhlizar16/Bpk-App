@@ -113,6 +113,6 @@ class PaguController extends Controller
 
     public function exportAll()
     {
-        return Excel::download(new PaguDataExport, 'Data Pagu.xlsx');
+        return Excel::download(new PaguDataExport, 'Data_Pagu.xlsx');
     }
 }

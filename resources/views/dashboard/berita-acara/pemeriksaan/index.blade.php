@@ -31,6 +31,7 @@
                             <tr>
                                 <th>NO</th>
                                 <th>NOMOR</th>
+                                <th>PAGU</th>
                                 <th>TANGGAL</th>
                                 <th>ACTION</th>
                             </tr>
@@ -40,6 +41,7 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $bap->nomor }}</td>
+                                    <td>{{ $bap->Pagu->paket }}</td>
                                     <td>{{ \Carbon\Carbon::parse($bap->tanggal)->format('d-m-Y') }}</td>
                                     <td>
                                         <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
@@ -71,6 +73,23 @@
                                                 {{ $message }}
                                             </div>
                                         @enderror
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="pagu_id" class="form-label">Pagu</label>
+                                        <select class="form-select @error('pagu_id') is-invalid @enderror"
+                                            name="pagu_id" id="pagu_id"
+                                            value="{{ old('pagu_id', $bap->pagu_id) }}">
+                                            @foreach ($pagus as $pagu)
+                                                @if (old('pagu_id', $bap->pagu_id) == $pagu->id)
+                                                    <option value="{{ $pagu->id }}" selected>
+                                                        {{ $pagu->paket }}</option>
+                                                @else
+                                                    <option value="{{ $pagu->id }}">
+                                                        {{ $pagu->paket }}</option>
+                                                @endif
+                                            @endforeach
+                                        </select>
                                     </div>
 
                                     <div class="mb-3">
@@ -132,6 +151,17 @@
                     {{ $message }}
                 </div>
             @enderror
+        </div>
+
+        <div class="mb-3">
+            <label for="pagu_id" class="form-label">pagu</label>
+            <select class="form-select @error('pagu_id') is-invalid @enderror" name="pagu_id"
+                id="pagu_id">
+                @foreach ($pagus as $pagu)
+                    <option value="{{ $pagu->id }}" selected>
+                        {{ $pagu->paket }}</option>
+                @endforeach
+            </select>
         </div>
 
         <div class="mb-3">

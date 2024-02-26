@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bast;
+use App\Models\Pagu;
 use Illuminate\Http\Request;
 
 class BastController extends Controller
@@ -13,8 +14,9 @@ class BastController extends Controller
     public function index()
     {
         $title = "Data Bast";
-        $basts = Bast::all();
-        return view('dashboard.berita-acara.bast.index')->with(compact('title', 'basts'));
+        $basts = Bast::with('Pagu')->get();
+        $pagus = Pagu::all();
+        return view('dashboard.berita-acara.bast.index')->with(compact('title', 'basts', 'pagus'));
     }
 
     /**
@@ -33,6 +35,7 @@ class BastController extends Controller
         try {
             $validatedData = $request->validate([
                 'nomor' => 'required',
+                'pagu_id' => 'required',
                 'tanggal' => 'required',
             ]);
         } catch (\Illuminate\Validation\ValidationException $exception) {
@@ -68,6 +71,7 @@ class BastController extends Controller
         try {
             $rules = [
                 'nomor' => 'required',
+                'pagu_id' => 'required',
                 'tanggal' => 'required',
             ];
 

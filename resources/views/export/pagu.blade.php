@@ -6,57 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Export</title>
-    <style>
-        .table {
-            width: 100%;
-            border-collapse: collapse;
-            border: 1px solid #000;
-            margin-bottom: 20px;
-        }
-
-        .table th,
-        .table td {
-            border: 1px solid #000;
-            padding: 8px;
-            text-align: left;
-        }
-
-        .table th {
-            font-weight: bold;
-        }
-
-        .header-table {
-            font-weight: 600;
-        }
-
-        .text-center {
-            text-align: center;
-        }
-
-        hr {
-            border-top: 2px solid #000;
-        }
-    </style>
 </head>
 
-<body style="padding-left: 0px 20px 0px 20px; ">
-
-    <table class="table" style="width: 100%;">
+<body >
+    <table class="table">
         <thead>
-            <tr>
+            <tr >
                 <th rowspan="2">No</th>
                 <th colspan="2">Jenis dan Uraian Kegiatan Pembangunan dan Pengadaan</th>
                 <th colspan="2">Pagu Anggaran</th>
                 <th>Cara Pengadaan</th>
                 <th colspan="5">Kontrak/SPK/SP</th>
                 <th rowspan="2">Bukti Kewajaran harga dari Penyedia (Ada/Tidak)</th>
+                <th rowspan="2">Nomor Sp2d</th>
+                <th colspan="2">Berita Acara Pemeriksaan Hasil Pekerjaan (Progress 100%)</th>
+                <th colspan="2">Berita Acara Serah Terima (BAST Barang)</th>
+                <th colspan="3">Berita Acara Serah Terima Provisional Hand Over (BAST PHO)</th>
+                <th colspan="4">Nilai Realisasi</th>
                 <th colspan="2">Surat Perintah Mulai Kerja (SPMK)</th>
                 <th colspan="3">Adendum Kontrak I</th>
                 <th colspan="3">Adendum Kontrak II</th>
                 <th colspan="3">Adendum Kontrak III</th>
-
+                <th rowspan="2">Penjab</th>
             </tr>
-            <tr>
+            <tr >
                 <th>Nama Program/ Kegiatan</th>
                 <th>Fisik Konstruksi/Nama Barang</th>
                 <th>Sumber Dana</th>
@@ -71,19 +44,29 @@
                 <th>Tanggal</th>
                 <th>Nomor</th>
                 <th>Tanggal</th>
-                <th>Keterangan CCO atau Perpanjangan Waktu</th>
+                <th>Nomor</th>
+                <th>Tanggal</th>
+                <th>Ket.</th>
+                <th>Kuangan Nilai (Rp)</th>
+                <th>Keuangan Bobot (%)</th>
+                <th>Fisik Nilai (Rp)</th>
+                <th>Fisik Bobot (%)</th>
+                <th>Nomor</th>
+                <th>Tanggal</th>
                 <th>Nomor</th>
                 <th>Tanggal</th>
                 <th>Keterangan CCO atau Perpanjangan Waktu</th>
                 <th>Nomor</th>
                 <th>Tanggal</th>
                 <th>Keterangan CCO atau Perpanjangan Waktu</th>
-
+                <th>Nomor</th>
+                <th>Tanggal</th>
+                <th>Keterangan CCO atau Perpanjangan Waktu</th>
             </tr>
         </thead>
         <thead>
-            <tr>
-                @for ($i = 0; $i < 23; $i++)
+            <tr >
+                @for ($i = 0; $i < 36; $i++)
                     <th>{{ $i }}</th>
                 @endfor
             </tr>
@@ -117,8 +100,8 @@
                         <td colspan="3" style="font-weight: 800">Kegiatan: {{ $kegiatan->keterangan }}</td>
                         <td colspan="1" style="font-weight: 800; border: 1px solid">
                             {{ $kegiatan->Subkegiatan->flatMap(function ($subkegiatan) {
-                                return $subkegiatan->Pagu->pluck('jumlah');
-                            })->sum() }}
+                                    return $subkegiatan->Pagu->pluck('jumlah');
+                                })->sum() }}
                         </td>
                         <td colspan="18" style="font-weight: 800; border: 1px solid">
                         </td>
@@ -131,7 +114,8 @@
                         <tr>
                             <td style="font-weight: 800">{{ $subkegiatanCounter++ }}</td>
                             <td colspan="3" style="font-weight: 800">Subkegiatan: {{ $subkegiatan->keterangan }}</td>
-                            <td colspan="1" style="font-weight: 800; border: 1px solid">{{ $subkegiatan->Pagu->sum('jumlah') }}
+                            <td colspan="1" style="font-weight: 800; border: 1px solid">
+                                {{ $subkegiatan->Pagu->sum('jumlah') }}
                             </td>
                             <td colspan="18" style="font-weight: 800; border: 1px solid">
                             </td>
@@ -159,10 +143,31 @@
                                         @endphp
                                         {{ $bukti }}
                                     </td>
+                                    @php
+                                        $kontraks2 = $pagu->Kontrak;
+                                    @endphp
+                                    @if ($kontraks2->Sp2d)
+                                        @foreach ($kontraks2->Sp2d as $sp2d)
+                                            <td>{{ $sp2d->nomor }}</td>
+                                        @endforeach
+                                    @else
+                                        <td>-</td>
+                                    @endif
                                 @else
                                     <td colspan="5">-</td>
                                     <td>-</td>
                                 @endif
+                                <td>{{ $pagu->Bap->first()->nomor ?? '-' }}</td>
+                                <td>{{ $pagu->Bap->first()->tanggal ?? '-' }}</td>
+                                <td>{{ $pagu->Bast->first()->nomor ?? '-' }}</td>
+                                <td>{{ $pagu->Bast->first()->tanggal ?? '-' }}</td>
+                                <td>{{ $pagu->BastPho->first()->nomor ?? '-' }}</td>
+                                <td>{{ $pagu->BastPho->first()->tanggal ?? '-' }}</td>
+                                <td>{{ $pagu->BastPho->first()->ket ?? '-' }}</td>
+                                <td>{{ $pagu->RealisasiKeuangan->sum('nilai') }}</td>
+                                <td>{{ $pagu->RealisasiKeuangan->sum('bobot') }}</td>
+                                <td>{{ $pagu->RealisasiFisik->sum('nilai') }}</td>
+                                <td>{{ $pagu->RealisasiFisik->sum('bobot') }}</td>
                                 <td>
                                     @if ($pagu->Spmk)
                                         {{ $pagu->Spmk->nomor }}
@@ -193,6 +198,7 @@
                                 @else
                                     -
                                 @endif
+                                <td></td>
                             </tr>
                         @endforeach
                     @endforeach

@@ -11,4 +11,9 @@ class Bast extends Model
 
     protected $table = 'bast';
     protected $fillable = ['nomor', 'tanggal'];
+
+    public function Pagu()
+    {
+        return $this->belongsTo(Pagu::class, 'pagu_id');
+    }
 }

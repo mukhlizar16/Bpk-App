@@ -32,6 +32,21 @@ class Pagu extends Model
         return $this->hasMany(RealisasiFisik::class);
     }
 
+    public function Bap()
+    {
+        return $this->hasMany(Bap::class);
+    }
+
+    public function Bast()
+    {
+        return $this->hasMany(Bast::class);
+    }
+
+    public function BastPho()
+    {
+        return $this->hasMany(BastPho::class);
+    }
+
     public function Spmk()
     {
         return $this->hasOne(Spmk::class);

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreBastPhoRequest;
 use App\Models\BastPho;
-use Illuminate\Database\QueryException;
+use App\Models\Pagu;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
@@ -16,8 +16,9 @@ class BastPhoController extends Controller
     public function index()
     {
         $title = "Data Bast Pho";
-        $basts = BastPho::all();
-        return view('dashboard.berita-acara.bast-pho.index', compact('title', 'basts'));
+        $basts = BastPho::with('Pagu')->get();
+        $pagus = Pagu::all();
+        return view('dashboard.berita-acara.bast-pho.index')->with(compact('title', 'basts', 'pagus'));
     }
 
     /**
@@ -61,7 +62,9 @@ class BastPhoController extends Controller
         try {
             $rules = [
                 'nomor' => 'required',
+                'pagu_id' => 'required',
                 'tanggal' => 'required',
+                'ket' => 'required',
             ];
 
             $validatedData = $this->validate($request, $rules);

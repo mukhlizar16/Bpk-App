@@ -11,4 +11,9 @@ class Bap extends Model
 
     protected $table = 'bap';
     protected $fillable = ['nomor', 'tanggal'];
+
+    public function Pagu()
+    {
+        return $this->belongsTo(Pagu::class, 'pagu_id');
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Bap;
+use App\Models\Pagu;
 use Illuminate\Http\Request;
 
 class BapController extends Controller
@@ -13,8 +14,9 @@ class BapController extends Controller
     public function index()
     {
         $title = "Data Bap";
-        $baps = Bap::all();
-        return view('dashboard.berita-acara.pemeriksaan.index')->with(compact('title', 'baps'));
+        $baps = Bap::with('Pagu')->get();
+        $pagus = Pagu::all();
+        return view('dashboard.berita-acara.pemeriksaan.index')->with(compact('title', 'baps', 'pagus'));
     }
 
     /**
@@ -33,6 +35,7 @@ class BapController extends Controller
         try {
             $validatedData = $request->validate([
                 'nomor' => 'required',
+                'pagu_id' => 'required',
                 'tanggal' => 'required',
             ]);
         } catch (\Illuminate\Validation\ValidationException $exception) {
@@ -68,6 +71,7 @@ class BapController extends Controller
         try {
             $rules = [
                 'nomor' => 'required',
+                'pagu_id' => 'required',
                 'tanggal' => 'required',
             ];
 
