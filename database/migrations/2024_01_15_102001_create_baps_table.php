@@ -12,8 +12,12 @@ return new class extends Migration {
     {
         Schema::create('bap', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('pagu_id')
+                ->index()
+                ->constrained('pagu')
+                ->cascadeOnUpdate()
+                ->restrictOnDelete();
             $table->string('nomor');
-            $table->foreignId('pagu_id')->constrained('pagus')->onUpdate('cascade')->onDelete('restrict');
             $table->date('tanggal');
             $table->timestamps();
         });
