@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreKontrakRequest;
+use App\Http\Requests\UpdateKontrakRequest;
 use App\Models\JenisPengadaan;
 use App\Models\Kontrak;
 use App\Models\Pagu;
 use Illuminate\Database\QueryException;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class KontrakController extends Controller
@@ -20,7 +21,7 @@ class KontrakController extends Controller
         $kontraks = Kontrak::all();
         $pagus = Pagu::all();
         $jenises = JenisPengadaan::all();
-        return view('dashboard.pagu.kontrak.index')->with(compact('title', 'kontraks', 'pagus', 'jenises'));
+        return view('dashboard.pagu.kontrak.index', compact('title', 'kontraks', 'pagus', 'jenises'));
     }
 
     /**
@@ -42,22 +43,9 @@ class KontrakController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Kontrak $kontrak)
+    public function update(UpdateKontrakRequest $request, Kontrak $kontrak)
     {
-        $rules = [
-            'pagu_id' => 'required',
-            'pengadaan_id' => 'required',
-            'penyedia' => 'required',
-            'nomor' => 'required',
-            'tanggal' => 'required',
-            'nilai_kontrak' => 'required',
-            'jangka_waktu' => 'required',
-            'bukti' => 'required',
-            'cara_pengadaan' => 'required',
-            'hps' => 'required',
-        ];
-
-        $validatedData = $this->validate($request, $rules);
+        $validatedData = $request->validated();
 
         if ($request->file('dokumen')) {
             if ($request->oldDokumen) {
@@ -66,7 +54,7 @@ class KontrakController extends Controller
             $validatedData['dokumen'] = $request->file('dokumen')->store('dokumen-kontrak');
         }
 
-        Kontrak::find($kontrak->id)->update($validatedData);
+        $kontrak->update($validatedData);
 
         return redirect()->route('kontrak.index')->with('success', "Data Kontrak $kontrak->keterangan berhasil diperbarui!");
 
@@ -75,21 +63,10 @@ class KontrakController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreKontrakRequest $request)
     {
-        $validatedData = $request->validate([
-            'pagu_id' => 'required',
-            'pengadaan_id' => 'required',
-            'penyedia' => 'required',
-            'nomor' => 'required',
-            'tanggal' => 'required',
-            'nilai_kontrak' => 'required',
-            'jangka_waktu' => 'required',
-            'bukti' => 'required',
-            'hps' => 'required',
-            'dokumen' => 'required',
-        ]);
-
+        $validatedData = $request->validated();
+//        dd($validatedData);
         if ($request->file('dokumen')) {
             $validatedData['dokumen'] = $request->file('dokumen')->store('dokumen-kontrak');
         }

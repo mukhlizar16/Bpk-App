@@ -6,16 +6,18 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <form action="{{ $route ?? '' }}" method="post" enctype="multipart/form-data">
-                {{ $method ?? '' }}
                 @csrf
+                {{ $method ?? '' }}
                 <div class="modal-body">
                     {{ $slot }}
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn {{ $btnSecondaryClass ?? 'btn-outline-secondary' }}"
-                        data-bs-dismiss="modal">{{ $btnSecondaryTitle ?? 'Batal' }}</button>
+                            data-bs-dismiss="modal">{{ $btnSecondaryTitle ?? 'Batal' }}</button>
                     <button type="submit"
-                        class="btn {{ $btnPrimaryClass ?? 'btn-primary' }}">{{ $btnPrimaryTitle ?? 'Simpan' }}</button>
+                            class="btn {{ $btnPrimaryClass ?? 'btn-primary' }}">
+                        {{ $btnPrimaryTitle ?? 'Simpan' }}
+                    </button>
                 </div>
             </form>
         </div>

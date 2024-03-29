@@ -14,6 +14,11 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
+            @if($errors->any())
+                @foreach($errors->all() as $error)
+                    <p>{{ $error }}</p>
+                @endforeach
+            @endif
         </div>
     </div>
 
@@ -24,8 +29,6 @@
         <div class="col">
             <div class="card mt-2">
                 <div class="card-body">
-
-                    {{-- Tabel Data Kontrak --}}
                     <div class="table-responsive">
                         <table id="myTable" class="table table-bordered table-striped align-middle"
                                style="width:100%">
@@ -64,12 +67,14 @@
                                         }
                                     @endphp
                                     <td>{{ $bukti }}</td>
-                                    <td>Rp. {{ number_format($kontrak->hps, 0, ',', '.') }}</td>
+                                    <td class="text-end text-nowrap">
+                                        Rp. {{ number_format($kontrak->hps, 0, ',', '.') }}</td>
                                     <td>
                                         @if ($kontrak->dokumen)
                                             <a class="btn btn-outline-primary text-nowrap"
+                                               data-bs-toggle="tooltip" title="Unduh"
                                                href="{{ asset('storage/' . $kontrak->dokumen) }}"
-                                               download><i class="fa-solid fa-download me-2"></i> Dokumen</a>
+                                               download><i class="fa-solid fa-download me-1"></i></a>
                                         @else
                                             No document available
                                         @endif
@@ -77,13 +82,13 @@
                                     <td>
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                            data-bs-target="#editKontrak{{ $loop->iteration }}">
-                                            <i class="fa-solid fa-pen-to-square"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
-                                            data-bs-target="#hapusKontrak{{ $loop->iteration }}">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
+                                                    data-bs-target="#editKontrak{{ $loop->iteration }}">
+                                                <i class="fa-solid fa-pen-to-square"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                                                    data-bs-target="#hapusKontrak{{ $loop->iteration }}">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
                                         </div>
                                     </td>
                                 </tr>
@@ -97,7 +102,7 @@
                                         @method('put')
                                     @endslot
                                     @slot('btnPrimaryTitle', 'Perbarui')
-
+                                    @csrf
                                     <input type="hidden" name="oldDokumen" value="{{ $kontrak->dokumen }}">
                                     <div class="mb-3">
                                         <label for="pagu_id" class="form-label">Pagu</label>
@@ -115,7 +120,6 @@
                                             @endforeach
                                         </select>
                                     </div>
-
                                     <div class="mb-3">
                                         <label for="pengadaan_id" class="form-label">Jenis Pengadaan</label>
                                         <select class="form-select @error('pengadaan_id') is-invalid @enderror"
@@ -132,64 +136,58 @@
                                             @endforeach
                                         </select>
                                     </div>
-
                                     <div class="mb-3">
                                         <label for="penyedia" class="form-label">penyedia</label>
                                         <input type="text" class="form-control @error('penyedia') is-invalid @enderror"
                                                id="penyedia" name="penyedia"
-                                               value="{{ old('penyedia', $kontrak->penyedia) }}" autofocus required>
+                                               value="{{ old('penyedia', $kontrak->penyedia) }}" required>
                                         @error('penyedia')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
                                         @enderror
                                     </div>
-
                                     <div class="mb-3">
                                         <label for="nomor" class="form-label">Nomor</label>
                                         <input type="text" class="form-control @error('nomor') is-invalid @enderror"
                                                id="nomor" name="nomor" value="{{ old('nomor', $kontrak->nomor) }}"
-                                               autofocus required>
+                                               required>
                                         @error('nomor')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
                                         @enderror
                                     </div>
-
                                     <div class="mb-3">
                                         <label for="tanggal" class="form-label">Tanggal</label>
                                         <input type="date" class="form-control @error('tanggal') is-invalid @enderror"
                                                id="tanggal" name="tanggal"
-                                               value="{{ old('tanggal', $kontrak->tanggal) }}"
-                                               autofocus required>
+                                               value="{{ old('tanggal', $kontrak->tanggal->format('Y-m-d')) }}"
+                                               required>
                                         @error('tanggal')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
                                         @enderror
                                     </div>
-
                                     <div class="mb-3">
-                                        <label for="nilai_kontrak" class="form-label">Nilai Kontrak</label>
+                                        <label for="jumlah" class="form-label">Nilai Kontrak</label>
                                         <input type="number"
-                                               class="form-control @error('nilai_kontrak') is-invalid @enderror"
-                                               id="nilai_kontrak" name="nilai_kontrak"
-                                               value="{{ old('nilai_kontrak', $kontrak->nilai_kontrak) }}"
-                                               autofocus required>
-                                        @error('nilai_kontrak')
+                                               class="form-control @error('jumlah') is-invalid @enderror"
+                                               id="jumlah" name="jumlah"
+                                               value="{{ old('jumlah', $kontrak->jumlah) }}">
+                                        @error('jumlah')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
                                         @enderror
                                     </div>
-
                                     <div class="mb-3">
                                         <label for="jangka_waktu" class="form-label">Jangka Waktu</label>
                                         <input type="number"
                                                class="form-control @error('jangka_waktu') is-invalid @enderror"
                                                id="jangka_waktu" name="jangka_waktu"
-                                               value="{{ old('jangka_waktu', $kontrak->jangka_waktu) }}" autofocus
+                                               value="{{ old('jangka_waktu', $kontrak->jangka_waktu) }}"
                                                required>
                                         @error('jangka_waktu')
                                         <div class="invalid-feedback">
@@ -197,7 +195,6 @@
                                         </div>
                                         @enderror
                                     </div>
-
                                     <div class="mb-3">
                                         <label for="bukti" class="form-label">Bukti</label>
                                         <select class="form-select" id="bukti" name="bukti">
@@ -209,32 +206,28 @@
                                             </option>
                                         </select>
                                     </div>
-
                                     <div class="mb-3">
                                         <label for="hps" class="form-label">HPS</label>
                                         <input type="number" class="form-control @error('hps') is-invalid @enderror"
                                                id="hps" name="hps" value="{{ old('hps', $kontrak->hps) }}"
-                                               autofocus required>
+                                               required>
                                         @error('hps')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
                                         @enderror
                                     </div>
-
                                     <div class="mb-3">
                                         <label for="dokumen" class="form-label">Dokumen</label>
                                         <input type="file" class="form-control @error('dokumen') is-invalid @enderror"
                                                id="dokumen" name="dokumen"
-                                               value="{{ old('dokumen', $kontrak->dokumen) }}"
-                                               autofocus>
+                                               value="{{ old('dokumen', $kontrak->dokumen) }}">
                                         @error('dokumen')
                                         <div class="invalid-feedback">
                                             {{ $message }}
                                         </div>
                                         @enderror
                                     </div>
-
 
                                 </x-form_modal>
                                 {{-- / Modal Edit Kontrak --}}
@@ -254,7 +247,6 @@
                                     <p class="fs-5">Apakah anda yakin akan menghapus data Kontrak
                                         <b>{{ $kontrak->penyedia }}</b>?
                                     </p>
-
                                 </x-form_modal>
                                 {{-- / Modal Hapus Kontrak  --}}
 
@@ -282,8 +274,9 @@
                 <label for="pagu_id" class="form-label">Pagu</label>
                 <select class="form-select @error('pagu_id') is-invalid @enderror" name="pagu_id" id="pagu_id"
                         value="{{ old('pagu_id') }}">
+                    <option value="">--pilih--</option>
                     @foreach ($pagus as $pagu)
-                        <option value="{{ $pagu->id }}" selected>
+                        <option value="{{ $pagu->id }}">
                             {{ $pagu->paket }}</option>
                     @endforeach
                 </select>
@@ -292,6 +285,7 @@
             <div class="mb-3">
                 <label for="pengadaan_id" class="form-label">Jenis Pengadaan</label>
                 <select class="form-select" id="pengadaan_id" name="pengadaan_id">
+                    <option value="">--pilih--</option>
                     @foreach ($jenises as $jenis)
                         <option value="{{ $jenis->id }}">{{ $jenis->keterangan }}</option>
                     @endforeach
@@ -301,7 +295,7 @@
             <div class="mb-3">
                 <label for="penyedia" class="form-label">penyedia</label>
                 <input type="text" class="form-control @error('penyedia') is-invalid @enderror" id="penyedia"
-                       name="penyedia" value="{{ old('penyedia') }}" autofocus required>
+                       name="penyedia" value="{{ old('penyedia') }}" required>
                 @error('penyedia')
                 <div class="invalid-feedback">
                     {{ $message }}
@@ -312,7 +306,7 @@
             <div class="mb-3">
                 <label for="nomor" class="form-label">Nomor</label>
                 <input type="text" class="form-control @error('nomor') is-invalid @enderror" id="nomor"
-                       name="nomor" value="{{ old('nomor') }}" autofocus required>
+                       name="nomor" value="{{ old('nomor') }}" required>
                 @error('nomor')
                 <div class="invalid-feedback">
                     {{ $message }}
@@ -323,7 +317,7 @@
             <div class="mb-3">
                 <label for="tanggal" class="form-label">Tanggal</label>
                 <input type="date" class="form-control @error('tanggal') is-invalid @enderror" id="tanggal"
-                       name="tanggal" value="{{ old('tanggal') }}" autofocus required>
+                       name="tanggal" value="{{ old('tanggal') }}" required>
                 @error('tanggal')
                 <div class="invalid-feedback">
                     {{ $message }}
@@ -332,11 +326,11 @@
             </div>
 
             <div class="mb-3">
-                <label for="nilai_kontrak" class="form-label">Nilai Kontrak</label>
-                <input type="number" class="form-control @error('nilai_kontrak') is-invalid @enderror"
-                       id="nilai_kontrak"
-                       name="nilai_kontrak" value="{{ old('nilai_kontrak') }}" autofocus required>
-                @error('nilai_kontrak')
+                <label for="jumlah" class="form-label">Nilai Kontrak</label>
+                <input type="number" class="form-control @error('jumlah') is-invalid @enderror"
+                       id="jumlah"
+                       name="jumlah" value="{{ old('jumlah') }}" required>
+                @error('jumlah')
                 <div class="invalid-feedback">
                     {{ $message }}
                 </div>
@@ -346,7 +340,7 @@
             <div class="mb-3">
                 <label for="jangka_waktu" class="form-label">Jangka Waktu</label>
                 <input type="number" class="form-control @error('jangka_waktu') is-invalid @enderror" id="jangka_waktu"
-                       name="jangka_waktu" value="{{ old('jangka_waktu') }}" autofocus required>
+                       name="jangka_waktu" value="{{ old('jangka_waktu') }}" required>
                 @error('jangka_waktu')
                 <div class="invalid-feedback">
                     {{ $message }}
@@ -357,40 +351,24 @@
             <div class="mb-3">
                 <label for="bukti" class="form-label">Bukti</label>
                 <select class="form-select" id="bukti" name="bukti">
-                    <option value="1">Ya
-                    </option>
-                    <option value="0">Tidak
-                    </option>
+                    <option value="1">Ya</option>
+                    <option value="0">Tidak</option>
                 </select>
             </div>
 
             <div class="mb-3">
                 <label for="hps" class="form-label">HPS</label>
                 <input type="number" class="form-control @error('hps') is-invalid @enderror" id="hps"
-                       name="hps" value="{{ old('hps') }}" autofocus required>
+                       name="hps" value="{{ old('hps') }}" required>
                 @error('hps')
-                <div class="invalid-feedback">
-                    {{ $message }}
-                </div>
-                @enderror
-            </div>
-
-            <div class="mb-3">
-                <label for="cara_pengadaan" class="form-label">Cara Pengadaan</label>
-                <input type="text" class="form-control @error('cara_pengadaan') is-invalid @enderror"
-                       id="cara_pengadaan"
-                       name="cara_pengadaan" value="{{ old('cara_pengadaan') }}" autofocus required>
-                @error('cara_pengadaan')
-                <div class="invalid-feedback">
-                    {{ $message }}
-                </div>
+                <div class="invalid-feedback">{{ $message }}</div>
                 @enderror
             </div>
 
             <div class="mb-3">
                 <label for="dokumen" class="form-label">Dokumen</label>
                 <input type="file" class="form-control @error('dokumen') is-invalid @enderror"
-                       id="dokumen" name="dokumen" value="{{ old('dokumen') }}" autofocus required>
+                       id="dokumen" name="dokumen" value="{{ old('dokumen') }}" required>
                 @error('dokumen')
                 <div class="invalid-feedback">
                     {{ $message }}

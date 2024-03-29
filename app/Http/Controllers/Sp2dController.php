@@ -32,7 +32,7 @@ class Sp2dController extends Controller
                 'kontrak_id' => 'required',
                 'nomor' => 'required',
                 'tanggal' => 'required',
-                'jumlah' => 'required',
+                'jumlah' => 'required|numeric',
                 'dokumen' => 'required',
             ]);
         } catch (ValidationException $exception) {

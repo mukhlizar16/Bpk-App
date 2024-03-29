@@ -1,3 +1,4 @@
+@php use Carbon\Carbon; @endphp
 @extends('dashboard.layouts.main')
 
 @section('content')
@@ -46,7 +47,7 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $sp2ds->Kontrak->Pagu->paket }}</td>
                                 <td>{{ $sp2ds->nomor }}</td>
-                                <td>{{ \Carbon\Carbon::parse($sp2ds->tanggal)->format('d-m-Y') }}</td>
+                                <td>{{ Carbon::parse($sp2ds->tanggal)->format('d-m-Y') }}</td>
                                 <td>{{ $sp2ds->jumlah }}</td>
                                 <td>
                                     @if ($sp2ds->dokumen)
@@ -197,7 +198,7 @@
                             <div class="mb-3">
                                 <label for="tanggal" class="form-label">Tanggal</label>
                                 <input type="date" class="form-control @error('tanggal') is-invalid @enderror"
-                                       id="tanggal" name="tanggal" value="{{ old('tanggal') }}" autofocus required>
+                                       id="tanggal" name="tanggal" value="{{ old('tanggal') }}" required>
                                 @error('tanggal')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -207,7 +208,7 @@
                             <div class="mb-3">
                                 <label for="jumlah" class="form-label">jumlah</label>
                                 <input type="text" class="form-control @error('jumlah') is-invalid @enderror"
-                                       id="jumlah" name="jumlah" value="{{ old('jumlah') }}" autofocus required>
+                                       id="jumlah" name="jumlah" value="{{ old('jumlah') }}" required>
                                 @error('jumlah')
                                 <div class="invalid-feedback">
                                     {{ $message }}
@@ -217,7 +218,7 @@
                             <div class="mb-3">
                                 <label for="dokumen" class="form-label">Dokumen</label>
                                 <input type="file" class="form-control @error('dokumen') is-invalid @enderror"
-                                       id="dokumen" name="dokumen" value="{{ old('dokumen') }}" autofocus required>
+                                       id="dokumen" name="dokumen" value="{{ old('dokumen') }}" required>
                                 @error('dokumen')
                                 <div class="invalid-feedback">
                                     {{ $message }}
