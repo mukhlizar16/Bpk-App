@@ -1,6 +1,6 @@
-$(document).ready(function() {
-    $('#myTable').DataTable( {
-        // "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]]
+$(document).ready(function () {
+    $('#myTable').DataTable({
+        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
         "scrollX": true,
         "language": {
             "search": "",
@@ -8,10 +8,10 @@ $(document).ready(function() {
             "decimal": ",",
             "thousands": "."
         }
-    } );
-    $(document).ready(function () {             
-        $('.dataTables_filter input[type="search"]').css( {
+    });
+    $(document).ready(function () {
+        $('.dataTables_filter input[type="search"]').css({
             "marginBottom": "10px"
-        } );
-    } );
-} );
+        });
+    });
+});

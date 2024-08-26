@@ -2,26 +2,66 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreKontrakRequest;
-use App\Http\Requests\UpdateKontrakRequest;
-use App\Models\JenisPengadaan;
-use App\Models\Kontrak;
 use App\Models\Pagu;
+use App\Models\Kontrak;
+use Illuminate\Http\Request;
+use App\Models\JenisPengadaan;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Storage;
+use Yajra\DataTables\Facades\DataTables;
+use App\Http\Requests\StoreKontrakRequest;
+use App\Http\Requests\UpdateKontrakRequest;
 
 class KontrakController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $title = "Data Kontrak";
-        $kontraks = Kontrak::all();
+        if ($request->ajax()) {
+            $kontrak = Kontrak::with([
+                'pagu',
+                'jenisPengadaan',
+                'adendum',
+                'sp2d'
+            ])->latest()->get();
+            return DataTables::of($kontrak)
+                ->addIndexColumn()
+                ->addColumn('dokumen', function ($kontrak) {
+                    if ($kontrak->dokumen) {
+                        return ' <a class="btn btn-outline-primary text-nowrap"
+                                    data-bs-toggle="tooltip" title="Unduh" href="' . asset('storage/' . $kontrak->dokumen) . '" download>
+                                    <i class="fa-solid fa-download me-1"></i>
+                                </a>';
+                    } else {
+                        return 'No document available.';
+                    }
+                })
+                ->addColumn('action', function ($kontrak) {
+                    return '<div class="text-center">
+                            <div class="btn-group">
+                                    <button type="button" class="btn btn-sm btn-warning btn-edit"
+                                            data-id="' . $kontrak->id . '"
+                                            data-pagu="' . $kontrak->pagu_id . '">
+                                        <i class="fa fa-pencil"></i>
+                                    </button>
+                                    <button class="btn btn-sm btn-danger btn-delete" type="button"
+                                        data-id="' . $kontrak->id . '"
+                                        data-nomor="' . $kontrak->nomor . '">
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </div>
+                        </div>';
+                })
+                ->rawColumns(['dokumen', 'action'])
+                ->make();
+        }
+
         $pagus = Pagu::all();
         $jenises = JenisPengadaan::all();
-        return view('dashboard.pagu.kontrak.index', compact('title', 'kontraks', 'pagus', 'jenises'));
+        return view('dashboard.pagu.kontrak.index', compact('title', 'pagus', 'jenises'));
     }
 
     /**
@@ -35,9 +75,11 @@ class KontrakController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($kontrak)
     {
-        //
+        $data = Kontrak::with('pagu', 'jenisPengadaan')->find($kontrak);
+
+        return response()->json($data);
     }
 
     /**
@@ -56,7 +98,7 @@ class KontrakController extends Controller
 
         $kontrak->update($validatedData);
 
-        return redirect()->route('kontrak.index')->with('success', "Data Kontrak $kontrak->keterangan berhasil diperbarui!");
+        return redirect()->route('kontrak.index')->with('success', "Data Kontrak dengan nomor $kontrak->nomor berhasil diperbarui!");
 
     }
 
@@ -66,7 +108,7 @@ class KontrakController extends Controller
     public function store(StoreKontrakRequest $request)
     {
         $validatedData = $request->validated();
-//        dd($validatedData);
+        //        dd($validatedData);
         if ($request->file('dokumen')) {
             $validatedData['dokumen'] = $request->file('dokumen')->store('dokumen-kontrak');
         }

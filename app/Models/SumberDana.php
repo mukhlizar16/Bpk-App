@@ -11,8 +11,10 @@ class SumberDana extends Model
 
     protected $table = 'sumber_dana';
 
+    protected $fillable = ['keterangan'];
+
     public function Pagu()
     {
-        return $this->hasMany(Pagu::class);
+        return $this->hasMany(Pagu::class, 'sumber_dana_id');
     }
 }

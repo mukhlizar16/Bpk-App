@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateKontrakRequest extends FormRequest
 {
@@ -32,7 +33,15 @@ class UpdateKontrakRequest extends FormRequest
             'jangka_waktu' => 'required',
             'bukti' => 'required',
             'hps' => 'required',
-            'dokumen' => 'sometimes|nullable|file|mimes:pdf|max:10240'
+            'dokumen' => [
+                Rule::requiredIf(function () {
+                    return $this->route('kontrak') == null;
+                }),
+                'nullable',
+                'file',
+                'mimes:pdf',
+                'max:10240'
+            ]
         ];
     }
 

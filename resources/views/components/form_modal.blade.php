@@ -5,7 +5,7 @@
                 <h5 class="modal-title">{{ $title }}</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{ $route ?? '' }}" method="post" enctype="multipart/form-data">
+            <form action="{{ $route ?? '' }}" method="post" id="{{ $formId ?? '' }}" enctype="multipart/form-data">
                 @csrf
                 {{ $method ?? '' }}
                 <div class="modal-body">
@@ -13,9 +13,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn {{ $btnSecondaryClass ?? 'btn-outline-secondary' }}"
-                            data-bs-dismiss="modal">{{ $btnSecondaryTitle ?? 'Batal' }}</button>
-                    <button type="submit"
-                            class="btn {{ $btnPrimaryClass ?? 'btn-primary' }}">
+                        data-bs-dismiss="modal">{{ $btnSecondaryTitle ?? 'Batal' }}</button>
+                    <button type="submit" class="btn {{ $btnPrimaryClass ?? 'btn-primary' }}">
                         {{ $btnPrimaryTitle ?? 'Simpan' }}
                     </button>
                 </div>

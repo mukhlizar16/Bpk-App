@@ -26,168 +26,22 @@
         <div class="col">
             <div class="card mt-2">
                 <div class="card-body">
-
-                    {{-- Tabel Data User --}}
-                    <table id="myTable" class="table responsive nowrap table-bordered table-striped align-middle"
-                        style="width:100%">
-                        <thead>
+                    <div class="table-responsive">
+                        <table id="paguTable" class="table nowrap table-bordered table-striped align-middle"
+                               style="width:100%">
+                            <thead>
                             <tr>
-                                <th>NO</th>
-                                <th>SUB KEGIATAN</th>
-                                <th>PAKET</th>
-                                <th>SUMBER DANA</th>
-                                <th>JUMLAH</th>
-                                <th>ACTION</th>
+                                <th class="text-center">NO</th>
+                                <th class="text-center">SUB KEGIATAN</th>
+                                <th class="text-center">PAKET</th>
+                                <th class="text-center">SUMBER DANA</th>
+                                <th class="text-center">JUMLAH</th>
+                                <th class="text-center">AKSI</th>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($pagus as $pagu)
-                                <tr>
-                                    <td class="text-center">{{ $loop->iteration }}</td>
-                                    <td>{{ $pagu->Subkegiatan->keterangan }}</td>
-                                    <td>{{ $pagu->paket }}</td>
-                                    <td class="text-center">{{ $pagu->SumberDana->keterangan }}</td>
-                                    <td class="text-end text-nowrap">Rp. {{ number_format($pagu->jumlah, 0, ',', '.') }}
-                                    </td>
-                                    <td>
-                                        <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
-                                            data-bs-target="#editPagu{{ $loop->iteration }}">
-                                            <i class="fa-solid fa-pen-to-square"></i>
-                                        </button>
-                                        <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal"
-                                            data-bs-target="#hapusPagu{{ $loop->iteration }}">
-                                            <i class="fa-solid fa-trash"></i>
-                                        </button>
-                                    </td>
-                                </tr>
-
-                                {{-- Modal Edit Pagu --}}
-                                <x-form_modal>
-                                    @slot('id', "editPagu$loop->iteration")
-                                    @slot('title', 'Edit Data Pagu')
-                                    @slot('route', route('pagu.update', $pagu->id))
-                                    @slot('method')
-                                        @method('put')
-                                    @endslot
-                                    @slot('btnPrimaryTitle', 'Perbarui')
-
-                                    <div class="mb-3">
-                                        <label for="subkegiatan_id" class="form-label">Sub Kegiatan</label>
-                                        <select class="form-select @error('subkegiatan_id') is-invalid @enderror"
-                                            name="subkegiatan_id" id="subkegiatan_id"
-                                            value="{{ old('subkegiatan_id', $pagu->subkegiatan_id) }}">
-                                            @foreach ($subs as $sub)
-                                                @if (old('subkegiatan_id', $pagu->sub_id) == $sub->id)
-                                                    <option value="{{ $sub->id }}" selected>
-                                                        {{ $sub->keterangan }}</option>
-                                                @else
-                                                    <option value="{{ $sub->id }}">
-                                                        {{ $sub->keterangan }}</option>
-                                                @endif
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="paket" class="form-label">Paket</label>
-                                        <input type="text" class="form-control @error('paket') is-invalid @enderror"
-                                            id="paket" name="paket" value="{{ old('paket', $pagu->paket) }}"
-                                            autofocus required>
-                                        @error('paket')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="sumber_dana_id" class="form-label">Sumber Dana</label>
-                                        <select class="form-select @error('sumber_dana_id') is-invalid @enderror"
-                                            name="sumber_dana_id" id="sumber_dana_id"
-                                            value="{{ old('sumber_dana_id', $pagu->sumber_dana_id) }}">
-                                            @foreach ($danas as $dana)
-                                                @if (old('sumber_dana_id', $pagu->dana_id) == $dana->id)
-                                                    <option value="{{ $dana->id }}" selected>
-                                                        {{ $dana->keterangan }}</option>
-                                                @else
-                                                    <option value="{{ $dana->id }}">
-                                                        {{ $dana->keterangan }}</option>
-                                                @endif
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="jumlah" class="form-label">Jumlah</label>
-                                        <input type="number" class="form-control @error('jumlah') is-invalid @enderror"
-                                            id="jumlah" name="jumlah" autofocus
-                                            value="{{ old('jumlah', $pagu->jumlah) }}" required>
-                                        @error('jumlah')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
-                                    </div>
-                                </x-form_modal>
-                                {{-- / Modal Edit Pagu --}}
-
-                                {{-- Modal Hapus pagu --}}
-                                <x-form_modal>
-                                    @slot('id', "hapusPagu$loop->iteration")
-                                    @slot('title', 'Hapus Data Pagu')
-                                    @slot('route', route('pagu.destroy', $pagu->id))
-                                    @slot('method')
-                                        @method('delete')
-                                    @endslot
-                                    @slot('btnPrimaryClass', 'btn-outline-danger')
-                                    @slot('btnSecondaryClass', 'btn-secondary')
-                                    @slot('btnPrimaryTitle', 'Hapus')
-
-                                    <p class="fs-5">Apakah anda yakin akan menghapus data pagu
-                                        <b>{{ $pagu->paket }}</b>?
-                                    </p>
-
-                                </x-form_modal>
-                                {{-- / Modal Hapus pagu  --}}
-
-                                {{-- Modal Detail Pagu --}}
-                                {{-- <x-form_modal2>
-                                @slot('id', "showPagu$loop->iteration")
-                                @slot('title', 'Show Data Pagu')
-
-                                <div class="row">
-                                    <div class="mb-2 col-lg-4">
-                                        <a href="{{ route('keuangan.show', $pagu->id) }}">
-                                            <div class="card shadow">
-                                                <div class="card-body text-center">
-                                                    Keuangan
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="mb-2 col-lg-4">
-                                        <a href="{{ route('fisik.show', $pagu->id) }}">
-                                            <div class="card shadow">
-                                                <div class="card-body text-center">
-                                                    Fisik
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                    <div class="mb-2 col-lg-4">
-                                        <a href="{{ route('spmk.show', $pagu->id) }}">
-                                            <div class="card shadow">
-                                                <div class="card-body text-center">
-                                                    SPMK
-                                                </div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                </div>
-
-                            </x-form_modal2> --}}
-                                {{-- / Modal Detail Pagu --}}
-                            @endforeach
-                        </tbody>
-                    </table>
-                    {{-- / Tabel Data ... --}}
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -204,8 +58,8 @@
         @csrf
         <div class="row">
             <div class="mb-3">
-                <label for="subkegiatan_id" class="form-label">Sub Kegiatan</label>
-                <select class="form-select" id="subkegiatan_id" name="subkegiatan_id">
+                <label for="subkegiatan" class="form-label">Sub Kegiatan</label>
+                <select class="form-select" id="subkegiatan" name="subkegiatan_id" style="width: 100%">
                     @foreach ($subs as $sub)
                         <option value="{{ $sub->id }}">{{ $sub->keterangan }}</option>
                     @endforeach
@@ -214,11 +68,11 @@
             <div class="mb-3">
                 <label for="paket" class="form-label">Paket</label>
                 <input type="text" class="form-control @error('paket') is-invalid @enderror" id="paket"
-                    name="paket" autofocus required>
+                       name="paket" autofocus required>
                 @error('paket')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
                 @enderror
             </div>
             <div class="mb-3">
@@ -231,16 +85,160 @@
             </div>
             <div class="mb-3">
                 <label for="jumlah" class="form-label">Jumlah</label>
-                <input type="number" class="form-control @error('jumlah') is-invalid @enderror" id="jumlah"
-                    name="jumlah" autofocus required>
+                <input type="number" min="0" step="1" class="form-control @error('jumlah') is-invalid @enderror"
+                       id="jumlah"
+                       name="jumlah" autofocus required>
                 @error('jumlah')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
                 @enderror
             </div>
 
         </div>
     </x-form_modal>
     <!-- Akhir Modal Tambah Pagu -->
+
+    <x-modal-kosong id="editModal">
+        @slot('title', 'Edit Data Pagu')
+        <form id="editForm" method="post">
+            @csrf
+            @method('PUT')
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label for="subkegiatanEdit" class="form-label">Sub Kegiatan</label>
+                    <select class="form-select @error('subkegiatan_id') is-invalid @enderror"
+                            name="subkegiatan_id" id="subkegiatanEdit" style="width: 100%">
+                        @foreach ($subs as $sub)
+                            <option value="{{ $sub->id }}" selected>
+                                {{ $sub->keterangan }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="paketEdit" class="form-label">Paket</label>
+                    <input type="text" class="form-control @error('paket') is-invalid @enderror"
+                           id="paketEdit" name="paket" required>
+                    @error('paket')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </div>
+                <div class="mb-3">
+                    <label for="sumberEdit" class="form-label">Sumber Dana</label>
+                    <select class="form-select @error('sumber_dana_id') is-invalid @enderror"
+                            name="sumber_dana_id" id="sumberEdit">
+                        @foreach ($danas as $dana)
+                            <option value="{{ $dana->id }}">
+                                {{ $dana->keterangan }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="jumlahEdit" class="form-label">Jumlah</label>
+                    <input type="number" class="form-control @error('jumlah') is-invalid @enderror"
+                           id="jumlahEdit" name="jumlah" required>
+                    @error('jumlah')
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
+                    @enderror
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn {{ $btnSecondaryClass ?? 'btn-outline-secondary' }}"
+                        data-bs-dismiss="modal">{{ $btnSecondaryTitle ?? 'Batal' }}</button>
+                <button type="submit"
+                        class="btn {{ $btnPrimaryClass ?? 'btn-primary' }}">
+                    {{ $btnPrimaryTitle ?? 'Simpan' }}
+                </button>
+            </div>
+        </form>
+    </x-modal-kosong>
+
+    @push('css')
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+    @endpush
+    @push('script')
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                const table = $('#paguTable');
+                $('#subkegiatan').select2({
+                    dropdownParent: $('#tambahPagu')
+                });
+                $('#subkegiatanEdit').select2({
+                    dropdownParent: $('#editModal')
+                });
+                table.DataTable({
+                    serverSide: true,
+                    processing: true,
+                    lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                    language: {
+                        url: 'https://cdn.datatables.net/plug-ins/2.1.4/i18n/id.json',
+                    },
+                    ajax: '{{ route('pagu.index') }}',
+                    columns: [
+                        {
+                            data: 'DT_RowIndex',
+                            name: 'DT_RowIndex',
+                            className: 'text-center'
+                        },
+                        {
+                            data: 'subkegiatan.keterangan',
+                            name: 'subkegiatan'
+                        },
+                        {
+                            data: 'paket',
+                            name: 'paket'
+
+                        },
+                        {
+                            data: 'sumber_dana.keterangan',
+                            name: 'sumber',
+                            className: 'text-center'
+                        },
+                        {
+                            data: 'jumlah',
+                            name: 'jumlah',
+                            render: function (data, type, row) {
+                                return new Intl.NumberFormat('id-ID', {
+                                    style: 'currency',
+                                    currency: 'IDR',
+                                    minimumFractionDigits: 0,
+                                    maximumFractionDigits: 0,
+                                }).format(data);
+                            },
+                            className: 'text-end'
+                        },
+                        {
+                            data: 'aksi',
+                            name: 'aksi'
+                        },
+                    ],
+                    columnDefs: [{orderable: false, targets: 0}]
+                });
+
+                table.on('click', '.btn-edit', function () {
+                    var id = $(this).data('id');
+                    var paket = $(this).data('paket');
+                    var sumber = $(this).data('sumber');
+                    var subkegiatan = $(this).data('subkegiatan');
+                    var jumlah = $(this).data('jumlah');
+
+                    console.log(id, paket, sumber, subkegiatan, jumlah)
+
+                    // Isi form di dalam modal dengan data yang diambil
+                    $('#editForm').attr('action', '/pagu/' + id);  // Sesuaikan dengan route update Anda
+                    $('#paketEdit').val(paket);
+                    $('#jumlahEdit').val(jumlah);
+                    $('#subkegiatanEdit').val(subkegiatan);
+                    $('#sumberEdit').val(sumber);
+                    // Tampilkan modal
+                    $('#editModal').modal('show');
+                });
+            });
+        </script>
+    @endpush
 @endsection

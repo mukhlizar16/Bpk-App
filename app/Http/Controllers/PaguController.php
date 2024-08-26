@@ -3,33 +3,57 @@
 namespace App\Http\Controllers;
 
 use App\Exports\PaguDataExport;
-use App\Models\JenisPengadaan;
 use App\Models\Pagu;
 use App\Models\Subkegiatan;
 use App\Models\SumberDana;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Maatwebsite\Excel\Facades\Excel;
+use Yajra\DataTables\Facades\DataTables;
 
 class PaguController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $title = "Data Pagu";
-        $pagus = Pagu::all();
+        $title = 'Data Pagu';
         $subs = Subkegiatan::all();
         $danas = SumberDana::all();
-        return view('dashboard.pagu.index')->with(compact('title', 'pagus', 'subs', 'danas'));
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        if ($request->ajax()) {
+            $pagu = Pagu::with(['sumberDana', 'subkegiatan'])->latest()->get();
+
+            return DataTables::of($pagu)
+                ->addIndexColumn()
+                ->addColumn('aksi', function ($pagu) {
+                    return '<div class="text-center">
+                                <form action="'.route('pagu.destroy', $pagu->id).'" method="POST" style="display:inline;">
+                                    '.csrf_field().'
+                                    '.method_field('DELETE').'
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-sm btn-warning btn-edit"
+                                                data-id="'.$pagu->id.'"
+                                                data-subkegiatan="'.$pagu->subkegiatan_id.'"
+                                                data-sumber="'.$pagu->sumber_dana_id.'"
+                                                data-paket="'.$pagu->paket.'"
+                                                data-jumlah="'.$pagu->jumlah.'">
+                                            <i class="fa fa-pencil"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-danger" type="submit" id="btn-delete" onclick="return confirm(\'Apakah Anda yakin ingin menghapus data ini?\')">
+                                            <i class="fa fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>';
+                })
+                ->rawColumns(['aksi'])
+                ->make();
+        }
+
+        return view('dashboard.pagu.index')->with(compact('title', 'subs', 'danas'));
     }
 
     /**
@@ -45,13 +69,21 @@ class PaguController extends Controller
                 'jumlah' => 'required',
 
             ]);
-        } catch (\Illuminate\Validation\ValidationException $exception) {
+        } catch (ValidationException $exception) {
             return redirect()->route('pagu.index')->with('failed', $exception->getMessage());
         }
 
         Pagu::create($validatedData);
 
         return redirect()->route('pagu.index')->with('success', 'Pagu baru berhasil ditambahkan!');
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        //
     }
 
     /**
@@ -89,8 +121,8 @@ class PaguController extends Controller
             Pagu::where('id', $pagu->id)->update($validatedData);
 
             return redirect()->route('pagu.index')->with('success', "Data Pagu $pagu->keterangan berhasil diperbarui!");
-        } catch (\Illuminate\Validation\ValidationException $exception) {
-            return redirect()->route('pagu.index')->with('failed', 'Data gagal diperbarui! ' . $exception->getMessage());
+        } catch (ValidationException $exception) {
+            return redirect()->route('pagu.index')->with('failed', 'Data gagal diperbarui! '.$exception->getMessage());
         }
     }
 
@@ -101,10 +133,11 @@ class PaguController extends Controller
     {
         try {
             Pagu::destroy($pagu->id);
-        } catch (\Illuminate\Database\QueryException $e) {
+        } catch (QueryException $e) {
             if ($e->getCode() == 23000) {
                 //SQLSTATE[23000]: Integrity constraint violation
-                return redirect()->route('pagu.index')->with('failed', "Pagu $pagu->keterangan tidak dapat dihapus, karena sedang digunakan!");
+                return redirect()->route('pagu.index')->with('failed',
+                    "Pagu $pagu->keterangan tidak dapat dihapus, karena sedang digunakan!");
             }
         }
 

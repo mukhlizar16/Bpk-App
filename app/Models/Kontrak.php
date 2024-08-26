@@ -15,22 +15,22 @@ class Kontrak extends Model
         'tanggal' => 'date'
     ];
 
-    public function Pagu()
+    public function pagu()
     {
         return $this->belongsTo(Pagu::class, 'pagu_id');
     }
 
-    public function Adendum()
+    public function adendum()
     {
         return $this->hasMany(Adendum::class);
     }
 
-    public function Sp2d()
+    public function sp2d()
     {
         return $this->hasMany(Sp2d::class);
     }
 
-    public function JenisPengadaan()
+    public function jenisPengadaan()
     {
         return $this->belongsTo(JenisPengadaan::class, 'pengadaan_id');
     }

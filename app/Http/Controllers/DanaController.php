@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SumberDanaRequest;
 use App\Models\SumberDana;
 use Illuminate\Http\Request;
 
@@ -12,8 +13,9 @@ class DanaController extends Controller
      */
     public function index()
     {
-        $title = "Data Sumber Dana";
+        $title = 'Data Sumber Dana';
         $danas = SumberDana::all();
+
         return view('dashboard.dana.index')->with(compact('title', 'danas'));
     }
 
@@ -28,9 +30,9 @@ class DanaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(SumberDanaRequest $request)
     {
-        //
+
     }
 
     /**

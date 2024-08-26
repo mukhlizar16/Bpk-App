@@ -61,6 +61,7 @@ Route::prefix('/dashboard')->middleware('auth')->group(function () {
     Route::resource('/adendum', AdendumController::class);
     Route::resource('/sp2d', Sp2dController::class);
     Route::resource('/spmk', SpmkController::class);
+    Route::resource('/kontrak', KontrakController::class);
     Route::prefix('/realisasi')->group(function () {
         Route::resource('/fisik', FisikController::class);
         Route::resource('/keuangan', KeuanganController::class);
@@ -71,6 +72,5 @@ Route::prefix('/dashboard')->middleware('auth')->group(function () {
         Route::resource('/bast-pho', BastPhoController::class);
     });
     Route::get('/export-pagu', [PaguController::class, 'exportAll'])->name('pagu.export-all');
-    Route::resource('/kontrak', KontrakController::class);
     Route::put('/resetpassword/{user}', [UserController::class, 'resetPasswordAdmin'])->name('resetpassword.resetPasswordAdmin');
 });
