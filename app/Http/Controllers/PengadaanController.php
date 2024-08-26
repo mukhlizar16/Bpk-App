@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\JenisPengadaan;
 use Illuminate\Http\Request;
+use App\Models\JenisPengadaan;
+use Illuminate\Support\Facades\DB;
+use App\Http\Requests\JenisPengadaanRequest;
 
 class PengadaanController extends Controller
 {
@@ -28,9 +30,10 @@ class PengadaanController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(JenisPengadaanRequest $request)
     {
-        //
+        JenisPengadaan::create($request->validated());
+        return to_route('pengadaan.index')->with('success', 'Berhasil disimpan.');
     }
 
     /**
@@ -52,16 +55,19 @@ class PengadaanController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(JenisPengadaanRequest $request, JenisPengadaan $pengadaan)
     {
-        //
+        $pengadaan->update($request->validated());
+        return to_route('pengadaan.index')->with('success', 'Berhasil diupdate.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(JenisPengadaan $pengadaan)
     {
-        //
+        $pengadaan->delete();
+        DB::statement('ALTER TABLE jenis_pengadaan AUTO_INCREMENT=1');
+        return to_route('pengadaan.index')->with('success', 'Berhasil dihapus.');
     }
 }

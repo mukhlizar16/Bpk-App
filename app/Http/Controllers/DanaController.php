@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\SumberDanaRequest;
 use App\Models\SumberDana;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Http\Requests\SumberDanaRequest;
 
 class DanaController extends Controller
 {
@@ -32,7 +33,8 @@ class DanaController extends Controller
      */
     public function store(SumberDanaRequest $request)
     {
-
+        SumberDana::create($request->validated());
+        return to_route('dana.index')->with('success', 'Berhasil disimpan.');
     }
 
     /**
@@ -62,8 +64,10 @@ class DanaController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(SumberDana $dana)
     {
-        //
+        $dana->delete();
+        DB::statement('ALTER TABLE sumber_dana AUTO_INCREMENT=1');
+        return to_route('dana.index')->with('success', 'Berhasil dihapus.');
     }
 }
