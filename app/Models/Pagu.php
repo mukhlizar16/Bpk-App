@@ -28,12 +28,12 @@ class Pagu extends Model
 
     public function realisasiKeuangan()
     {
-        return $this->hasMany(RealisasiKeuangan::class);
+        return $this->hasMany(RealisasiKeuangan::class, 'pagu_id');
     }
 
     public function realisasiFisik()
     {
-        return $this->hasMany(RealisasiFisik::class);
+        return $this->hasMany(RealisasiFisik::class, 'pagu_id');
     }
 
     public function bap(): HasOne
@@ -43,17 +43,17 @@ class Pagu extends Model
 
     public function bast()
     {
-        return $this->hasOne(Bast::class);
+        return $this->hasOne(Bast::class, 'pagu_id');
     }
 
     public function bastPho()
     {
-        return $this->hasOne(BastPho::class);
+        return $this->hasOne(BastPho::class, 'pagu_id');
     }
 
     public function spmk()
     {
-        return $this->hasOne(Spmk::class);
+        return $this->hasOne(Spmk::class, 'pagu_id');
     }
 
     public function kontrak()
