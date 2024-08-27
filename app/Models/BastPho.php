@@ -11,6 +11,9 @@ class BastPho extends Model
 
     protected $table = 'bast_pho';
     protected $fillable = ['nomor', 'tanggal'];
+    protected $casts = [
+        'tanggal' => 'date'
+    ];
 
     public function Pagu()
     {

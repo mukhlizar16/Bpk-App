@@ -12,6 +12,10 @@ class Adendum extends Model
     protected $table = 'adendum';
     protected $fillable = ['kontrak_id', 'tanggal', 'keterangan', 'dokumen', 'nomor'];
 
+    protected $casts = [
+        'tanggal' => 'date'
+    ];
+
     public function Kontrak()
     {
         return $this->belongsTo(Kontrak::class, 'kontrak_id');

@@ -11,6 +11,9 @@ class Bap extends Model
 
     protected $table = 'bap';
     protected $fillable = ['nomor', 'tanggal'];
+    protected $casts = [
+        'tanggal' => 'date'
+    ];
 
     public function Pagu()
     {

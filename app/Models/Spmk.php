@@ -11,6 +11,9 @@ class Spmk extends Model
 
     protected $table = 'spmk';
     protected $guarded = ['id'];
+    protected $casts = [
+        'tanggal' => 'date'
+    ];
 
     public function Pagu()
     {

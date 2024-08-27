@@ -11,6 +11,9 @@ class Sp2d extends Model
 
     protected $table = 'sp2d';
     protected $guarded = ['id'];
+    protected $casts = [
+        'tanggal' => 'date'
+    ];
 
     public function Kontrak()
     {

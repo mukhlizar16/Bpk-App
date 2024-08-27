@@ -11,6 +11,9 @@ class Bast extends Model
 
     protected $table = 'bast';
     protected $fillable = ['nomor', 'tanggal'];
+    protected $casts = [
+        'tanggal' => 'date'
+    ];
 
     public function Pagu()
     {

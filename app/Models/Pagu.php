@@ -23,37 +23,37 @@ class Pagu extends Model
         return $this->belongsTo(SumberDana::class, 'sumber_dana_id');
     }
 
-    public function RealisasiKeuangan()
+    public function realisasiKeuangan()
     {
         return $this->hasMany(RealisasiKeuangan::class);
     }
 
-    public function RealisasiFisik()
+    public function realisasiFisik()
     {
         return $this->hasMany(RealisasiFisik::class);
     }
 
-    public function Bap()
+    public function bap()
     {
         return $this->hasMany(Bap::class);
     }
 
-    public function Bast()
+    public function bast()
     {
         return $this->hasMany(Bast::class);
     }
 
-    public function BastPho()
+    public function bastPho()
     {
         return $this->hasMany(BastPho::class);
     }
 
-    public function Spmk()
+    public function spmk()
     {
         return $this->hasOne(Spmk::class);
     }
 
-    public function Kontrak()
+    public function kontrak()
     {
         return $this->hasOne(Kontrak::class);
     }
