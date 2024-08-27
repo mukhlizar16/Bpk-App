@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Bap extends Model
 {
@@ -15,7 +16,7 @@ class Bap extends Model
         'tanggal' => 'date'
     ];
 
-    public function Pagu()
+    public function pagu(): BelongsTo
     {
         return $this->belongsTo(Pagu::class, 'pagu_id');
     }

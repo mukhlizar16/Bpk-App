@@ -10,7 +10,7 @@ class BastPho extends Model
     use HasFactory;
 
     protected $table = 'bast_pho';
-    protected $fillable = ['nomor', 'tanggal'];
+    protected $fillable = ['nomor', 'tanggal', 'keterangan'];
     protected $casts = [
         'tanggal' => 'date'
     ];

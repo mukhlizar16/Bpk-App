@@ -12,8 +12,8 @@ class Program extends Model
     protected $guarded = ['id'];
     protected $table = 'program';
 
-    public function Kegiatan()
+    public function kegiatans()
     {
-        return $this->hasMany(Kegiatan::class);
+        return $this->hasMany(Kegiatan::class, 'program_id');
     }
 }

@@ -6,12 +6,34 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Export</title>
+    <style>
+        .text-center {
+            text-align: center;
+        }
+
+        .text-end {
+            text-align: right;
+        }
+
+        thead.v-center tr th {
+            vertical-align: middle
+        }
+
+        tr.fw-bold td {
+            font-weight: bold;
+        }
+
+        th,
+        td {
+            padding: 5px;
+        }
+    </style>
 </head>
 
-<body >
+<body>
     <table class="table">
-        <thead>
-            <tr >
+        <thead class="v-center">
+            <tr>
                 <th rowspan="2">No</th>
                 <th colspan="2">Jenis dan Uraian Kegiatan Pembangunan dan Pengadaan</th>
                 <th colspan="2">Pagu Anggaran</th>
@@ -29,7 +51,7 @@
                 <th colspan="3">Adendum Kontrak III</th>
                 <th rowspan="2">Penjab</th>
             </tr>
-            <tr >
+            <tr>
                 <th>Nama Program/ Kegiatan</th>
                 <th>Fisik Konstruksi/Nama Barang</th>
                 <th>Sumber Dana</th>
@@ -64,179 +86,264 @@
                 <th>Keterangan CCO atau Perpanjangan Waktu</th>
             </tr>
         </thead>
-        <thead>
-            <tr >
+        <thead class="v-center">
+            <tr>
                 @for ($i = 0; $i < 36; $i++)
-                    <th>{{ $i }}</th>
+                    <th class="text-center" style="font-size: 10pt">{{ $i }}</th>
                 @endfor
             </tr>
         </thead>
-
         <tbody>
-            @php
-                $programCounter = 65;
-            @endphp
             @foreach ($programs as $program)
-                <tr>
-                    <td style="font-weight: 800;">{{ chr($programCounter++) }}</td>
-                    <td colspan="3" style="font-weight: 800; border: 1px solid">Program: {{ $program->keterangan }}
-                    </td>
-                    <td colspan="1" style="font-weight: 800; border: 1px solid">
-                        {{ $program->kegiatan->sum(function ($kegiatan) {
-                            return $kegiatan->Subkegiatan->sum(function ($subkegiatan) {
-                                return $subkegiatan->Pagu->sum('jumlah');
+                <tr class="fw-bold">
+                    <td class="text-center">{{ abjad($loop->iteration) }}</td>
+                    <td colspan="3">Program: {{ $program->keterangan }}</td>
+                    <td class="text-end">
+                        {{ $program->kegiatans->sum(function ($kegiatan) {
+                            return $kegiatan->subkegiatans->sum(function ($subkegiatan) {
+                                return $subkegiatan->pagus->sum('jumlah');
                             });
                         }) }}
                     </td>
-                    <td colspan="18" style="font-weight: 800; border: 1px solid">
-                    </td>
-                </tr>
-                @php
-                    $kegiatanCounter = 1;
-                @endphp
-                @foreach ($program->kegiatan as $kegiatan)
-                    <tr>
-                        <td style="font-weight: 800">{{ romanNumerals($kegiatanCounter++) }}</td>
-                        <td colspan="3" style="font-weight: 800">Kegiatan: {{ $kegiatan->keterangan }}</td>
-                        <td colspan="1" style="font-weight: 800; border: 1px solid">
-                            {{ $kegiatan->Subkegiatan->flatMap(function ($subkegiatan) {
-                                    return $subkegiatan->Pagu->pluck('jumlah');
-                                })->sum() }}
-                        </td>
-                        <td colspan="18" style="font-weight: 800; border: 1px solid">
-                        </td>
-                    </tr>
-
-                    @php
-                        $subkegiatanCounter = 1;
-                    @endphp
-                    @foreach ($kegiatan->Subkegiatan as $subkegiatan)
-                        <tr>
-                            <td style="font-weight: 800">{{ $subkegiatanCounter++ }}</td>
-                            <td colspan="3" style="font-weight: 800">Subkegiatan: {{ $subkegiatan->keterangan }}</td>
-                            <td colspan="1" style="font-weight: 800; border: 1px solid">
-                                {{ $subkegiatan->Pagu->sum('jumlah') }}
-                            </td>
-                            <td colspan="18" style="font-weight: 800; border: 1px solid">
-                            </td>
-                        </tr>
+                    <td colspan="4"></td>
+                    <td class="text-end">
                         @php
-                            $i = 1;
+                            $kontrak = 0;
                         @endphp
-                        @foreach ($subkegiatan->Pagu as $pagu)
+                        @if ($program->kegiatans->isNotEmpty())
+                            @php
+                                $kontrak = $program->kegiatans->sum(function ($kegiatan) {
+                                    return $kegiatan->subkegiatans->sum(function ($subkegiatan) {
+                                        return $subkegiatan->pagus->sum(function ($pagu) {
+                                            return optional($pagu->kontrak)->jumlah ?? 0;
+                                        });
+                                    });
+                                });
+                            @endphp
+                            {{ $kontrak }}
+                        @else
+                            0
+                        @endif
+                    </td>
+                    <td colspan="10"></td>
+                    <td class="text-end">
+                        @php
+                            $realisasi = 0;
+                        @endphp
+                        @if ($program->kegiatans->isNotEmpty())
+                            @php
+                                $realisasi = $program->kegiatans->sum(function ($kegiatan) {
+                                    return $kegiatan->subkegiatans->sum(function ($subkegiatan) {
+                                        return $subkegiatan->pagus->sum(function ($pagu) {
+                                            return optional($pagu->realisasiKeuangan)->sum('jumlah') ?? 0;
+                                        });
+                                    });
+                                });
+                            @endphp
+                            {{ $realisasi }}
+                        @else
+                            0
+                        @endif
+                    </td>
+                    <td class="text-center">
+                        {{ $realisasi != 0 ? ($realisasi / $kontrak) * 100 : 0 }}
+                    </td>
+                    <td class="text-end">
+                        @if ($program->kegiatans->isNotEmpty())
+                            @php
+                                $fisik = $program->kegiatans->sum(function ($kegiatan) {
+                                    return $kegiatan->subkegiatans->sum(function ($subkegiatan) {
+                                        return $subkegiatan->pagus->sum(function ($pagu) {
+                                            return optional($pagu->realisasiFisik)->sum('jumlah') ?? 0;
+                                        });
+                                    });
+                                });
+                            @endphp
+                            {{ $fisik }}
+                        @else
+                            0
+                        @endif
+                    </td>
+                    <td class="text-center">
+                        {{ $fisik != 0 ? ($fisik / $kontrak) * 100 : 0 }}
+                    </td>
+                    <td colspan="12"></td>
+                </tr>
+                @foreach ($program->kegiatans as $kegiatan)
+                    <tr class="fw-bold">
+                        <td class="text-center">{{ romawi($loop->iteration) }}</td>
+                        <td colspan="3">
+                            Kegiatan: {{ $kegiatan->keterangan }}
+                        </td>
+                        <td class="text-end">
+                            {{ $kegiatan->subkegiatans->sum(function ($subkegiatan) {
+                                return $subkegiatan->pagus->sum('jumlah');
+                            }) }}
+                        </td>
+                        <td colspan="4"></td>
+                        <td class="text-end">
+                            @php
+                                $kontrak = 0;
+                            @endphp
+                            @if ($kegiatan->subkegiatans->isNotEmpty())
+                                @php
+                                    $kontrak = $kegiatan->subkegiatans->sum(function ($subkegiatan) {
+                                        return $subkegiatan->pagus->sum(function ($pagu) {
+                                            return optional($pagu->kontrak)->jumlah ?? 0;
+                                        });
+                                    });
+                                @endphp
+                                {{ $kontrak }}
+                            @else
+                                0
+                            @endif
+                        </td>
+                        <td colspan="10"></td>
+                        <td class="text-end">
+                            @php
+                                $realisasi = 0;
+                            @endphp
+                            @if ($kegiatan->subkegiatans->isNotEmpty())
+                                @php
+                                    $realisasi = $kegiatan->subkegiatans->sum(function ($subkegiatan) {
+                                        return $subkegiatan->pagus->sum(function ($pagu) {
+                                            return optional($pagu->realisasiKeuangan)->sum('jumlah') ?? 0;
+                                        });
+                                    });
+                                @endphp
+                                {{ $realisasi }}
+                            @else
+                                0
+                            @endif
+                        </td>
+                        <td class="text-center">
+                            {{ $realisasi != 0 ? ($realisasi / $kontrak) * 100 : 0 }}
+                        </td>
+                        <td class="text-end">
+                            @if ($kegiatan->subkegiatans->isNotEmpty())
+                                @php
+                                    $fisik = $kegiatan->subkegiatans->sum(function ($subkegiatan) {
+                                        return $subkegiatan->pagus->sum(function ($pagu) {
+                                            return optional($pagu->realisasiFisik)->sum('jumlah') ?? 0;
+                                        });
+                                    });
+                                @endphp
+                                {{ $fisik }}
+                            @else
+                                0
+                            @endif
+                        </td>
+                        <td class="text-center">
+                            {{ $fisik != 0 ? ($fisik / $kontrak) * 100 : 0 }}
+                        </td>
+                        <td colspan="12"></td>
+                    </tr>
+                    @foreach ($kegiatan->subkegiatans as $subkegiatan)
+                        <tr class="fw-bold">
+                            <td class="text-center">{{ abjadKecil($loop->iteration) }}</td>
+                            <td colspan="3">
+                                Subkegiatan: {{ $subkegiatan->keterangan }}
+                            </td>
+                            <td class="text-end">
+                                {{ $subkegiatan->pagus->sum('jumlah') }}
+                            </td>
+                            <td colspan="4"></td>
+                            <td class="text-end">
+                                @php
+                                    $kontrak = $subkegiatan->pagus->sum(function ($pagu) {
+                                        return optional($pagu->kontrak)->jumlah ?? 0;
+                                    });
+                                @endphp
+                                {{ $kontrak }}
+                            </td>
+                            <td colspan="10"></td>
+                            <td class="text-end">
+                                @php
+                                    $realisasi = $subkegiatan->pagus->sum(function ($pagu) {
+                                        return optional($pagu->realisasiKeuangan)->sum('jumlah') ?? 0;
+                                    });
+                                @endphp
+                                {{ $realisasi }}
+                            </td>
+                            <td class="text-center">
+                                {{ $realisasi != 0 ? ($realisasi / $kontrak) * 100 : 0 }}
+                            </td>
+                            <td class="text-end">
+                                @php
+                                    $fisik = $subkegiatan->pagus->sum(function ($pagu) {
+                                        return optional($pagu->realisasiFisik)->sum('jumlah') ?? 0;
+                                    });
+                                @endphp
+                                {{ $fisik }}
+                            </td>
+                            <td class="text-center">
+                                {{ $fisik != 0 ? ($fisik / $kontrak) * 100 : 0 }}
+                            </td>
+                            <td colspan="12"></td>
+                        </tr>
+                        @foreach ($subkegiatan->pagus as $pagu)
                             <tr>
-                                <td>{{ $i++ }}</td>
+                                <td class="text-center">{{ $loop->iteration }}</td>
                                 <td></td>
                                 <td>{{ $pagu->paket }}</td>
-                                <td>{{ $pagu->SumberDana->keterangan }}</td>
-                                <td>{{ $pagu->jumlah }}</td>
-                                @if ($pagu->Kontrak)
-                                    <td>{{ $pagu->Kontrak->cara_pengadaan }}</td>
-                                    <td>{{ $pagu->Kontrak->penyedia }}</td>
-                                    <td>{{ $pagu->Kontrak->nomor }}</td>
-                                    <td>{{ $pagu->Kontrak->tanggal }}</td>
-                                    <td>{{ $pagu->Kontrak->nilai_kontrak }}</td>
-                                    <td>{{ $pagu->Kontrak->jangka_waktu }}</td>
-                                    <td>
-                                        @php
-                                            $bukti = $pagu->kontrak->bukti == 1 ? 'ya' : 'tidak';
-                                        @endphp
-                                        {{ $bukti }}
-                                    </td>
-                                    @php
-                                        $kontraks2 = $pagu->Kontrak;
-                                    @endphp
-                                    @if ($kontraks2->Sp2d)
-                                        @foreach ($kontraks2->Sp2d as $sp2d)
-                                            <td>{{ $sp2d->nomor }}</td>
-                                        @endforeach
-                                    @else
-                                        <td>-</td>
-                                    @endif
-                                @else
-                                    <td colspan="5">-</td>
-                                    <td>-</td>
-                                @endif
-                                <td>{{ $pagu->Bap->first()->nomor ?? '-' }}</td>
-                                <td>{{ $pagu->Bap->first()->tanggal ?? '-' }}</td>
-                                <td>{{ $pagu->Bast->first()->nomor ?? '-' }}</td>
-                                <td>{{ $pagu->Bast->first()->tanggal ?? '-' }}</td>
-                                <td>{{ $pagu->BastPho->first()->nomor ?? '-' }}</td>
-                                <td>{{ $pagu->BastPho->first()->tanggal ?? '-' }}</td>
-                                <td>{{ $pagu->BastPho->first()->ket ?? '-' }}</td>
-                                <td>{{ $pagu->RealisasiKeuangan->sum('nilai') }}</td>
-                                <td>{{ $pagu->RealisasiKeuangan->sum('bobot') }}</td>
-                                <td>{{ $pagu->RealisasiFisik->sum('nilai') }}</td>
-                                <td>{{ $pagu->RealisasiFisik->sum('bobot') }}</td>
-                                <td>
-                                    @if ($pagu->Spmk)
-                                        {{ $pagu->Spmk->nomor }}
-                                    @else
-                                        -
-                                    @endif
+                                <td class="text-center">{{ $pagu->sumberDana->keterangan }}</td>
+                                <td class="text-end">{{ $pagu->jumlah }}</td>
+                                <td>{{ $pagu->kontrak?->jenisPengadaan->keterangan }}</td>
+                                <td>{{ $pagu->kontrak?->penyedia }}</td>
+                                <td>{{ $pagu->kontrak?->nomor }}</td>
+                                <td class="text-center">{{ $pagu->kontrak?->tanggal->format('d/m/Y') }}</td>
+                                <td class="text-end">{{ $pagu->kontrak?->jumlah }}</td>
+                                <td class="text-center">{{ $pagu->kontrak?->jangka_waktu }}</td>
+                                <td class="text-center">
+                                    {{ $pagu->kontrak?->bukti == 1 ? 'Ya' : 'Bukti' }}
                                 </td>
                                 <td>
-                                    @if ($pagu->Spmk)
-                                        {{ $pagu->Spmk->tanggal }}
-                                    @else
-                                        -
-                                    @endif
+                                    {{ $pagu->sp2d ? $pagu->sp2d->nomor : '-' }}
                                 </td>
-                                @if ($pagu->Kontrak)
-                                    @php
-                                        $kontraks = $pagu->Kontrak;
-                                    @endphp
-                                    @if ($kontraks->Adendum)
-                                        @foreach ($kontraks->Adendum as $adendum)
-                                            <td>{{ $adendum->nomor }}</td>
-                                            <td>{{ $adendum->tanggal }}</td>
-                                            <td>{{ $adendum->keterangan }}</td>
-                                        @endforeach
-                                    @else
-                                        -
-                                    @endif
-                                @else
-                                    -
-                                @endif
-                                <td></td>
+                                <td>
+                                    {{ $pagu->bap ? $pagu->bap?->nomor : '-' }}
+                                </td>
+                                <td class="text-center">
+                                    {{ $pagu->bap ? $pagu->bap?->tanggal->format('d/m/Y') : '-' }}
+                                </td>
+                                <td>
+                                    {{ $pagu->bast ? $pagu->bast?->nomor : '-' }}
+                                </td>
+                                <td class="text-center">
+                                    {{ $pagu->bast ? $pagu->bast?->tanggal->format('d/m/Y') : '-' }}
+                                </td>
+                                <td>
+                                    {{ $pagu->bastPho ? $pagu->bastPho?->nomor : '-' }}
+                                </td>
+                                <td class="text-center">
+                                    {{ $pagu->bastPho ? $pagu->bastPho?->tanggal->format('d/m/Y') : '-' }}
+                                </td>
+                                <td>
+                                    {{ $pagu->bastPho ? $pagu->bastPho?->keterangan : '-' }}
+                                </td>
+                                <td class="text-end">
+                                    {{ $pagu->realisasiKeuangan ? $pagu->realisasiKeuangan?->sum('nilai') : 0 }}
+                                </td>
+                                <td class="text-center">
+                                    {{ $pagu->realisasiKeuangan ? $pagu->realisasiKeuangan?->sum('bobot') : 0 }}
+                                </td>
+                                <td class="text-end">
+                                    {{ $pagu->realisasiFisik ? $pagu->realisasiFisik?->sum('nilai') : 0 }}
+                                </td>
+                                <td class="text-center">
+                                    {{ $pagu->realisasiFisik ? $pagu->realisasiFisik?->sum('bobot') : 0 }}
+                                </td>
+                                <td>
+                                    {{ $pagu->smpk ? $pagu->smpk?->nomor : '-' }}
+                                </td>
+                                <td>
+                                    {{ $pagu->smpk ? $pagu->smpk?->tanggal->format('d/m/Y') : '-' }}
+                                </td>
                             </tr>
                         @endforeach
                     @endforeach
                 @endforeach
-                <tr>
-                    <td colspan="22"></td>
-                </tr>
             @endforeach
-
-            @php
-                function romanNumerals($number)
-                {
-                    $romans = [
-                        1 => 'I',
-                        2 => 'II',
-                        3 => 'III',
-                        4 => 'IV',
-                        5 => 'V',
-                        6 => 'VI',
-                        7 => 'VII',
-                        8 => 'VIII',
-                        9 => 'IX',
-                        10 => 'X',
-                        11 => 'XI',
-                        12 => 'XII',
-                        13 => 'XIII',
-                        14 => 'XIV',
-                        15 => 'XV',
-                        16 => 'XVI',
-                        17 => 'XVII',
-                        18 => 'XVIII',
-                        19 => 'XIX',
-                        20 => 'XX',
-                    ];
-
-                    return $romans[$number] ?? $number;
-                }
-            @endphp
 
         </tbody>
     </table>

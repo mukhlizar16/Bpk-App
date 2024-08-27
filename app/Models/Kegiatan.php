@@ -12,13 +12,13 @@ class Kegiatan extends Model
     protected $table = 'kegiatan';
     protected $guarded = ['id'];
 
-    public function Program()
+    public function program()
     {
         return $this->belongsTo(Program::class, 'program_id');
     }
 
-    public function Subkegiatan()
+    public function subkegiatans()
     {
-        return $this->hasMany(Subkegiatan::class);
+        return $this->hasMany(Subkegiatan::class, 'kegiatan_id');
     }
 }

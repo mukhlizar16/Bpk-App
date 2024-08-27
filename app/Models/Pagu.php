@@ -4,6 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Pagu extends Model
 {
@@ -33,19 +36,19 @@ class Pagu extends Model
         return $this->hasMany(RealisasiFisik::class);
     }
 
-    public function bap()
+    public function bap(): HasOne
     {
-        return $this->hasMany(Bap::class);
+        return $this->hasOne(Bap::class, 'pagu_id');
     }
 
     public function bast()
     {
-        return $this->hasMany(Bast::class);
+        return $this->hasOne(Bast::class);
     }
 
     public function bastPho()
     {
-        return $this->hasMany(BastPho::class);
+        return $this->hasOne(BastPho::class);
     }
 
     public function spmk()
@@ -55,6 +58,11 @@ class Pagu extends Model
 
     public function kontrak()
     {
-        return $this->hasOne(Kontrak::class);
+        return $this->hasOne(Kontrak::class, 'pagu_id');
+    }
+
+    public function jenisPengadaan(): BelongsTo
+    {
+        return $this->belongsTo(JenisPengadaan::class, 'pengadaan_id');
     }
 }

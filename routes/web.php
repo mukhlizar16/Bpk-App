@@ -1,26 +1,28 @@
 <?php
 
-use App\Http\Controllers\AdendumController;
-use App\Http\Controllers\AuthController;
+use App\Models\Pagu;
+use App\Models\Program;
+use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BapController;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BastController;
-use App\Http\Controllers\BastPhoController;
 use App\Http\Controllers\DanaController;
-use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\FisikController;
-use App\Http\Controllers\JabatanController;
-use App\Http\Controllers\KegiatanController;
-use App\Http\Controllers\KeuanganController;
-use App\Http\Controllers\KontrakController;
 use App\Http\Controllers\PaguController;
-use App\Http\Controllers\PejabatController;
-use App\Http\Controllers\PengadaanController;
-use App\Http\Controllers\ProgramController;
 use App\Http\Controllers\Sp2dController;
 use App\Http\Controllers\SpmkController;
-use App\Http\Controllers\SubKegiatanController;
 use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FisikController;
+use App\Http\Controllers\AdendumController;
+use App\Http\Controllers\BastPhoController;
+use App\Http\Controllers\JabatanController;
+use App\Http\Controllers\KontrakController;
+use App\Http\Controllers\PejabatController;
+use App\Http\Controllers\ProgramController;
+use App\Http\Controllers\KegiatanController;
+use App\Http\Controllers\KeuanganController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PengadaanController;
+use App\Http\Controllers\SubKegiatanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -73,4 +75,5 @@ Route::prefix('/dashboard')->middleware('auth')->group(function () {
     });
     Route::get('/export-pagu', [PaguController::class, 'exportAll'])->name('pagu.export-all');
     Route::put('/resetpassword/{user}', [UserController::class, 'resetPasswordAdmin'])->name('resetpassword.resetPasswordAdmin');
+
 });

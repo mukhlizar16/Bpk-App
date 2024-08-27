@@ -10,13 +10,13 @@ class Subkegiatan extends Model
 
     protected $fillable = ['kode', 'keterangan'];
 
-    public function Kegiatan()
+    public function kegiatan()
     {
         return $this->belongsTo(Kegiatan::class, 'kegiatan_id');
     }
 
-    public function Pagu()
+    public function pagus()
     {
-        return $this->hasMany(Pagu::class);
+        return $this->hasMany(Pagu::class, 'subkegiatan_id');
     }
 }
