@@ -13,10 +13,10 @@ class KeuanganController extends Controller
      */
     public function index()
     {
-        $title = "Data Realisasi Keuangan " ;
-        $keuangans = RealisasiKeuangan::all();
+        $title = "Data Realisasi Keuangan ";
+        $keuangans = RealisasiKeuangan::latest()->get();
         $pagus = Pagu::all();
-        return view('dashboard.pagu.keuangan.index')->with(compact('title', 'keuangans', 'pagus'));
+        return view('dashboard.pagu.keuangan.index', compact('title', 'keuangans', 'pagus'));
     }
 
     /**

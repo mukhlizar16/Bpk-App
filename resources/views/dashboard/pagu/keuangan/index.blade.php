@@ -43,7 +43,7 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $keuangan->Pagu->paket }}</td>
-                                    <td>Rp. {{ number_format($keuangan->nilai, 0, ',', '.')}}</td>
+                                    <td>Rp. {{ number_format($keuangan->nilai, 0, ',', '.') }}</td>
                                     <td>{{ $keuangan->bobot }}</td>
                                     <td>
                                         <button class="btn btn-sm btn-warning" data-bs-toggle="modal"
@@ -60,6 +60,7 @@
                                 {{-- Modal Edit sppd --}}
                                 <x-form_modal>
                                     @slot('id', "editKeuangan$loop->iteration")
+                                    @slot('class', 'modal-edit')
                                     @slot('title', 'Edit Data Keuangan')
                                     @slot('route', route('keuangan.update', $keuangan->id))
                                     @slot('method') @method('put') @endslot
@@ -67,17 +68,12 @@
 
                                     <div class="mb-3">
                                         <label for="pagu_id" class="form-label">Pagu</label>
-                                        <select class="form-select @error('pagu_id') is-invalid @enderror"
-                                            name="pagu_id" id="pagu_id"
-                                            value="{{ old('pagu_id', $keuangan->pagu_id) }}">
+                                        <select class="form-select pagu-edit @error('pagu_id') is-invalid @enderror"
+                                            name="pagu_id" id="pagu_id" style="width: 100%" required>
+                                            <option value="">--pilih--</option>
                                             @foreach ($pagus as $pagu)
-                                                @if (old('pagu_id', $keuangan->pagu_id) == $pagu->id)
-                                                    <option value="{{ $pagu->id }}" selected>
-                                                        {{ $pagu->paket }}</option>
-                                                @else
-                                                    <option value="{{ $pagu->id }}">
-                                                        {{ $pagu->paket }}</option>
-                                                @endif
+                                                <option value="{{ $pagu->id }}" @selected(old('pagu_id', $keuangan->pagu_id) == $pagu->id)>
+                                                    {{ $pagu->paket }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -86,7 +82,7 @@
                                         <label for="nilai" class="form-label">Nilai</label>
                                         <input type="number" class="form-control @error('nilai') is-invalid @enderror"
                                             id="nilai" name="nilai" value="{{ old('nilai', $keuangan->nilai) }}"
-                                            autofocus required>
+                                            required>
                                         @error('nilai')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -129,50 +125,68 @@
                     </table>
                     {{-- End Table --}}
 
-                    <x-form_modal>
-                        @slot('id', 'tambahKeuangan')
-                        @slot('title', 'Tambah Data Keuangan')
-                        @slot('overflow', 'overflow-auto')
-                        @slot('route', route('keuangan.store'))
-
-                        @csrf
-                        <div class="row">
-                            <div class="mb-3">
-                                <label for="pagu_id" class="form-label">pagu</label>
-                                <select class="form-select @error('pagu_id') is-invalid @enderror" name="pagu_id"
-                                    id="pagu_id">
-                                    @foreach ($pagus as $pagu)
-                                        <option value="{{ $pagu->id }}" selected>
-                                            {{ $pagu->paket }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="nilai" class="form-label">Nilai</label>
-                                <input type="number" class="form-control @error('nilai') is-invalid @enderror"
-                                    id="nilai" name="nilai" autofocus required>
-                                @error('nilai')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-                            <div class="mb-3">
-                                <label for="bobot" class="form-label">Bobot</label>
-                                <input type="number" step="any"
-                                    class="form-control @error('bobot') is-invalid @enderror" id="bobot" name="bobot"
-                                    autofocus required>
-                                @error('bobot')
-                                    <div class="invalid-feedback">
-                                        {{ $message }}
-                                    </div>
-                                @enderror
-                            </div>
-                        </div>
-                    </x-form_modal>
 
                 </div>
             </div>
         </div>
     </div>
+    <x-form_modal>
+        @slot('id', 'tambahKeuangan')
+        @slot('title', 'Tambah Data Keuangan')
+        @slot('overflow', 'overflow-auto')
+        @slot('route', route('keuangan.store'))
+
+        @csrf
+        <div class="mb-3">
+            <label for="pagu" class="form-label">pagu</label>
+            <select class="form-select @error('pagu_id') is-invalid @enderror" name="pagu_id" id="pagu" required
+                autofocus style="width: 100%">
+                <option value="">--pilih--</option>
+                @foreach ($pagus as $pagu)
+                    <option value="{{ $pagu->id }}" @selected(old('pagu_id'))>
+                        {{ $pagu->paket }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="nilai" class="form-label">Nilai</label>
+            <input type="number" class="form-control @error('nilai') is-invalid @enderror" id="nilai" name="nilai"
+                value="{{ old('nilai') }}" required>
+            @error('nilai')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+            @enderror
+        </div>
+        <div class="mb-3">
+            <label for="bobot" class="form-label">Bobot</label>
+            <input type="number" step="any" class="form-control @error('bobot') is-invalid @enderror" id="bobot"
+                name="bobot" value="{{ old('bobot') }}" required>
+            @error('bobot')
+                <div class="invalid-feedback">
+                    {{ $message }}
+                </div>
+            @enderror
+        </div>
+    </x-form_modal>
+
+    @push('css')
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    @endpush
+
+    @push('script')
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('#pagu').select2({
+                    dropdownParent: $('#tambahKeuangan')
+                });
+                $('.modal-edit').on('shown.bs.modal', function() {
+                    $(this).find('.pagu-edit').select2({
+                        dropdownParent: $(this)
+                    });
+                })
+            });
+        </script>
+    @endpush
 @endsection
