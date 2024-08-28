@@ -29,23 +29,23 @@
                         style="width:100%">
                         <thead>
                             <tr>
-                                <th>NO</th>
+                                <th class="text-center">NO</th>
                                 <th>NOMOR</th>
                                 <th>PAGU</th>
-                                <th>TANGGAL</th>
+                                <th class="text-center">TANGGAL</th>
                                 <th>KETERANGAN</th>
-                                <th>ACTION</th>
+                                <th class="text-center">ACTION</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($basts as $bast)
                                 <tr>
-                                    <td>{{ $loop->iteration }}</td>
+                                    <td class="text-center">{{ $loop->iteration }}</td>
                                     <td>{{ $bast->nomor }}</td>
                                     <td>{{ $bast->Pagu->paket }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($bast->tanggal)->format('d-m-Y') }}</td>
-                                    <td>{{ $bast->ket }}</td>
-                                    <td>
+                                    <td class="text-center">{{ $bast->tanggal->format('d/m/Y') }}</td>
+                                    <td>{{ $bast->keterangan }}</td>
+                                    <td class="text-center">
                                         <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
                                             data-bs-target="#editBastPho{{ $loop->iteration }}">
                                             <i class="fa-solid fa-pen-to-square"></i>
@@ -60,6 +60,7 @@
                                 {{-- Modal Edit Bast --}}
                                 <x-form_modal>
                                     @slot('id', "editBastPho$loop->iteration")
+                                    @slot('class', 'modal-edit')
                                     @slot('title', 'Edit Data Bast Pho')
                                     @slot('route', route('bast-pho.update', $bast->id))
                                     @slot('method') @method('put') @endslot
@@ -79,17 +80,11 @@
 
                                     <div class="mb-3">
                                         <label for="pagu_id" class="form-label">Pagu</label>
-                                        <select class="form-select @error('pagu_id') is-invalid @enderror"
-                                            name="pagu_id" id="pagu_id"
-                                            value="{{ old('pagu_id', $bast->pagu_id) }}">
+                                        <select class="form-select pagu-edit @error('pagu_id') is-invalid @enderror"
+                                            name="pagu_id" id="pagu_id" required>
                                             @foreach ($pagus as $pagu)
-                                                @if (old('pagu_id', $bast->pagu_id) == $pagu->id)
-                                                    <option value="{{ $pagu->id }}" selected>
-                                                        {{ $pagu->paket }}</option>
-                                                @else
-                                                    <option value="{{ $pagu->id }}">
-                                                        {{ $pagu->paket }}</option>
-                                                @endif
+                                                <option value="{{ $pagu->id }}" @selected(old('pagu_id', $bast->pagu_id) == $pagu->id)>
+                                                    {{ $pagu->paket }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -97,8 +92,8 @@
                                     <div class="mb-3">
                                         <label for="tanggal" class="form-label">Tanggal</label>
                                         <input type="date" class="form-control @error('tanggal') is-invalid @enderror"
-                                            id="tanggal" name="tanggal" value="{{ old('tanggal', $bast->tanggal) }}" autofocus
-                                            required>
+                                            id="tanggal" name="tanggal"
+                                            value="{{ old('tanggal', $bast->tanggal->format('Y-m-d')) }}" required>
                                         @error('tanggal')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -108,10 +103,10 @@
 
                                     <div class="mb-3">
                                         <label for="ket" class="form-label">Keterangan</label>
-                                        <input type="text" class="form-control @error('ket') is-invalid @enderror"
-                                            id="ket" name="ket" value="{{ old('ket', $bast->ket) }}" autofocus
-                                            required>
-                                        @error('ket')
+                                        <input type="text" class="form-control @error('keterangan') is-invalid @enderror"
+                                            id="ket" name="keterangan"
+                                            value="{{ old('keterangan', $bast->keterangan) }}">
+                                        @error('keterangan')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
                                             </div>
@@ -136,7 +131,6 @@
 
                                 </x-form_modal>
                                 {{-- / Modal Hapus User  --}}
-
                             @endforeach
                         </tbody>
                     </table>
@@ -157,9 +151,8 @@
         @csrf
         <div class="mb-3">
             <label for="nomor" class="form-label">Nomor</label>
-            <input type="text" class="form-control @error('nomor') is-invalid @enderror"
-                id="nomor" name="nomor" autofocus
-                required>
+            <input type="text" class="form-control @error('nomor') is-invalid @enderror" id="nomor" name="nomor"
+                autofocus required>
             @error('nomor')
                 <div class="invalid-feedback">
                     {{ $message }}
@@ -169,10 +162,11 @@
 
         <div class="mb-3">
             <label for="pagu_id" class="form-label">pagu</label>
-            <select class="form-select @error('pagu_id') is-invalid @enderror" name="pagu_id"
-                id="pagu_id">
+            <select class="form-select select2 @error('pagu_id') is-invalid @enderror" name="pagu_id" id="pagu_id"
+                style="width: 100%" required>
+                <option value="">--pilih--</option>
                 @foreach ($pagus as $pagu)
-                    <option value="{{ $pagu->id }}" selected>
+                    <option value="{{ $pagu->id }}">
                         {{ $pagu->paket }}</option>
                 @endforeach
             </select>
@@ -180,8 +174,7 @@
 
         <div class="mb-3">
             <label for="tanggal" class="form-label">Tanggal</label>
-            <input type="date" class="form-control @error('tanggal') is-invalid @enderror"
-                id="tanggal" name="tanggal" autofocus
+            <input type="date" class="form-control @error('tanggal') is-invalid @enderror" id="tanggal" name="tanggal"
                 required>
             @error('tanggal')
                 <div class="invalid-feedback">
@@ -192,10 +185,9 @@
 
         <div class="mb-3">
             <label for="ket" class="form-label">Keterangan</label>
-            <input type="text" class="form-control @error('ket') is-invalid @enderror"
-                id="ket" name="ket" autofocus
-                required>
-            @error('ket')
+            <input type="text" class="form-control @error('keterangan') is-invalid @enderror" id="ket"
+                name="keterangan" required>
+            @error('keterangan')
                 <div class="invalid-feedback">
                     {{ $message }}
                 </div>
@@ -203,4 +195,24 @@
         </div>
     </x-form_modal>
     <!-- Akhir Modal Tambah User -->
+
+    @push('css')
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    @endpush
+
+    @push('script')
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('.select2').select2({
+                    dropdownParent: $('#tambahBastPho')
+                });
+                $('.modal-edit').on('shown.bs.modal', function() {
+                    $(this).find('.pagu-edit').select2({
+                        dropdownParent: $(this)
+                    });
+                })
+            });
+        </script>
+    @endpush
 @endsection

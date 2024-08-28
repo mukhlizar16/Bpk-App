@@ -23,8 +23,10 @@ class StoreBastPhoRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'nomor' => 'required',
-            'tanggal' => 'required'
+            'pagu_id' => 'required',
+            'nomor' => 'required|string|max:200',
+            'tanggal' => 'required',
+            'keterangan' => 'nullable|sometimes|string|max:255'
         ];
     }
 }

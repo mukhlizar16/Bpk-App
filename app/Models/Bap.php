@@ -11,7 +11,7 @@ class Bap extends Model
     use HasFactory;
 
     protected $table = 'bap';
-    protected $fillable = ['nomor', 'tanggal'];
+    protected $fillable = ['pagu_id', 'nomor', 'tanggal'];
     protected $casts = [
         'tanggal' => 'date'
     ];

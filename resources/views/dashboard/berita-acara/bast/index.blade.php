@@ -53,76 +53,68 @@
                                             <i class="fa-solid fa-trash"></i>
                                         </button>
                                     </td>
+                                    {{-- Modal Edit Bast --}}
+                                    <x-form_modal>
+                                        @slot('id', "editBast$loop->iteration")
+                                        @slot('class', 'modal-edit')
+                                        @slot('title', 'Edit Data Bast')
+                                        @slot('route', route('bast.update', $bast->id))
+                                        @slot('method') @method('put') @endslot
+                                        @slot('btnPrimaryTitle', 'Perbarui')
+
+                                        <div class="mb-3">
+                                            <label for="nomor" class="form-label">Nomor</label>
+                                            <input type="text" class="form-control @error('nomor') is-invalid @enderror"
+                                                id="nomor" name="nomor" value="{{ old('nomor', $bast->nomor) }}"
+                                                autofocus required>
+                                            @error('nomor')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="pagu_edit" class="form-label">Pagu</label>
+                                            <select class="form-select pagu-edit @error('pagu_id') is-invalid @enderror"
+                                                name="pagu_id" id="pagu_edit" style="width: 100%">
+                                                @foreach ($pagus as $pagu)
+                                                    <option value="{{ $pagu->id }}" @selected(old('pagu_id', $bast->pagu_id) == $pagu->id)>
+                                                        {{ $pagu->paket }}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="tanggal" class="form-label">Tanggal</label>
+                                            <input type="date"
+                                                class="form-control @error('tanggal') is-invalid @enderror" id="tanggal"
+                                                name="tanggal"
+                                                value="{{ old('tanggal', $bast->tanggal->format('Y-m-d')) }}" required>
+                                            @error('tanggal')
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
+                                        </div>
+                                    </x-form_modal>
+                                    {{-- / Modal Edit Bast --}}
+
+                                    {{-- Modal Hapus Bast --}}
+                                    <x-form_modal>
+                                        @slot('id', "hapusBast$loop->iteration")
+                                        @slot('title', 'Hapus Data Bast')
+                                        @slot('route', route('bast.destroy', $bast->id))
+                                        @slot('method') @method('delete') @endslot
+                                        @slot('btnPrimaryClass', 'btn-outline-danger')
+                                        @slot('btnSecondaryClass', 'btn-secondary')
+                                        @slot('btnPrimaryTitle', 'Hapus')
+
+                                        <p class="fs-5">Apakah anda yakin akan menghapus data bast
+                                            <b>{{ $bast->nomor }}</b>?
+                                        </p>
+
+                                    </x-form_modal>
+                                    {{-- / Modal Hapus User  --}}
                                 </tr>
-
-                                {{-- Modal Edit Bast --}}
-                                <x-form_modal>
-                                    @slot('id', "editBast$loop->iteration")
-                                    @slot('title', 'Edit Data Bast')
-                                    @slot('route', route('bast.update', $bast->id))
-                                    @slot('method') @method('put') @endslot
-                                    @slot('btnPrimaryTitle', 'Perbarui')
-
-                                    <div class="mb-3">
-                                        <label for="nomor" class="form-label">Nomor</label>
-                                        <input type="text" class="form-control @error('nomor') is-invalid @enderror"
-                                            id="nomor" name="nomor" value="{{ old('nomor', $bast->nomor) }}" autofocus
-                                            required>
-                                        @error('nomor')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label for="pagu_id" class="form-label">Pagu</label>
-                                        <select class="form-select @error('pagu_id') is-invalid @enderror"
-                                            name="pagu_id" id="pagu_id"
-                                            value="{{ old('pagu_id', $bast->pagu_id) }}">
-                                            @foreach ($pagus as $pagu)
-                                                @if (old('pagu_id', $bast->pagu_id) == $pagu->id)
-                                                    <option value="{{ $pagu->id }}" selected>
-                                                        {{ $pagu->paket }}</option>
-                                                @else
-                                                    <option value="{{ $pagu->id }}">
-                                                        {{ $pagu->paket }}</option>
-                                                @endif
-                                            @endforeach
-                                        </select>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label for="tanggal" class="form-label">Tanggal</label>
-                                        <input type="date" class="form-control @error('tanggal') is-invalid @enderror"
-                                            id="tanggal" name="tanggal" value="{{ old('tanggal', $bast->tanggal) }}" autofocus
-                                            required>
-                                        @error('tanggal')
-                                            <div class="invalid-feedback">
-                                                {{ $message }}
-                                            </div>
-                                        @enderror
-                                    </div>
-                                </x-form_modal>
-                                {{-- / Modal Edit Bast --}}
-
-                                {{-- Modal Hapus Bast --}}
-                                <x-form_modal>
-                                    @slot('id', "hapusBast$loop->iteration")
-                                    @slot('title', 'Hapus Data Bast')
-                                    @slot('route', route('bast.destroy', $bast->id))
-                                    @slot('method') @method('delete') @endslot
-                                    @slot('btnPrimaryClass', 'btn-outline-danger')
-                                    @slot('btnSecondaryClass', 'btn-secondary')
-                                    @slot('btnPrimaryTitle', 'Hapus')
-
-                                    <p class="fs-5">Apakah anda yakin akan menghapus data bast
-                                        <b>{{ $bast->nomor }}</b>?
-                                    </p>
-
-                                </x-form_modal>
-                                {{-- / Modal Hapus User  --}}
-
                             @endforeach
                         </tbody>
                     </table>
@@ -143,9 +135,8 @@
         @csrf
         <div class="mb-3">
             <label for="nomor" class="form-label">Nomor</label>
-            <input type="text" class="form-control @error('nomor') is-invalid @enderror"
-                id="nomor" name="nomor" autofocus
-                required>
+            <input type="text" class="form-control @error('nomor') is-invalid @enderror" id="nomor" name="nomor"
+                autofocus required>
             @error('nomor')
                 <div class="invalid-feedback">
                     {{ $message }}
@@ -155,10 +146,11 @@
 
         <div class="mb-3">
             <label for="pagu_id" class="form-label">pagu</label>
-            <select class="form-select @error('pagu_id') is-invalid @enderror" name="pagu_id"
-                id="pagu_id">
+            <select class="form-select select2 @error('pagu_id') is-invalid @enderror" name="pagu_id" id="pagu_id"
+                style="width: 100%">
+                <option value="">--pilih--</option>
                 @foreach ($pagus as $pagu)
-                    <option value="{{ $pagu->id }}" selected>
+                    <option value="{{ $pagu->id }}">
                         {{ $pagu->paket }}</option>
                 @endforeach
             </select>
@@ -166,9 +158,8 @@
 
         <div class="mb-3">
             <label for="tanggal" class="form-label">Tanggal</label>
-            <input type="date" class="form-control @error('tanggal') is-invalid @enderror"
-                id="tanggal" name="tanggal" autofocus
-                required>
+            <input type="date" class="form-control @error('tanggal') is-invalid @enderror" id="tanggal" name="tanggal"
+                autofocus required>
             @error('tanggal')
                 <div class="invalid-feedback">
                     {{ $message }}
@@ -177,4 +168,24 @@
         </div>
     </x-form_modal>
     <!-- Akhir Modal Tambah User -->
+
+    @push('css')
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    @endpush
+
+    @push('script')
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('.select2').select2({
+                    dropdownParent: $('#tambahBast')
+                });
+                $('.modal-edit').on('shown.bs.modal', function() {
+                    $(this).find('.pagu-edit').select2({
+                        dropdownParent: $(this)
+                    });
+                })
+            });
+        </script>
+    @endpush
 @endsection

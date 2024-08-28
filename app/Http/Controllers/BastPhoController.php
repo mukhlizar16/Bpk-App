@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreBastPhoRequest;
-use App\Models\BastPho;
 use App\Models\Pagu;
+use App\Models\BastPho;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
+use App\Http\Requests\StoreBastPhoRequest;
 use Illuminate\Validation\ValidationException;
 
 class BastPhoController extends Controller
@@ -16,9 +18,9 @@ class BastPhoController extends Controller
     public function index()
     {
         $title = "Data Bast Pho";
-        $basts = BastPho::with('Pagu')->get();
+        $basts = BastPho::with('pagu')->latest()->get();
         $pagus = Pagu::all();
-        return view('dashboard.berita-acara.bast-pho.index')->with(compact('title', 'basts', 'pagus'));
+        return view('dashboard.berita-acara.bast-pho.index', compact('title', 'basts', 'pagus'));
     }
 
     /**
@@ -64,12 +66,12 @@ class BastPhoController extends Controller
                 'nomor' => 'required',
                 'pagu_id' => 'required',
                 'tanggal' => 'required',
-                'ket' => 'required',
+                'keterangan' => 'required',
             ];
 
             $validatedData = $this->validate($request, $rules);
 
-            BastPho::find($bast_pho->id)->update($validatedData);
+            $bast_pho->update($validatedData);
 
             return redirect()->back()->with('success', "Data Bast Pho $bast_pho->nomor berhasil diperbarui!");
         } catch (ValidationException $exception) {
@@ -83,7 +85,8 @@ class BastPhoController extends Controller
     public function destroy(BastPho $bast_pho)
     {
         try {
-            BastPho::destroy($bast_pho->id);
+            $bast_pho->delete();
+            DB::statement('ALTER TABLE bast_pho AUTO_INCREMENT=1');
         } catch (QueryException $e) {
             if ($e->getCode() == 23000) {
                 //SQLSTATE[23000]: Integrity constraint violation

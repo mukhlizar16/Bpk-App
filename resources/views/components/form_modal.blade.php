@@ -1,4 +1,10 @@
-<div class="modal fade " id="{{ $id }}" tabindex="-1" aria-hidden="true">
+@props(['class'])
+
+@php
+    $classes = empty($class) ?? false ? 'modal fade ' : 'modal fade ' . $class;
+@endphp
+
+<div {{ $attributes->merge(['class' => $classes]) }} id="{{ $id }}" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog  {{ $modalSize ?? '' }} modal-dialog-scrollable" role="document">
         <div class="modal-content {{ $overflow ?? '' }}">
             <div class="modal-header">

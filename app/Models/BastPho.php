@@ -10,12 +10,12 @@ class BastPho extends Model
     use HasFactory;
 
     protected $table = 'bast_pho';
-    protected $fillable = ['nomor', 'tanggal', 'keterangan'];
+    protected $fillable = ['pagu_id', 'nomor', 'tanggal', 'keterangan'];
     protected $casts = [
         'tanggal' => 'date'
     ];
 
-    public function Pagu()
+    public function pagu()
     {
         return $this->belongsTo(Pagu::class, 'pagu_id');
     }

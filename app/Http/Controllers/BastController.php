@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Bast;
 use App\Models\Pagu;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BastController extends Controller
 {
@@ -14,9 +15,9 @@ class BastController extends Controller
     public function index()
     {
         $title = "Data Bast";
-        $basts = Bast::with('Pagu')->get();
+        $basts = Bast::with('pagu')->get();
         $pagus = Pagu::all();
-        return view('dashboard.berita-acara.bast.index')->with(compact('title', 'basts', 'pagus'));
+        return view('dashboard.berita-acara.bast.index', compact('title', 'basts', 'pagus'));
     }
 
     /**
@@ -77,7 +78,7 @@ class BastController extends Controller
 
             $validatedData = $this->validate($request, $rules);
 
-            Bast::where('id', $bast->id)->update($validatedData);
+            $bast->update($validatedData);
 
             return redirect()->back()->with('success', "Data Bast $bast->nomor berhasil diperbarui!");
         } catch (\Illuminate\Validation\ValidationException $exception) {
@@ -91,7 +92,8 @@ class BastController extends Controller
     public function destroy(Bast $bast)
     {
         try {
-            Bast::destroy($bast->id);
+            $bast->delete();
+            DB::statement('ALTER TABLE bast AUTO_INCREMENT=1');
         } catch (\Illuminate\Database\QueryException $e) {
             if ($e->getCode() == 23000) {
                 //SQLSTATE[23000]: Integrity constraint violation

@@ -29,21 +29,21 @@
                         style="width:100%">
                         <thead>
                             <tr>
-                                <th>NO</th>
+                                <th class="text-center">NO</th>
                                 <th>NOMOR</th>
                                 <th>PAGU</th>
-                                <th>TANGGAL</th>
-                                <th>ACTION</th>
+                                <th class="text-center">TANGGAL</th>
+                                <th class="text-center">ACTION</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($baps as $bap)
                                 <tr>
-                                    <td>{{ $loop->iteration }}</td>
+                                    <td class="text-center">{{ $loop->iteration }}</td>
                                     <td>{{ $bap->nomor }}</td>
                                     <td>{{ $bap->Pagu->paket }}</td>
-                                    <td>{{ \Carbon\Carbon::parse($bap->tanggal)->format('d-m-Y') }}</td>
-                                    <td>
+                                    <td class="text-center">{{ $bap->tanggal->format('d/m/Y') }}</td>
+                                    <td class="text-center">
                                         <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal"
                                             data-bs-target="#editBap{{ $loop->iteration }}">
                                             <i class="fa-solid fa-pen-to-square"></i>
@@ -77,9 +77,8 @@
 
                                     <div class="mb-3">
                                         <label for="pagu_id" class="form-label">Pagu</label>
-                                        <select class="form-select @error('pagu_id') is-invalid @enderror"
-                                            name="pagu_id" id="pagu_id"
-                                            value="{{ old('pagu_id', $bap->pagu_id) }}">
+                                        <select class="form-select @error('pagu_id') is-invalid @enderror" name="pagu_id"
+                                            id="pagu_id" value="{{ old('pagu_id', $bap->pagu_id) }}">
                                             @foreach ($pagus as $pagu)
                                                 @if (old('pagu_id', $bap->pagu_id) == $pagu->id)
                                                     <option value="{{ $pagu->id }}" selected>
@@ -95,8 +94,8 @@
                                     <div class="mb-3">
                                         <label for="tanggal" class="form-label">Tanggal</label>
                                         <input type="date" class="form-control @error('tanggal') is-invalid @enderror"
-                                            id="tanggal" name="tanggal" value="{{ old('tanggal', $bap->tanggal) }}" autofocus
-                                            required>
+                                            id="tanggal" name="tanggal"
+                                            value="{{ old('tanggal', $bap->tanggal->format('Y-m-d')) }}" required>
                                         @error('tanggal')
                                             <div class="invalid-feedback">
                                                 {{ $message }}
@@ -122,7 +121,6 @@
 
                                 </x-form_modal>
                                 {{-- / Modal Hapus User  --}}
-
                             @endforeach
                         </tbody>
                     </table>
@@ -143,9 +141,8 @@
         @csrf
         <div class="mb-3">
             <label for="nomor" class="form-label">Nomor</label>
-            <input type="text" class="form-control @error('nomor') is-invalid @enderror"
-                id="nomor" name="nomor" autofocus
-                required>
+            <input type="text" class="form-control @error('nomor') is-invalid @enderror" id="nomor" name="nomor"
+                autofocus required>
             @error('nomor')
                 <div class="invalid-feedback">
                     {{ $message }}
@@ -155,10 +152,11 @@
 
         <div class="mb-3">
             <label for="pagu_id" class="form-label">pagu</label>
-            <select class="form-select @error('pagu_id') is-invalid @enderror" name="pagu_id"
-                id="pagu_id">
+            <select class="form-select select2 @error('pagu_id') is-invalid @enderror" name="pagu_id" id="pagu_id"
+                style="width: 100%">
+                <option value="">--pilih--</option>
                 @foreach ($pagus as $pagu)
-                    <option value="{{ $pagu->id }}" selected>
+                    <option value="{{ $pagu->id }}">
                         {{ $pagu->paket }}</option>
                 @endforeach
             </select>
@@ -166,9 +164,8 @@
 
         <div class="mb-3">
             <label for="tanggal" class="form-label">Tanggal</label>
-            <input type="date" class="form-control @error('tanggal') is-invalid @enderror"
-                id="tanggal" name="tanggal" autofocus
-                required>
+            <input type="date" class="form-control @error('tanggal') is-invalid @enderror" id="tanggal" name="tanggal"
+                autofocus required>
             @error('tanggal')
                 <div class="invalid-feedback">
                     {{ $message }}
@@ -177,4 +174,19 @@
         </div>
     </x-form_modal>
     <!-- Akhir Modal Tambah User -->
+
+    @push('css')
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    @endpush
+
+    @push('script')
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                $('.select2').select2({
+                    dropdownParent: $('#tambahBap')
+                });
+            });
+        </script>
+    @endpush
 @endsection

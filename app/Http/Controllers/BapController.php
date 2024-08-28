@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Bap;
 use App\Models\Pagu;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class BapController extends Controller
 {
@@ -14,9 +15,9 @@ class BapController extends Controller
     public function index()
     {
         $title = "Data Bap";
-        $baps = Bap::with('Pagu')->get();
+        $baps = Bap::with('pagu')->get();
         $pagus = Pagu::all();
-        return view('dashboard.berita-acara.pemeriksaan.index')->with(compact('title', 'baps', 'pagus'));
+        return view('dashboard.berita-acara.pemeriksaan.index', compact('title', 'baps', 'pagus'));
     }
 
     /**
@@ -77,7 +78,7 @@ class BapController extends Controller
 
             $validatedData = $this->validate($request, $rules);
 
-            Bap::where('id', $pemeriksaan->id)->update($validatedData);
+            $pemeriksaan->update($validatedData);
 
             return redirect()->back()->with('success', "Data Bap $pemeriksaan->nomor berhasil diperbarui!");
         } catch (\Illuminate\Validation\ValidationException $exception) {
@@ -91,7 +92,8 @@ class BapController extends Controller
     public function destroy(Bap $pemeriksaan)
     {
         try {
-            Bap::destroy($pemeriksaan->id);
+            $pemeriksaan->delete();
+            DB::statement('ALTER TABLE bap AUTO_INCREMENT=1');
         } catch (\Illuminate\Database\QueryException $e) {
             if ($e->getCode() == 23000) {
                 //SQLSTATE[23000]: Integrity constraint violation
