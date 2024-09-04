@@ -440,7 +440,7 @@
                 $('#kontrakTable').on('click', '.btn-delete', function() {
                     const id = $(this).data('id');
                     const nomor = $(this).data('nomor');
-                    $('#formDelete').attr('action', `dashboard/kontrak/${id}`);
+                    $('#formDelete').attr('action', `kontrak/${id}`);
                     $('#text').html(
                         `Apakah anda yakin akan menghapus data kontrak dengan nomor: <b>${nomor}</b>`);
                     $('#modalHapus').modal('show');

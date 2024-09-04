@@ -132,7 +132,7 @@ class KontrakController extends Controller
     public function destroy(Kontrak $kontrak)
     {
         try {
-            if ($kontrak->dokumen) {
+            if ($kontrak->dokumen && Storage::disk('public')->exists($kontrak->dokumen)) {
                 Storage::delete($kontrak->dokumen);
             }
             Kontrak::destroy($kontrak->id);
