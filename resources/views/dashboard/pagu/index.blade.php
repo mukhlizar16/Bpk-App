@@ -28,16 +28,16 @@
                 <div class="card-body">
                     <div class="table-responsive">
                         <table id="paguTable" class="table nowrap table-bordered table-striped align-middle"
-                               style="width:100%">
+                            style="width:100%">
                             <thead>
-                            <tr>
-                                <th class="text-center">NO</th>
-                                <th class="text-center">SUB KEGIATAN</th>
-                                <th class="text-center">PAKET</th>
-                                <th class="text-center">SUMBER DANA</th>
-                                <th class="text-center">JUMLAH</th>
-                                <th class="text-center">AKSI</th>
-                            </tr>
+                                <tr>
+                                    <th class="text-center">NO</th>
+                                    <th class="text-center">SUB KEGIATAN</th>
+                                    <th class="text-center">PAKET</th>
+                                    <th class="text-center">SUMBER DANA</th>
+                                    <th class="text-center">JUMLAH</th>
+                                    <th class="text-center">AKSI</th>
+                                </tr>
                             </thead>
                             <tbody></tbody>
                         </table>
@@ -68,11 +68,11 @@
             <div class="mb-3">
                 <label for="paket" class="form-label">Paket</label>
                 <input type="text" class="form-control @error('paket') is-invalid @enderror" id="paket"
-                       name="paket" autofocus required>
+                    name="paket" autofocus required>
                 @error('paket')
-                <div class="invalid-feedback">
-                    {{ $message }}
-                </div>
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
                 @enderror
             </div>
             <div class="mb-3">
@@ -85,13 +85,13 @@
             </div>
             <div class="mb-3">
                 <label for="jumlah" class="form-label">Jumlah</label>
-                <input type="number" min="0" step="1" class="form-control @error('jumlah') is-invalid @enderror"
-                       id="jumlah"
-                       name="jumlah" autofocus required>
+                <input type="number" min="0" step="1"
+                    class="form-control @error('jumlah') is-invalid @enderror" id="jumlah" name="jumlah" autofocus
+                    required>
                 @error('jumlah')
-                <div class="invalid-feedback">
-                    {{ $message }}
-                </div>
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
                 @enderror
             </div>
 
@@ -107,8 +107,8 @@
             <div class="modal-body">
                 <div class="mb-3">
                     <label for="subkegiatanEdit" class="form-label">Sub Kegiatan</label>
-                    <select class="form-select @error('subkegiatan_id') is-invalid @enderror"
-                            name="subkegiatan_id" id="subkegiatanEdit" style="width: 100%">
+                    <select class="form-select @error('subkegiatan_id') is-invalid @enderror" name="subkegiatan_id"
+                        id="subkegiatanEdit" style="width: 100%">
                         @foreach ($subs as $sub)
                             <option value="{{ $sub->id }}" selected>
                                 {{ $sub->keterangan }}</option>
@@ -117,18 +117,18 @@
                 </div>
                 <div class="mb-3">
                     <label for="paketEdit" class="form-label">Paket</label>
-                    <input type="text" class="form-control @error('paket') is-invalid @enderror"
-                           id="paketEdit" name="paket" required>
+                    <input type="text" class="form-control @error('paket') is-invalid @enderror" id="paketEdit"
+                        name="paket" required>
                     @error('paket')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
                     @enderror
                 </div>
                 <div class="mb-3">
                     <label for="sumberEdit" class="form-label">Sumber Dana</label>
-                    <select class="form-select @error('sumber_dana_id') is-invalid @enderror"
-                            name="sumber_dana_id" id="sumberEdit">
+                    <select class="form-select @error('sumber_dana_id') is-invalid @enderror" name="sumber_dana_id"
+                        id="sumberEdit">
                         @foreach ($danas as $dana)
                             <option value="{{ $dana->id }}">
                                 {{ $dana->keterangan }}</option>
@@ -137,20 +137,19 @@
                 </div>
                 <div class="mb-3">
                     <label for="jumlahEdit" class="form-label">Jumlah</label>
-                    <input type="number" class="form-control @error('jumlah') is-invalid @enderror"
-                           id="jumlahEdit" name="jumlah" required>
+                    <input type="number" class="form-control @error('jumlah') is-invalid @enderror" id="jumlahEdit"
+                        name="jumlah" required>
                     @error('jumlah')
-                    <div class="invalid-feedback">
-                        {{ $message }}
-                    </div>
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
                     @enderror
                 </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn {{ $btnSecondaryClass ?? 'btn-outline-secondary' }}"
-                        data-bs-dismiss="modal">{{ $btnSecondaryTitle ?? 'Batal' }}</button>
-                <button type="submit"
-                        class="btn {{ $btnPrimaryClass ?? 'btn-primary' }}">
+                    data-bs-dismiss="modal">{{ $btnSecondaryTitle ?? 'Batal' }}</button>
+                <button type="submit" class="btn {{ $btnPrimaryClass ?? 'btn-primary' }}">
                     {{ $btnPrimaryTitle ?? 'Simpan' }}
                 </button>
             </div>
@@ -158,12 +157,12 @@
     </x-modal-kosong>
 
     @push('css')
-        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet"/>
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     @endpush
     @push('script')
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
         <script>
-            $(document).ready(function () {
+            $(document).ready(function() {
                 const table = $('#paguTable');
                 $('#subkegiatan').select2({
                     dropdownParent: $('#tambahPagu')
@@ -174,13 +173,15 @@
                 table.DataTable({
                     serverSide: true,
                     processing: true,
-                    lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                    lengthMenu: [
+                        [10, 25, 50, -1],
+                        [10, 25, 50, "All"]
+                    ],
                     language: {
                         url: 'https://cdn.datatables.net/plug-ins/2.1.4/i18n/id.json',
                     },
                     ajax: '{{ route('pagu.index') }}',
-                    columns: [
-                        {
+                    columns: [{
                             data: 'DT_RowIndex',
                             name: 'DT_RowIndex',
                             className: 'text-center'
@@ -202,7 +203,7 @@
                         {
                             data: 'jumlah',
                             name: 'jumlah',
-                            render: function (data, type, row) {
+                            render: function(data, type, row) {
                                 return new Intl.NumberFormat('id-ID', {
                                     style: 'currency',
                                     currency: 'IDR',
@@ -217,20 +218,17 @@
                             name: 'aksi'
                         },
                     ],
-                    columnDefs: [{orderable: false, targets: 0}]
+                    columnDefs: [{
+                        orderable: false,
+                        targets: 0
+                    }]
                 });
 
-                table.on('click', '.btn-edit', function () {
-                    var id = $(this).data('id');
-                    var paket = $(this).data('paket');
-                    var sumber = $(this).data('sumber');
-                    var subkegiatan = $(this).data('subkegiatan');
-                    var jumlah = $(this).data('jumlah');
-
-                    console.log(id, paket, sumber, subkegiatan, jumlah)
-
-                    // Isi form di dalam modal dengan data yang diambil
-                    $('#editForm').attr('action', '/pagu/' + id);  // Sesuaikan dengan route update Anda
+                table.on('click', '.btn-edit', function() {
+                    var [id, paket, sumber, subkegiatan, jumlah] = [$(this).data('id'), $(this).data('paket'),
+                        $(this).data('sumber'), $(this).data('subkegiatan'), $(this).data('jumlah')
+                    ];
+                    $('#editForm').attr('action', '/dashboard/pagu/' + id);
                     $('#paketEdit').val(paket);
                     $('#jumlahEdit').val(jumlah);
                     $('#subkegiatanEdit').val(subkegiatan);
